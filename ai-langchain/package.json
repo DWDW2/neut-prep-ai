@@ -1,0 +1,12 @@
+{
+  "name": "ai-langchain",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@langchain/google-genai": "^0.0.21",
+    "langchain": "^0.2.8",
+    "pdf-parse": "^1.1.1"
+  },
+  "type": "module"
+}
