@@ -1,7 +1,7 @@
 import express, { type Request, type Response } from 'express';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
-import getVacancies from './controllers/vacancies/vacancies.controllers';
+import CriticalRouter from './routes/critical.routes'
 import { HttpCode, ONE_HUNDRED, ONE_THOUSAND, SIXTY } from './core/constants/index';
 
 interface ServerOptions {
@@ -28,8 +28,7 @@ export class Server {
    })
   );
 
-
-  this.app.get('/', getVacancies);
+  this.app.use('/critical', CriticalRouter);
 
   this.app.get('/health', (_req: Request, res: Response) => {
    return res.status(HttpCode.OK).send({

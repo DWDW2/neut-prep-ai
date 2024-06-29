@@ -1,5 +1,0 @@
-1.\n' +
-    'The circle centered at O is passing through the points A, B, and C. Given that |OA| = 5cm and |OC| = 7cm. Find the length of |AC|.\n' +
-    '\n' +
-    'A) 5  B) 6  C) 7  D) 8  E) 9\n' +
-    '\n' +
