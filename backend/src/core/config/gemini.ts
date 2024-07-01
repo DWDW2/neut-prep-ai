@@ -1,12 +1,13 @@
 import { GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
-import getCriticalPromt from "../promts/getCritical";
 import { envs } from "./env";
-import parts from "../promts/getCritical";
 const apiKey = envs.GEMINI_API;
 const genAI = new GoogleGenerativeAI(apiKey);
   
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
+  generationConfig:{
+    responseMimeType: "application/json",
+  }
 });
 
 const safetySetting = [

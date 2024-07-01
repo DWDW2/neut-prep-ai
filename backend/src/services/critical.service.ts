@@ -1,5 +1,5 @@
 import { model } from "../core/config/gemini";
-import {partsCritical} from "../core/promts/getCritical";
+import {partsCritical} from "../core/promts/getPrompts";
 import { generationConfig, safetySetting } from "../core/config/gemini";
 export default class CriticalService {
     async getCriticalData() {
