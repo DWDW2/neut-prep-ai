@@ -3,7 +3,7 @@ import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import CriticalRouter from './routes/critical.routes'
 import { HttpCode, ONE_HUNDRED, ONE_THOUSAND, SIXTY } from './core/constants/index';
-
+import { logger } from './logger';
 interface ServerOptions {
  port: number;
 }
@@ -27,7 +27,7 @@ export class Server {
     message: 'Too many requests from this IP, please try again in one hour'
    })
   );
-
+  this.app.use(logger)
   this.app.use('/critical', CriticalRouter);
 
   this.app.get('/health', (_req: Request, res: Response) => {

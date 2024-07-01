@@ -1,10 +1,10 @@
 import { model } from "../core/config/gemini";
-import {partsCritical} from "../core/promts/getCritical";
+import {partsMath} from "../core/promts/getCritical";
 import { generationConfig, safetySetting } from "../core/config/gemini";
 export default class CriticalService {
-    async getCriticalData() {
+    async getMathData() {
         const res = await model.generateContent({
-            contents: [{'role': 'user', parts:partsCritical}],
+            contents: [{'role': 'user', parts: partsMath}],
             generationConfig,
             safetySettings: safetySetting
         })

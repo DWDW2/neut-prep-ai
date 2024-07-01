@@ -6,6 +6,6 @@ const router = express.Router()
 const criticalService = new CriticalService()
 const criticalController = new CriticalController(criticalService)
 
-router.get('/', criticalController.getCritical)
+router.get('/', (req, res) => criticalController.getCritical(req, res))
 
 export default router
