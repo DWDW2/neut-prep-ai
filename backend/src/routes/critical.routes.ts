@@ -1,11 +1,21 @@
-import express from 'express'
-import CriticalController from '../controllers/critical.controller'
-import CriticalService from '../services/critical.service'
-const router = express.Router()
+import express from 'express';
+import CriticalController from '../controllers/critical.controller';
+import CriticalService from '../services/critical.service';
 
-const criticalService = new CriticalService()
-const criticalController = new CriticalController(criticalService)
+const router = express.Router();
 
-router.get('/', (req, res) => criticalController.getCritical(req, res))
+const criticalService = new CriticalService();
+const criticalController = new CriticalController(criticalService);
+router.get('/', (req, res) => criticalController.getCritical(req, res));
 
-export default router
+router.get('/all', (req, res) => criticalController.getAllCritical(req, res));
+
+router.get('/:id', (req, res) => criticalController.getCriticalById(req, res));
+
+router.post('/', (req, res) => criticalController.createCritical(req, res));
+
+router.put('/:id', (req, res) => criticalController.updateCritical(req, res));
+
+router.delete('/:id', (req, res) => criticalController.deleteCritical(req, res));
+
+export default router;

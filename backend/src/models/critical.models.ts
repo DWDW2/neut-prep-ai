@@ -12,7 +12,7 @@ const criticalTestShema: Schema = new Schema({
         answer: { type: String, required: true },
         explanation: { type: String, required: true },
         table: { type: String, default: null },
-        question_type: { type: String, required: true }
+        "question type": { type: String, required: true }
     }],
     answers:{
         type: [String],

@@ -1,4 +1,4 @@
-export type UseMathResponseType = {
+type mathTestType = {
     id: string;
     question: string;
     question_type: string;
@@ -13,3 +13,17 @@ export type UseMathResponseType = {
     correct_option: string;
     svg_file: string | null;
 }
+
+type mathTestModelType = {
+    test: mathTestType[];
+    answers: string[];
+    createdAt: string;
+    updatedAt: string;
+}
+
+export type {
+    mathTestType,
+    mathTestModelType
+}
+
+//
