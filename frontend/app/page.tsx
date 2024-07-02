@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { HeroHighlight, Highlight } from "../components/ui/hero-highlight"
 import Hero from "@/components/Hero";
 import Link from "next/link";
+import { ToggleTheme } from "@/components/ThemeToggle";
 
 export default function Home() {
   return (
