@@ -58,8 +58,9 @@ export default class CriticalController {
         try {
             const updatedCriticalData = await this.criticalService.updateCriticalData(
                 req.params.id,
-                req.body.test
+                req.body
             );
+            console.log(req.body)
             if (!updatedCriticalData) {
                 return res.status(404).send('Critical data not found');
             }

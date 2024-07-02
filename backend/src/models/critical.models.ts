@@ -15,9 +15,9 @@ const criticalTestShema: Schema = new Schema({
         "question type": { type: String, required: true }
     }],
     answers:{
-        type: [String],
+        type: Object,
         required: true,
-        default: [],
+        default: {},
     },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },

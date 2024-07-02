@@ -14,9 +14,9 @@ const mathTestSchema: Schema = new Schema({
         svg_file: { type: String, default: null }
     }],
     answers: {
-        type: [String],
+        type: Object,
         required: true,
-        default: [],
+        default: {},
     },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },

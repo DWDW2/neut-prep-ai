@@ -20,7 +20,7 @@ type criticalTestModelType = {
         table: string | null;
         question_type: string; // change to camelCase for consistency
     },
-    answers: string[];
+    answers: object,
     createdAt: string;
     updatedAt: string;
 }

@@ -4,7 +4,7 @@ interface useCriticalResponseType{
 
 interface criticalTestType {
     _id: string;
-    test:{
+    test:[{
         id: string;
         question: string;
         statement: string;
@@ -13,7 +13,7 @@ interface criticalTestType {
         explanation: string;
         table: string | null;
         question_type: string; // change to camelCase for consistency
-    },
+    }],
     answers: string[];
     createdAt: string;
     updatedAt: string;

@@ -44,9 +44,6 @@ export default class CriticalService {
         }
     }
 
-    // CRUD Operations
-
-    // Get all critical data
     async getAllCriticalData(): Promise<criticalTestModelType[]> {
         try {
             const criticalData = await criticalTestModel.find();
@@ -57,7 +54,7 @@ export default class CriticalService {
         }
     }
 
-    // Get critical data by ID
+
     async getCriticalDataById(id: string): Promise<criticalTestModelType | null> {
         try {
             const criticalData = await criticalTestModel.findById(id);
@@ -68,7 +65,7 @@ export default class CriticalService {
         }
     }
 
-    // Create new critical data
+
     async createCriticalData(data: criticalTestType[]): Promise<criticalTestModelType> {
         try {
             const newCriticalData = new criticalTestModel({ test: data });
@@ -76,16 +73,16 @@ export default class CriticalService {
             return savedCriticalData;
         } catch (error) {
             console.log(error);
-            throw error; // Re-throw the error to be handled by the controller
+            throw error; 
         }
     }
 
-    // Update critical data by ID
-    async updateCriticalData(id: string, data: criticalTestType[]): Promise<criticalTestModelType | null> {
+
+    async updateCriticalData(id: string, data: criticalTestModelType): Promise<criticalTestModelType | null> {
         try {
             const updatedCriticalData = await criticalTestModel.findByIdAndUpdate(
                 id,
-                { test: data },
+                {answers: data},
                 { new: true }
             );
             return updatedCriticalData;
@@ -95,7 +92,6 @@ export default class CriticalService {
         }
     }
 
-    // Delete critical data by ID
     async deleteCriticalData(id: string): Promise<boolean> {
         try {
             const deletedCriticalData = await criticalTestModel.findByIdAndDelete(id);

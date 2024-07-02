@@ -25,13 +25,6 @@ export class Server {
   this.app.use(compression());
   this.app.use(cors())
   connectdb()
-  this.app.use(
-   rateLimit({
-    max: ONE_HUNDRED,
-    windowMs: SIXTY * SIXTY * ONE_THOUSAND,
-    message: 'Too many requests from this IP, please try again in one hour'
-   })
-  );
   this.app.use(logger)
   this.app.use('/critical', CriticalRouter);
   this.app.use('/math', MathRouter);
