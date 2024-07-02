@@ -87,7 +87,7 @@ export default class MathService {
         try {
             const updatedMathData = await MathModel.findByIdAndUpdate(
                 id,
-                { test: data },
+                { answers: data },
                 { new: true }
             );
             return updatedMathData;

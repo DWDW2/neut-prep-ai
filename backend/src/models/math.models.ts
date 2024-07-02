@@ -7,7 +7,7 @@ const mathTestSchema: Schema = new Schema({
     test: [{
         id: { type: String, required: true },
         question: { type: String, required: true },
-        question_type: { type: String, required: true },
+        questionType: { type: String, required: true },
         explanation: { type: String, required: true },
         options: { type: Object, required: true },
         correct_option: { type: String, required: true },

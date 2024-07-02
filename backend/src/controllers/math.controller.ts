@@ -1,8 +1,7 @@
-// home/zhansar/projects/neut-prep-ai/backend/src/controllers/math.controller.ts
 import { EnhancedGenerateContentResponse } from '@google/generative-ai';
 import MathService from '../services/math.service';
 import { Request, Response } from 'express';
-import { mathTestModelType } from '../types/useMath.types'; // Import the type for your model
+import { mathTestModelType } from '../types/useMath.types'; 
 export default class MathController {
     private mathService: MathService
     
@@ -13,16 +12,20 @@ export default class MathController {
     async getMath(req: Request, res: Response) {
         try {
             const result = await this.mathService.getMathData()
-            const formattedDataAI = await this.mathService.formatDataUsingAi(result.text())
-            const f = await this.mathService.removeDoubleBackslashNewline(formattedDataAI)
+            const f = await this.mathService.removeDoubleBackslashNewline(result.text())
             const test = await this.mathService.saveMathDataToDB(f)
-            res.json({id: test?._id});
+            if (test) {
+                // res.json({id: test._id});
+                return {id: test._id}
+            } else {
+                res.status(500).send('Error saving math data to database');
+                return null;
+            }
         } catch (error) {
             res.status(500).send(error);
         }
     }
 
-    // GET all math data
     async getAllMath(req: Request, res: Response) {
         try {
             const mathData = await this.mathService.getAllMathData();
@@ -33,7 +36,6 @@ export default class MathController {
         }
     }
 
-    // GET math data by ID
     async getMathById(req: Request, res: Response) {
         try {
             const mathData = await this.mathService.getMathDataById(req.params.id);
@@ -47,7 +49,6 @@ export default class MathController {
         }
     }
 
-    // CREATE new math data
     async createMath(req: Request, res: Response) {
         try {
             const newMathData = await this.mathService.createMathData(req.body.answer);
@@ -58,12 +59,11 @@ export default class MathController {
         }
     }
 
-    // UPDATE math data by ID
     async updateMath(req: Request, res: Response) {
         try {
             const updatedMathData = await this.mathService.updateMathData(
                 req.params.id,
-                req.body.answer
+                req.body
             );
             if (!updatedMathData) {
                 return res.status(404).send('Math data not found');
@@ -75,7 +75,6 @@ export default class MathController {
         }
     }
 
-    // DELETE math data by ID
     async deleteMath(req: Request, res: Response) {
         try {
             const deleted = await this.mathService.deleteMathData(req.params.id);

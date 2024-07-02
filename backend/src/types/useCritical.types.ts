@@ -1,3 +1,5 @@
+import { Document } from "mongoose";
+import { mathTestModelType } from "./useMath.types";
 type criticalTestType = {
     id: string;
     question: string;
