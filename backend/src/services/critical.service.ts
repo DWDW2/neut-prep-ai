@@ -95,7 +95,7 @@ export default class CriticalService {
     async deleteCriticalData(id: string): Promise<boolean> {
         try {
             const deletedCriticalData = await criticalTestModel.findByIdAndDelete(id);
-            return !!deletedCriticalData; // Check if data was deleted
+            return !!deletedCriticalData; 
         } catch (error) {
             console.log(error);
             return false;
