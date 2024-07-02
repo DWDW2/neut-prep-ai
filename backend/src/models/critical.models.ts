@@ -1,19 +1,29 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { UseCriticalResponseType } from '../types/useCritical.types';
+import { criticalTestModelType } from '../types/useCritical.types';
 
-interface IUseCriticalResponse extends Omit<UseCriticalResponseType, 'id'>, Document {}
+interface ICriticalTestModel extends Omit<criticalTestModelType, 'id'>, Document {}
 
-const useCriticalResponseSchema: Schema = new Schema({
-    id: { type: String, required: true },
-    question: { type: String, required: true },
-    statement: { type: String, required: true },
-    options: { type: [String], required: true },
-    answer: { type: String, required: true },
-    explanation: { type: String, required: true },
-    table: { type: String, default: null },
-    questionType: { type: String, required: true } // camelCase for consistency
+const criticalTestShema: Schema = new Schema({
+    test: [{
+        id: { type: String, required: true },
+        question: { type: String, required: true },
+        statement: { type: String, required: true },
+        options: { type: [String], required: true },
+        answer: { type: String, required: true },
+        explanation: { type: String, required: true },
+        table: { type: String, default: null },
+        question_type: { type: String, required: true }
+    }],
+    answers:{
+        type: [String],
+        required: true,
+        default: [],
+    },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
+     // camelCase for consistency
 });
 
-const UseCriticalResponseModel = mongoose.model<IUseCriticalResponse>('UseCriticalResponse', useCriticalResponseSchema);
+const criticalTestModel = mongoose.model<ICriticalTestModel>('criticalTest', criticalTestShema);
 
-export default UseCriticalResponseModel;
+export default criticalTestModel;

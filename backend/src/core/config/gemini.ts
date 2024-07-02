@@ -27,6 +27,14 @@ const generationConfig = {
   topK: 64,
   maxOutputTokens: 200000,
   responseMimeType: "application/json",
+  response_schema: {
+    type: 'object',
+    properties: {
+      answer: {
+        type: 'string'
+      }
+    }
+}
 };
 
   

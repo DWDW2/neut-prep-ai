@@ -11,8 +11,8 @@ export default class MathController {
     async getMath(req: Request, res: Response) {
         try {
             const result = await this.mathService.getMathData()
-            // const formattedDataAI = await this.mathService.formatDataUsingAi(result.text())
-            const f = await this.mathService.removeDoubleBackslashNewline(result.text())
+            const formattedDataAI = await this.mathService.formatDataUsingAi(result.text())
+            const f = await this.mathService.removeDoubleBackslashNewline(formattedDataAI)
             res.json(f);
         } catch (error) {
             res.status(500).send(error);

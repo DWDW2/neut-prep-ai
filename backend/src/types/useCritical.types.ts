@@ -1,4 +1,4 @@
-export type UseCriticalResponseType = {
+type criticalTestType = {
     id: string;
     question: string;
     statement: string;
@@ -6,5 +6,23 @@ export type UseCriticalResponseType = {
     answer: string;
     explanation: string;
     table: string | null;
-    questionType: string; // change to camelCase for consistency
+    question_type: string; // change to camelCase for consistency
 }
+
+type criticalTestModelType = {
+    test:{
+        id: string;
+        question: string;
+        statement: string;
+        options: string[];
+        answer: string;
+        explanation: string;
+        table: string | null;
+        question_type: string; // change to camelCase for consistency
+    },
+    answers: string[];
+    createdAt: string;
+    updatedAt: string;
+}
+
+export type { criticalTestType, criticalTestModelType };

@@ -6,6 +6,7 @@ import MathRouter from './routes/math.routes'
 import cors from 'cors';
 import { HttpCode, ONE_HUNDRED, ONE_THOUSAND, SIXTY } from './core/constants/index';
 import { logger } from './logger';
+import connectdb from './core/connectdb';
 interface ServerOptions {
  port: number;
 }
@@ -23,6 +24,7 @@ export class Server {
   this.app.use(express.urlencoded({ extended: true })); 
   this.app.use(compression());
   this.app.use(cors())
+  connectdb()
   this.app.use(
    rateLimit({
     max: ONE_HUNDRED,
