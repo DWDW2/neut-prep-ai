@@ -4,7 +4,7 @@ import { useCriticalResponseType } from '@/types/useCritical.types';
 import { useState } from 'react';
 
 const useCritical = () => {
-  const [criticalData, setCriticalData] = useState<useCriticalResponseType | null>(null);
+  const [criticalData, setCriticalData] = useState<useCriticalResponseType[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<any>(null);
   const fetchCriticalData = async () => {
