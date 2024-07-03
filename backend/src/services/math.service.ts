@@ -27,6 +27,7 @@ export default class MathService {
       const formattedResponse = await this.removeDoubleBackslashNewline(
         res.response.text()
       );
+      console.log(formattedResponse)
       if (JSON.stringify(formattedResponse) === JSON.stringify(errorType)) {
         i--;
         continue;

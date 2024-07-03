@@ -83,64 +83,7 @@ here is an example of ideal response:
   }
 ]`
 const systemPromptMath = `
-You are the best NUET test creator in the world. Your goal is to create a unique and challenging math practice question for the National University Entrance Test (NUET). The question should focus on open-ended scenarios that demand the application of logical reasoning to draw conclusions and evaluate outcomes. Encourage multi-perspective examination for a comprehensive understanding. All math-related symbols should be written using LaTeX markdown to be implemented in a Next.js web application.
-
-### Structure of the JSON object:
-{
-  "id": "1",  // Unique identifier for the question
-  "question": "STRING",  // Question text using LaTeX markdown
-  "question_type": "STRING",  // Type of question, e.g., "inequality solving"
-  "explanation": "STRING",  // Explanation using LaTeX markdown, if applicable
-  "options": [
-    "STRING",  // Option 1 text
-    "STRING",  // Option 2 text
-    "STRING",  // Option 3 text
-    "STRING",  // Option 4 text
-    "STRING"  // Optional, for 5-choice questions
-  ],
-  "correct_option": "NUMBER",  // NUMBER of the correct option, e.g., "1"
-  "svg_file": "STRING"  // Optional, path to the SVG file for geometric problems
-}
-
-### Emphasis:
-Focus on open-ended scenarios that demand:
-- Application of logical reasoning to draw conclusions and evaluate outcomes.
-- Multi-perspective examination for a comprehensive understanding.
-
-### Question Types:
-Cover classic NUET question formats, including:
-- Binary operations and properties
-- Inequality solving
-- Simultaneous equations
-- Algebraic fractions and manipulation
-- Exponents and logarithms
-- Quadratic equations and properties
-- Geometric problems (separate process for SVG generation)
-- Straight line equations and relationships
-- Logic and reasoning with statements
-- Word problems involving volumes/surface areas (consider for challenge)
-- Permutation and combination problems (consider for challenge)
-
-### Example of an ideal question output:
-
-{
-  "id": "1",
-  "question": "Consider a function \\( f(x) \\) defined as \\( f(x) = \\frac{2x + 3}{x - 4} \\). Determine the value of \\( f(f(5)) \\).",
-  "question_type": "functions",
-  "explanation": "First, find \\( f(5) = \\frac{2(5) + 3}{5 - 4} = \\frac{13}{1} = 13 \\). Then, find \\( f(13) = \\frac{2(13) + 3}{13 - 4} = \\frac{29}{9} \\).",
-  "options": [
-    "\\( \\frac{29}{9} \\)",
-    "13",
-    "9",
-    "\\( \\frac{1}{13} \\)",
-    null
-  ],
-  "correct_option": "1",
-  "svg_file": null
-}
-
-Please generate a JSON object with one unique and challenging math practice question according to the specified format.
-
+input: Goal: Create a comprehensive JSON file containing 30 unique and challenging math practice questions for the National University Entrance Test (NUET).Request: Generate an array named questions.Structure: Each element in the array should be a JSON object adhering to the specified format:\n\nEXAMPLE:\n[\n  {\n    \"id\": \"1\",\n    \"question\": \"If \\\\(\\\\ast\\\\) is a binary operation defined by \\\\(a \\\\ast b = a^2 + b^2 - ab\\\\), find the value of \\\\((2 \\\\ast 3) \\\\ast 4\\\\).\",\n    \"question_type\": \"binary operations\",\n    \"explanation\": \"First, find \\\\(2 \\\\ast 3 = 2^2 + 3^2 - (2)(3) = 7\\\\). Then, find \\\\((2 \\\\ast 3) \\\\ast 4 = 7 \\\\ast 4 = 7^2 + 4^2 - (7)(4) = 33\\\\).\",\n    \"options\": {\n      \"A\": \"13\",\n      \"B\": \"25\",\n      \"C\": \"33\",\n      \"D\": \"49\",\n      \"E\": null\n    },\n    \"correct_option\": \"C\",\n    \"svg_file\": null\n  },\n  {\n    \"id\": \"2\",\n    \"question\": \"Solve the inequality \\\\(3x - 5 < 2x + 4\\\\).\",\n    \"question_type\": \"inequality solving\",\n    \"explanation\": \"Subtract \\\\(2x\\\\) from both sides to get \\\\(x - 5 < 4\\\\). Then, add 5 to both sides to get \\\\(x < 9\\\\).\",\n    \"options\": {\n      \"A\": \"x > 9\",\n      \"B\": \"x < 9\",\n      \"C\": \"x = 9\",\n      \"D\": \"x \\\\leq 9\",\n      \"E\": null\n    },\n    \"correct_option\": \"B\",\n    \"svg_file\": null\n  }\n  // Add more questions as needed\n]\nEmphasis:Focus on open-ended scenarios that demand:Application of logical reasoning to draw conclusions and evaluate outcomes.Multi-perspective examination for a comprehensive understanding.Question Types:Cover classic NUET question formats, including:Binary operations and propertiesInequality solvingSimultaneous equationsAlgebraic fractions and manipulationExponents and logarithmsQuadratic equations and propertiesGeometric problems (separate process for SVG generation)Straight line equations and relationshipsLogic and reasoning with statementsWord problems involving volumes/surface areas (consider for challenge)Permutation and combination problems (consider for challenge)\n\nRETURN:\n\n\n\n{\n  \"id\": \"1\",  // Unique identifier for the question\n  \"question\": \"STRING\",  // Question text using better-react-mathjax markdown\n  \"questionType\": \"STRING\",  // Type of question, e.g., \"inequality solving\"\n  \"explanation\": \"STRING\",  // Explanation using better-react-mathjax markdown, if applicable\n  \"options\": [\n     \"STRING\",  // Option 1 text\n     \"STRING\",  // Option 2 text\n     \"STRING\",  // Option 3 text\n     \"STRING\",  // Option 4 text\n    \"STRING\"  // Optional, for 5-choice questions\n  ],\n  \"correct_option\": \"NUMBER\",  // NUMBER of the correct option, e.g., \"1\"\n  \"svg_file\": \"STRING\"  // Optional, path to the SVG file for geometric problems\n}"
 `
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
