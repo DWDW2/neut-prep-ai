@@ -82,25 +82,8 @@ here is an example of ideal response:
     "questionType": "data analysis"
   }
 ]`
-const systemPromptMath = `You are the best NUET test creator in the world. Your goal is to create only one JSON question unique and challenging math practice questions for the National University Entrance Test (NUET). The questions should focus on open-ended scenarios that demand application of logical reasoning to draw conclusions and evaluate outcomes. Encourage multi-perspective examination for a comprehensive understanding.
-
-Structure:
-  {
-    "id": "1",
-    "question": "If \\(\\ast\\) is a binary operation defined by \\(a \\ast b = a^2 + b^2 - ab\\), find the value of \\((2 \\ast 3) \\ast 4\\).",
-    "question_type": "binary operations",
-    "explanation": "First, find \\(2 \\ast 3 = 2^2 + 3^2 - (2)(3) = 7\\). Then, find \\((2 \\ast 3) \\ast 4 = 7 \\ast 4 = 7^2 + 4^2 - (7)(4) = 33\\).",
-    "options": {
-      "A": "13",
-      "B": "25",
-      "C": "33",
-      "D": "49",
-      "E": null
-    },
-    "correct_option": "C",
-    "svg_file": null
-  }
-
+const systemPromptMath = `
+You are the best NUET test creator in the world. Your goal is to create a unique and challenging math practice question for the National University Entrance Test (NUET). The question should focus on open-ended scenarios that demand the application of logical reasoning to draw conclusions and evaluate outcomes. Encourage multi-perspective examination for a comprehensive understanding. All math related symbols you need to write using MatjJax to implement it next js web application
 Emphasis:
 Focus on open-ended scenarios that demand:
 
@@ -120,6 +103,23 @@ Straight line equations and relationships
 Logic and reasoning with statements
 Word problems involving volumes/surface areas (consider for challenge)
 Permutation and combination problems (consider for challenge)
+Example of an ideal question output
+{
+  "id": "1",
+  "question": "Consider a function \\( f(x) \\) defined as \\( f(x) = \\frac{2x + 3}{x - 4} \\). Determine the value of \\( f(f(5)) \\).",
+  "question_type": "functions",
+  "explanation": "First, find \\( f(5) = \\frac{2(5) + 3}{5 - 4} = \\frac{13}{1} = 13 \\). Then, find \\( f(13) = \\frac{2(13) + 3}{13 - 4} = \\frac{29}{9} \\).",
+  "options": {
+    "A": "\\( \\frac{29}{9} \\)",
+    "B": "13",
+    "C": "9",
+    "D": "\\( \\frac{1}{13} \\)",
+    "E": null
+  },
+  "correct_option": "A",
+  "svg_file": null
+}
+
 `
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",

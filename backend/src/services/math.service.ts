@@ -39,7 +39,7 @@ export default class MathService {
 
   async removeDoubleBackslashNewline(str: any): Promise<mathTestType> {
     try {
-      const formattedStr = JSON.parse(str);
+      const formattedStr = JSON.parse(str.trim());
       return formattedStr;
     } catch (e) {
       console.log(e);
