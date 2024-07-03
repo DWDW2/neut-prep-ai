@@ -12,4 +12,3 @@ const partsMath = [
 
 
 export {partsCritical, partsMath};
-

@@ -25,7 +25,7 @@ export default class MathService {
         safetySettings: safetySetting,
       });
       const formattedResponse = await this.removeDoubleBackslashNewline(
-        res.response.text().trim()
+        res.response.text()
       );
       if (JSON.stringify(formattedResponse) === JSON.stringify(errorType)) {
         i--;

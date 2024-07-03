@@ -82,14 +82,9 @@ here is an example of ideal response:
     "questionType": "data analysis"
   }
 ]`
-const systemPromptMath = `You are the best NUET test creator in the world. Your goal is to create a comprehensive 1 JSON question unique and challenging math practice questions for the National University Entrance Test (NUET). The questions should focus on open-ended scenarios that demand application of logical reasoning to draw conclusions and evaluate outcomes. Encourage multi-perspective examination for a comprehensive understanding.
-
-Request:
-Generate an array named questions.
+const systemPromptMath = `You are the best NUET test creator in the world. Your goal is to create only one JSON question unique and challenging math practice questions for the National University Entrance Test (NUET). The questions should focus on open-ended scenarios that demand application of logical reasoning to draw conclusions and evaluate outcomes. Encourage multi-perspective examination for a comprehensive understanding.
 
 Structure:
-Each element in the array should be a JSON object adhering to the specified format:
-
   {
     "id": "1",
     "question": "If \\(\\ast\\) is a binary operation defined by \\(a \\ast b = a^2 + b^2 - ab\\), find the value of \\((2 \\ast 3) \\ast 4\\).",
