@@ -13,19 +13,19 @@ export default class CriticalController {
   async getCritical(req: Request, res: Response) {
     try {
       const result = await this.criticalService.getCriticalData();
-      const f: criticalTestType[] = await this.criticalService.removeDoubleBackslashNewline(
-        result.text()
-      );
-      res.json(f)
-      // const test = await this.criticalService.saveCriticalDataToDB(f);
-
-      // if (test) {
-      //   res.json({ id: test._id });
-      //   return { id: test._id };
-      // } else {
-      //   res.status(500).send('Error saving critical data to database');
-      //   return null; 
-      // }
+      // const f: criticalTestType[] = await this.criticalService.removeDoubleBackslashNewline(
+      //   result.text()
+      // );
+     
+      const test = await this.criticalService.saveCriticalDataToDB(result);
+      console.log(result)
+      if (test) {
+        res.json({ id: test._id });
+        return { id: test._id };
+      } else {
+        res.status(500).send('Error saving critical data to database');
+        return null; 
+      }
     } catch (error) {
       console.log(error);
       res.status(500).send(error);

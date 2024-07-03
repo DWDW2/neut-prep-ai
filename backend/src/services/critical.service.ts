@@ -7,25 +7,35 @@ import criticalTestModel from "../models/critical.models"; // Import your Mongoo
 export default class CriticalService {
     async getCriticalData() {
     const results: criticalTestType[] = [];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 1; i < 30; i++) {
       const res = await model.generateContent({
         contents: [{'role': 'user', parts:partsCritical}],
         generationConfig,
         safetySettings: safetySetting
       });
       const formattedResponse = await this.removeDoubleBackslashNewline(res.response.text());
-      results.push(...formattedResponse);
+      formattedResponse.id = String(i)
+      results.push(formattedResponse);
     }
     return results;
-
+    
     } 
-    async removeDoubleBackslashNewline(str: any): Promise<criticalTestType[]> {
+    async removeDoubleBackslashNewline(str: any): Promise<criticalTestType> {
         try{
             const formattedStr = JSON.parse(str)
             return formattedStr
         }catch(e){
             console.log(e)
-            return []
+            return {
+                id: "",
+                question: "",
+                statement: "",
+                options: [],
+                answer: "",
+                explanation: "",
+                table: null,
+                question_type: ""
+            }
         }
     }
 
