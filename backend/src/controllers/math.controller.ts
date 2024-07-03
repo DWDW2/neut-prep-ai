@@ -1,7 +1,8 @@
 import { EnhancedGenerateContentResponse } from '@google/generative-ai';
 import MathService from '../services/math.service';
 import { Request, Response } from 'express';
-import { mathTestModelType } from '../types/useMath.types'; 
+import { mathTestModelType } from '../types/useMath.types';
+import MathTestModel from '../models/math.models';
 export default class MathController {
     private mathService: MathService
     
@@ -15,7 +16,7 @@ export default class MathController {
             const f = await this.mathService.removeDoubleBackslashNewline(result.text())
             const test = await this.mathService.saveMathDataToDB(f)
             if (test) {
-                // res.json({id: test._id});
+                res.json({id: test._id});
                 return {id: test._id}
             } else {
                 res.status(500).send('Error saving math data to database');
@@ -61,18 +62,31 @@ export default class MathController {
 
     async updateMath(req: Request, res: Response) {
         try {
-            const updatedMathData = await this.mathService.updateMathData(
-                req.params.id,
-                req.body
-            );
-            if (!updatedMathData) {
-                return res.status(404).send('Math data not found');
+            const updatedMathData = await this.mathService.updateMathData(req.params.id, req.body);
+  
+            const test = await MathTestModel.findById(req.params.id);
+  
+            if (!test) {
+              return res.status(404).json({ message: 'Test not found' });
             }
-            res.json(updatedMathData);
-        } catch (error) {
-            console.log(error);
-            res.status(500).send(error);
-        }
+        
+            const results = [];
+            for (let i = 0; i < test.test.length; i++) {
+              const question = test.test[i];
+              const userAnswer = req.body[Number(question.id)]; 
+              const isCorrect = userAnswer === question.options[Number(question.correct_option)-1]; // Compare userAnswer with the correct answer from the question object
+                
+              results.push({
+                question: question.id,
+                isCorrect: isCorrect,
+              });
+            }
+  
+            return res.status(200).json({ results });
+          } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Internal server error' });
+          }  
     }
 
     async deleteMath(req: Request, res: Response) {

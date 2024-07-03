@@ -1,12 +1,13 @@
 import axios from 'axios';
 import { BASE_URL } from '@/constants';
-import { useCriticalResponseType, criticalTestType } from '@/types/useCritical.types';
+import { useCriticalResponseType, criticalTestType, useCriticalUpdateResponseType } from '@/types/useCritical.types';
 import { useState } from 'react';
 
 const useCritical = () => {
   const [criticalUrl, setCriticalUrl] = useState<useCriticalResponseType>({id: ''});
   const [criticalData, setCriticalData] = useState<criticalTestType | null>(null);
   const [criticalDataAll, setCriticalDataAll] = useState<criticalTestType[] | null>(null);
+  const [finished , setFinished] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<any>(null);
   const fetchCriticalData = async () => {
@@ -55,6 +56,28 @@ const useCritical = () => {
       setIsLoading(false);
     }
   }
+
+  const handleSubmitTest = async (id: string, userAnswers: any) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.put(`${BASE_URL}/critical/${id}`, userAnswers);
+      if (response.status === 200) {
+        console.log('Test submitted successfully!');
+        return response.data;
+      } else {
+        console.error('Error submitting test:', response.status);
+        setError(response.data);
+      }
+    } catch (error) {
+      console.error('Error submitting test:', error);
+      setError(error);
+    } finally {
+      setIsLoading(false);
+      setFinished(true);
+    }
+  };
   
   return {
     criticalData,
@@ -65,6 +88,9 @@ const useCritical = () => {
     criticalUrl,
     getAllCriticalTests,
     criticalDataAll,
+    handleSubmitTest,
+    finished,
+    setFinished
   };
 };
 

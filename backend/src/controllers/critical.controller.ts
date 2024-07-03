@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import CriticalService from '../services/critical.service';
 import { criticalTestType } from '../types/useCritical.types';
+import criticalTestModel from '../models/critical.models';
 
 export default class CriticalController {
   private criticalService: CriticalService;
@@ -18,7 +19,7 @@ export default class CriticalController {
       const test = await this.criticalService.saveCriticalDataToDB(f);
 
       if (test) {
-        // res.json({ id: test._id });
+        res.json({ id: test._id });
         return { id: test._id };
       } else {
         res.status(500).send('Error saving critical data to database');
@@ -69,19 +70,31 @@ export default class CriticalController {
 
   async updateCritical(req: Request, res: Response) {
     try {
-      const updatedCriticalData = await this.criticalService.updateCriticalData(
-        req.params.id,
-        req.body
-      );
-      console.log(req.body);
-      if (!updatedCriticalData) {
-        return res.status(404).send('Critical data not found');
+      const updatedCriticalData = await this.criticalService.updateCriticalData(req.params.id, req.body);
+
+      const test = await criticalTestModel.findById(req.params.id);
+
+      if (!test) {
+        return res.status(404).json({ message: 'Test not found' });
       }
-      res.json(updatedCriticalData);
+  
+      const results = [];
+      for (let i = 0; i < test.test.length; i++) {
+        const question = test.test[i];
+        const userAnswer = req.body[Number(question.id)]; 
+        const isCorrect = userAnswer === question.options[Number(question.answer)-1]; // Compare userAnswer with the correct answer from the question object
+
+        results.push({
+          question: question.id,
+          isCorrect: isCorrect,
+        });
+      }
+
+      return res.status(200).json({ results });
     } catch (error) {
-      console.log(error);
-      res.status(500).send(error);
-    }
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }  
   }
 
   async deleteCritical(req: Request, res: Response) {
