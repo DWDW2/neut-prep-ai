@@ -18,14 +18,8 @@ export default class CriticalController {
       // );
      
       const test = await this.criticalService.saveCriticalDataToDB(result);
-      console.log(result)
-      if (test) {
-        res.json({ id: test._id });
-        return { id: test._id };
-      } else {
-        res.status(500).send('Error saving critical data to database');
-        return null; 
-      }
+      console.log(test)
+      res.json(result)
     } catch (error) {
       console.log(error);
       res.status(500).send(error);

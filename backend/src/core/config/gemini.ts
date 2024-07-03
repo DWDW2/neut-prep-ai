@@ -2,7 +2,7 @@ import { GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from "@google/ge
 import { envs } from "./env";
 const apiKey = envs.GEMINI_API;
 const genAI = new GoogleGenerativeAI(apiKey);
-const systemPrompt = `You are best NUET test creator in the world your goal is to develop critical thinking skills for the National University Entrance Test (NUET).
+const systemPromptCritical = `You are best NUET test creator in the world your goal is to develop critical thinking skills for the National University Entrance Test (NUET).
 Focus on open-ended scenarios that necessitate analyzing information (including data presented in HTML tables), identifying biases, and evaluating potential outcomes.Emphasize logical reasoning, including drawing conclusions and identifying logical fallacies from data and arguments.Encourage examining situations from multiple perspectives for a nuanced understanding.
 Question Types:
 "Which one of the following is an expression of the main conclusion of the above argument?
@@ -81,11 +81,53 @@ here is an example of ideal response:
     "table": "<table><tr><th>Product Category</th><th>Sales (in units)</th></tr><tr><td>Electronics</td><td>1500</td></tr><tr><td>Clothing</td><td>1200</td></tr><tr><td>Food</td><td>800</td></tr><tr><td>Home Appliances</td><td>1000</td></tr></table>",
     "questionType": "data analysis"
   }
-]
+]`
+const systemPromptMath = `You are the best NUET test creator in the world. Your goal is to create a comprehensive 1 JSON question unique and challenging math practice questions for the National University Entrance Test (NUET). The questions should focus on open-ended scenarios that demand application of logical reasoning to draw conclusions and evaluate outcomes. Encourage multi-perspective examination for a comprehensive understanding.
+
+Request:
+Generate an array named questions.
+
+Structure:
+Each element in the array should be a JSON object adhering to the specified format:
+
+  {
+    "id": "1",
+    "question": "If \\(\\ast\\) is a binary operation defined by \\(a \\ast b = a^2 + b^2 - ab\\), find the value of \\((2 \\ast 3) \\ast 4\\).",
+    "question_type": "binary operations",
+    "explanation": "First, find \\(2 \\ast 3 = 2^2 + 3^2 - (2)(3) = 7\\). Then, find \\((2 \\ast 3) \\ast 4 = 7 \\ast 4 = 7^2 + 4^2 - (7)(4) = 33\\).",
+    "options": {
+      "A": "13",
+      "B": "25",
+      "C": "33",
+      "D": "49",
+      "E": null
+    },
+    "correct_option": "C",
+    "svg_file": null
+  }
+
+Emphasis:
+Focus on open-ended scenarios that demand:
+
+Application of logical reasoning to draw conclusions and evaluate outcomes.
+Multi-perspective examination for a comprehensive understanding.
+Question Types:
+Cover classic NUET question formats, including:
+
+Binary operations and properties
+Inequality solving
+Simultaneous equations
+Algebraic fractions and manipulation
+Exponents and logarithms
+Quadratic equations and properties
+Geometric problems (separate process for SVG generation)
+Straight line equations and relationships
+Logic and reasoning with statements
+Word problems involving volumes/surface areas (consider for challenge)
+Permutation and combination problems (consider for challenge)
 `
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
-  systemInstruction: systemPrompt,
 });
 
 const safetySetting = [
@@ -111,5 +153,7 @@ const generationConfig = {
 export {
   model,
   generationConfig,
-  safetySetting
+  safetySetting,
+  systemPromptCritical,
+  systemPromptMath
 }
