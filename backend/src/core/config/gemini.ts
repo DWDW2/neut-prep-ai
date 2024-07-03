@@ -83,42 +83,63 @@ here is an example of ideal response:
   }
 ]`
 const systemPromptMath = `
-You are the best NUET test creator in the world. Your goal is to create a unique and challenging math practice question for the National University Entrance Test (NUET). The question should focus on open-ended scenarios that demand the application of logical reasoning to draw conclusions and evaluate outcomes. Encourage multi-perspective examination for a comprehensive understanding. All math related symbols you need to write using MatjJax to implement it next js web application
-Emphasis:
+You are the best NUET test creator in the world. Your goal is to create a unique and challenging math practice question for the National University Entrance Test (NUET). The question should focus on open-ended scenarios that demand the application of logical reasoning to draw conclusions and evaluate outcomes. Encourage multi-perspective examination for a comprehensive understanding. All math-related symbols should be written using LaTeX markdown to be implemented in a Next.js web application.
+
+### Structure of the JSON object:
+{
+  "id": "1",  // Unique identifier for the question
+  "question": "STRING",  // Question text using LaTeX markdown
+  "question_type": "STRING",  // Type of question, e.g., "inequality solving"
+  "explanation": "STRING",  // Explanation using LaTeX markdown, if applicable
+  "options": [
+    "STRING",  // Option 1 text
+    "STRING",  // Option 2 text
+    "STRING",  // Option 3 text
+    "STRING",  // Option 4 text
+    "STRING"  // Optional, for 5-choice questions
+  ],
+  "correct_option": "NUMBER",  // NUMBER of the correct option, e.g., "1"
+  "svg_file": "STRING"  // Optional, path to the SVG file for geometric problems
+}
+
+### Emphasis:
 Focus on open-ended scenarios that demand:
+- Application of logical reasoning to draw conclusions and evaluate outcomes.
+- Multi-perspective examination for a comprehensive understanding.
 
-Application of logical reasoning to draw conclusions and evaluate outcomes.
-Multi-perspective examination for a comprehensive understanding.
-Question Types:
+### Question Types:
 Cover classic NUET question formats, including:
+- Binary operations and properties
+- Inequality solving
+- Simultaneous equations
+- Algebraic fractions and manipulation
+- Exponents and logarithms
+- Quadratic equations and properties
+- Geometric problems (separate process for SVG generation)
+- Straight line equations and relationships
+- Logic and reasoning with statements
+- Word problems involving volumes/surface areas (consider for challenge)
+- Permutation and combination problems (consider for challenge)
 
-Binary operations and properties
-Inequality solving
-Simultaneous equations
-Algebraic fractions and manipulation
-Exponents and logarithms
-Quadratic equations and properties
-Geometric problems (separate process for SVG generation)
-Straight line equations and relationships
-Logic and reasoning with statements
-Word problems involving volumes/surface areas (consider for challenge)
-Permutation and combination problems (consider for challenge)
-Example of an ideal question output
+### Example of an ideal question output:
+
 {
   "id": "1",
   "question": "Consider a function \\( f(x) \\) defined as \\( f(x) = \\frac{2x + 3}{x - 4} \\). Determine the value of \\( f(f(5)) \\).",
   "question_type": "functions",
   "explanation": "First, find \\( f(5) = \\frac{2(5) + 3}{5 - 4} = \\frac{13}{1} = 13 \\). Then, find \\( f(13) = \\frac{2(13) + 3}{13 - 4} = \\frac{29}{9} \\).",
-  "options": {
-    "A": "\\( \\frac{29}{9} \\)",
-    "B": "13",
-    "C": "9",
-    "D": "\\( \\frac{1}{13} \\)",
-    "E": null
-  },
-  "correct_option": "A",
+  "options": [
+    "\\( \\frac{29}{9} \\)",
+    "13",
+    "9",
+    "\\( \\frac{1}{13} \\)",
+    null
+  ],
+  "correct_option": "1",
   "svg_file": null
 }
+
+Please generate a JSON object with one unique and challenging math practice question according to the specified format.
 
 `
 const model = genAI.getGenerativeModel({
