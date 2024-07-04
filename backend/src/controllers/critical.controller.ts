@@ -83,7 +83,7 @@ export default class CriticalController {
         const isCorrect = userAnswer === question.options[Number(question.answer)-1]; // Compare userAnswer with the correct answer from the question object
 
         results.push({
-          question: question.id,
+          questionId: question.id,
           isCorrect: isCorrect,
         });
       }

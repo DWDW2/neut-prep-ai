@@ -1,14 +1,20 @@
 'use client'
-import Hero from "@/components/Hero";
-import Navbar from "@/components/Navbar";
-import Link from "next/link";
+import FeaturesSection from "@/components/landing/FeatureSection";
+import HeroSection from "@/components/landing/Herosection";
+import UniversitySection from "@/components/landing/UniversitySection";
+import Header from "@/components/Navbar";
+
 
 
 export default function Home() {
   return (
-    <div>
-    <Navbar />
-    <Hero />
-    </div>
+    <div className="min-h-screen bg-gray-50">
+    <Header />
+    <main>
+      <HeroSection />
+      <FeaturesSection />
+      <UniversitySection />
+    </main>
+  </div>
   );
 }

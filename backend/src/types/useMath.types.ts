@@ -1,7 +1,7 @@
 type mathTestType = {
     id: string;
     question: string;
-    question_type: string;
+    questionType: string;
     explanation: string;
     options: string[];
     correct_option: string;
@@ -10,7 +10,7 @@ type mathTestType = {
 
 type mathTestModelType = {
     test: mathTestType[];
-    answers: string[];
+    answers: object;
     createdAt: string;
     updatedAt: string;
 }

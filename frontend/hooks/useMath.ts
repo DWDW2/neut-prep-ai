@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { BASE_URL } from '@/constants';
-import { UseMathResponseType, UseMathUpdateResponseType, mathTestType } from '@/types/useMath.types';
+import { UseMathResponseType, useMathUpdateResponseType, mathTestType } from '@/types/useMath.types';
 import { useState } from 'react';
 
 const useMath = () => {
@@ -57,22 +57,25 @@ const useMath = () => {
     }
   }
 
-  const handleSubmitTest = async (id: string, userAnswers: any) => {
+  const handleSubmitTest = async (id: string, userAnswers: any): Promise<useMathUpdateResponseType> => {
     setIsLoading(true);
     setError(null);
 
     try {
       const response = await axios.put(`${BASE_URL}/math/${id}`, userAnswers);
-      if (response.status === 200) {
-        console.log('Test submitted successfully!');
-        return response.data;
+      if (typeof response.data === 'object' && !Array.isArray(response.data)) {
+        return response.data; 
+      } else if (Array.isArray(response.data)) {
+        return {results:[{questionId:'', isCorrect: false}]}; 
       } else {
         console.error('Error submitting test:', response.status);
         setError(response.data);
+        return {results:[{questionId:'', isCorrect: false}]}; 
       }
     } catch (error) {
       console.error('Error submitting test:', error);
       setError(error);
+      return {results:[{questionId:'', isCorrect: false}]};
     } finally {
       setIsLoading(false);
       setFinished(true);

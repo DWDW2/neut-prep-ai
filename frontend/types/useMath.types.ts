@@ -3,17 +3,23 @@ interface UseMathResponseType {
 }
 
 interface mathTestType {
-    id: string;
-    question: string;
-    question_type: string;
-    explanation: string;
-    options: string[];
-    correct_option: string;
-    svg_file: string | null;
+    _id: string;
+    test:[{
+        id: string;
+        question: string;
+        questionType: string;
+        explanation: string;
+        options: string[];
+        correct_option: string;
+        svg_file: string | null;
+    }],
+    answers: string[]
+    createdAt: string;
+    updatedAt: string;
 }
 
-interface UseMathUpdateResponseType {
-    result: [
+interface useMathUpdateResponseType {
+    results: [
         {
             questionId: string;
             isCorrect: boolean;
@@ -25,5 +31,5 @@ interface UseMathUpdateResponseType {
 export type {
     UseMathResponseType,
     mathTestType,
-    UseMathUpdateResponseType
+    useMathUpdateResponseType
 }
