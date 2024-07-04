@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import useMath from '@/hooks/useMath'
-import { mathTestType, useMathUpdateResponseType } from '@/types/useMath.types'
+import useCritical from '@/hooks/useCritical'
+import { criticalTestType } from '@/types/useCritical.types'
 type Props = {
     params: {
         id: string
@@ -14,22 +14,20 @@ interface Result {
 }
 
 export default function PageID({params}: Props) {
-    const { mathDataAll, mathUrl, getAllMathTests, isLoading, error, handleSubmitTest, finished} = useMath()
-    const [mathData, setMathData] = useState<mathTestType | undefined>(undefined);
+    const {criticalDataAll, isLoading, error, getAllCriticalTests, finished, setFinished, handleSubmitTest} = useCritical()
+    const [criticalData, setCriticalData] = useState<criticalTestType | undefined>(undefined);
     const [userAnswers, setUserAnswers] = useState<{ [questionId: string]: string }>({}); 
-    const [results, setResults] = useState<useMathUpdateResponseType>(); 
-
+    const [selectedCategory, setSelectedCategory] = useState('criticalThinking'); 
     console.log(userAnswers)
-
     useEffect(() => {
-        getAllMathTests()
+        getAllCriticalTests()
     }, [])
 
     useEffect(() => {
-        if (mathDataAll) {
-            setMathData(mathDataAll.find(item => item._id === params.id));
+        if (criticalDataAll) {
+            setCriticalData(criticalDataAll.find(item => item._id === params.id));
         }
-    }, [mathDataAll, params.id]);
+    }, [criticalDataAll, params.id, selectedCategory]);
 
     if(isLoading) {
         return <div>
@@ -48,24 +46,30 @@ export default function PageID({params}: Props) {
 
     const handleSubmitTestFront = async () => {
       try{
-        const response: useMathUpdateResponseType = await handleSubmitTest(params.id ,userAnswers)
-        setResults(response)
-        console.log(response)
+        const response = await handleSubmitTest(params.id ,userAnswers)
+        
       }catch(err){
         console.log(err)
       }
     };
     if(finished){
         return (
-            <div>
-              finished {results?.results[0].isCorrect ? "true" : "false"}
-            </div>
+            <>fiinished</>
         )
     }
     return (
         <div>
-            {mathData?.test.map((question, index) => (
+            <div>
+                <label htmlFor="category">Select Category:</label>
+                <select id="category" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+                    <option value="criticalThinking">Critical Thinking</option>
+                    <option value="math">Math</option>
+                </select>
+            </div>
+
+            {criticalData?.test.map((question, index) => (
                 <div key={index}>
+                    <p><strong>Statement:</strong><br/>{question.statement}</p>
                     <p><strong>Question {index + 1}:</strong> {question.question}</p>
                     <ul>
                         {question.options.map((option, optionIndex) => (

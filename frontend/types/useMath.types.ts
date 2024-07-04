@@ -18,8 +18,8 @@ interface mathTestType {
     updatedAt: string;
 }
 
-interface UseMathUpdateResponseType {
-    result: [
+interface useMathUpdateResponseType {
+    results: [
         {
             questionId: string;
             isCorrect: boolean;
@@ -31,5 +31,5 @@ interface UseMathUpdateResponseType {
 export type {
     UseMathResponseType,
     mathTestType,
-    UseMathUpdateResponseType
+    useMathUpdateResponseType
 }

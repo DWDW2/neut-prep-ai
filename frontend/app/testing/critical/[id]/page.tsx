@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import useCritical from '@/hooks/useCritical'
-import { criticalTestType } from '@/types/useCritical.types'
+import { criticalTestType, useCriticalUpdateResponseType } from '@/types/useCritical.types'
 type Props = {
     params: {
         id: string
@@ -17,7 +17,7 @@ export default function PageID({params}: Props) {
     const {criticalDataAll, isLoading, error, getAllCriticalTests, finished, setFinished, handleSubmitTest} = useCritical()
     const [criticalData, setCriticalData] = useState<criticalTestType | undefined>(undefined);
     const [userAnswers, setUserAnswers] = useState<{ [questionId: string]: string }>({}); 
-    const [results, setResults] = useState<Result[]>([]); 
+    const [results, setResults] = useState<useCriticalUpdateResponseType>({results: [{isCorrect: false, questionId: ''}]}); 
 
     console.log(userAnswers)
     useEffect(() => {
@@ -47,16 +47,18 @@ export default function PageID({params}: Props) {
 
     const handleSubmitTestFront = async () => {
       try{
-        const response: Result[] = await handleSubmitTest(params.id ,userAnswers)
+        const response: useCriticalUpdateResponseType = await handleSubmitTest(params.id ,userAnswers)
+        console.log('response called', response)
         setResults(response)
       }catch(err){
         console.log(err)
       }
     };
+
     if(finished){
         return (
             <div>
-                {results[0].isCorrect}
+                {results.results[0].isCorrect ? 'Correct' : 'Incorrect'}
             </div>
         )
     }

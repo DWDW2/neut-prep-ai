@@ -76,7 +76,7 @@ export default class MathController {
               const isCorrect = userAnswer === question.options[Number(question.correct_option)-1]; // Compare userAnswer with the correct answer from the question object
                 
               results.push({
-                question: question.id,
+                questionId: question.id,
                 isCorrect: isCorrect,
               });
             }
