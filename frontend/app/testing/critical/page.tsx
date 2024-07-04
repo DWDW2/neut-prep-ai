@@ -1,4 +1,5 @@
 'use client'
+import Loading from '@/components/Loading'
 import Test from '@/components/testing/Test'
 import useCritical from '@/hooks/useCritical'
 import React, {useEffect} from 'react'
@@ -20,9 +21,7 @@ export default function CriticalDetailed({}: Props) {
 
   if (isLoading) {
       return(
-        <div>
-          loading
-        </div>
+        <Loading />
       )
   }
   if (error) {
@@ -35,9 +34,6 @@ export default function CriticalDetailed({}: Props) {
         <div>NUET AI</div>
         <button className="shadow-[0_0_0_3px_#000000_inset] px-6 py-2 bg-transparent border border-black text-black rounded-lg font-bold transform hover:-translate-y-1 transition duration-400" onClick={handleFetch}>
           Generate test
-        </button>
-        <button className="shadow-[0_0_0_3px_#000000_inset] px-6 py-2 bg-transparent border border-black text-black rounded-lg font-bold transform hover:-translate-y-1 transition duration-400" onClick={handleFetch}>
-          Practice specific questions
         </button>
 
       </div>

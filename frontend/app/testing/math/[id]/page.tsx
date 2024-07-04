@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react'
 import useMath from '@/hooks/useMath'
 import { mathTestType, useMathUpdateResponseType } from '@/types/useMath.types'
+import Loading from '@/components/Loading'
+import MathRenderer from '@/components/MathRender'
 type Props = {
     params: {
         id: string
@@ -32,9 +34,7 @@ export default function PageID({params}: Props) {
     }, [mathDataAll, params.id]);
 
     if(isLoading) {
-        return <div>
-            Loading
-        </div>
+        return <Loading />
     }
     if(error) {
         return <div>
@@ -66,7 +66,7 @@ export default function PageID({params}: Props) {
         <div>
             {mathData?.test.map((question, index) => (
                 <div key={index}>
-                    <p><strong>Question {index + 1}:</strong> {question.question}</p>
+                    <p><strong>Question {index + 1}:</strong> {<MathRenderer expression={question.question?.replace(/\\/g, '')} />}</p>
                     <ul>
                         {question.options.map((option, optionIndex) => (
                             <li key={optionIndex}>
@@ -77,7 +77,7 @@ export default function PageID({params}: Props) {
                                     checked={userAnswers[question.id] === option}
                                     onChange={() => handleAnswerChange(question.id, option)}
                                 />
-                                {option}
+                                <MathRenderer expression={option?.replace(/\\/g, '')} />
                             </li>
                         ))}
                     </ul>

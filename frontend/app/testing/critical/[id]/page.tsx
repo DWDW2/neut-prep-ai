@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import useCritical from '@/hooks/useCritical'
 import { criticalTestType, useCriticalUpdateResponseType } from '@/types/useCritical.types'
+import Loading from '@/components/Loading'
 type Props = {
     params: {
         id: string
@@ -31,9 +32,7 @@ export default function PageID({params}: Props) {
     }, [criticalDataAll, params.id]);
 
     if(isLoading) {
-        return <div>
-            Loading
-        </div>
+        return <Loading />
     }
     if(error) {
         return <div>
