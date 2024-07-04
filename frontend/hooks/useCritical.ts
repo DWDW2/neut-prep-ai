@@ -2,6 +2,7 @@ import axios from 'axios';
 import { BASE_URL } from '@/constants';
 import { useCriticalResponseType, criticalTestType, useCriticalUpdateResponseType } from '@/types/useCritical.types';
 import { useState } from 'react';
+import { UseMathUpdateResponseType } from '@/types/useMath.types';
 
 const useCritical = () => {
   const [criticalUrl, setCriticalUrl] = useState<useCriticalResponseType>({id: ''});
@@ -32,7 +33,7 @@ const useCritical = () => {
 
     try {
       const response = await axios.get(`${BASE_URL}/critical/${id}`);
-      setCriticalData(response.data);
+      return response.data
     } catch (error) {
       console.error('Error fetching critical data:', error);
       setError(error);
@@ -65,7 +66,8 @@ const useCritical = () => {
       const response = await axios.put(`${BASE_URL}/critical/${id}`, userAnswers);
       if (response.status === 200) {
         console.log('Test submitted successfully!');
-        return response.data;
+        console.log(response.data)
+        return response.data
       } else {
         console.error('Error submitting test:', response.status);
         setError(response.data);

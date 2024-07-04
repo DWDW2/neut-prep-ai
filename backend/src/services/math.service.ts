@@ -9,7 +9,7 @@ export default class MathService {
     const errorType = {
         id: '',
         question: '',
-        question_type: '',
+        questionType: '',
         explanation: '',
         options: '',
         correct_option: '',
@@ -47,7 +47,7 @@ export default class MathService {
       return {
         id: '',
         question: '',
-        question_type: '',
+        questionType: '',
         explanation: '',
         options: [],
         correct_option: '',
@@ -112,10 +112,10 @@ export default class MathService {
     }
   }
 
-  // Update math data by ID
+  
   async updateMathData(
     id: string,
-    data: mathTestType[]
+    data: object
   ): Promise<mathTestModelType | null> {
     try {
       const updatedMathData = await MathModel.findByIdAndUpdate(

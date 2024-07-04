@@ -1,8 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import useMath from '@/hooks/useMath'
-import { criticalTestType } from '@/types/useCritical.types'
-import ResultsComponent from '@/components/testing/Result'
 import { mathTestType } from '@/types/useMath.types'
 type Props = {
     params: {
@@ -16,10 +14,11 @@ interface Result {
 }
 
 export default function PageID({params}: Props) {
-    const {mathData, mathDataAll, mathUrl, getAllMathTests, isLoading, error, handleSubmitTest, finished} = useMath()
-    const [criticalData, setCriticalData] = useState<mathTestType | undefined>(undefined);
+    const { mathDataAll, mathUrl, getAllMathTests, isLoading, error, handleSubmitTest, finished} = useMath()
+    const [mathData, setMathData] = useState<mathTestType | undefined>(undefined);
     const [userAnswers, setUserAnswers] = useState<{ [questionId: string]: string }>({}); 
-    const [selectedCategory, setSelectedCategory] = useState('criticalThinking'); 
+    const [results, setResults] = useState<Result[]>([]); 
+
     console.log(userAnswers)
 
     useEffect(() => {
@@ -28,9 +27,9 @@ export default function PageID({params}: Props) {
 
     useEffect(() => {
         if (mathDataAll) {
-            setCriticalData(mathDataAll.find(item => item._id === params.id));
+            setMathData(mathDataAll.find(item => item._id === params.id));
         }
-    }, [mathDataAll, params.id, selectedCategory]);
+    }, [mathDataAll, params.id]);
 
     if(isLoading) {
         return <div>
@@ -50,29 +49,23 @@ export default function PageID({params}: Props) {
     const handleSubmitTestFront = async () => {
       try{
         const response = await handleSubmitTest(params.id ,userAnswers)
-        const data = response.data
+        setResults(response)
+        console.log(response)
       }catch(err){
         console.log(err)
       }
     };
     if(finished){
         return (
-            <ResultsComponent criticalData={criticalData} userAnswers={userAnswers} />
+            <div>
+              finished {results[0].id}
+            </div>
         )
     }
     return (
         <div>
-            <div>
-                <label htmlFor="category">Select Category:</label>
-                <select id="category" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
-                    <option value="criticalThinking">Critical Thinking</option>
-                    <option value="math">Math</option>
-                </select>
-            </div>
-
-            {criticalData?.test.map((question, index) => (
+            {mathData?.test.map((question, index) => (
                 <div key={index}>
-                    <p><strong>Statement:</strong><br/>{question.statement}</p>
                     <p><strong>Question {index + 1}:</strong> {question.question}</p>
                     <ul>
                         {question.options.map((option, optionIndex) => (

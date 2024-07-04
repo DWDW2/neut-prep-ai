@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react'
 import useCritical from '@/hooks/useCritical'
 import { criticalTestType } from '@/types/useCritical.types'
-import ResultsComponent from '@/components/testing/Result'
 type Props = {
     params: {
         id: string
@@ -18,7 +17,8 @@ export default function PageID({params}: Props) {
     const {criticalDataAll, isLoading, error, getAllCriticalTests, finished, setFinished, handleSubmitTest} = useCritical()
     const [criticalData, setCriticalData] = useState<criticalTestType | undefined>(undefined);
     const [userAnswers, setUserAnswers] = useState<{ [questionId: string]: string }>({}); 
-    const [selectedCategory, setSelectedCategory] = useState('criticalThinking'); 
+    const [results, setResults] = useState<Result[]>([]); 
+
     console.log(userAnswers)
     useEffect(() => {
         getAllCriticalTests()
@@ -28,7 +28,7 @@ export default function PageID({params}: Props) {
         if (criticalDataAll) {
             setCriticalData(criticalDataAll.find(item => item._id === params.id));
         }
-    }, [criticalDataAll, params.id, selectedCategory]);
+    }, [criticalDataAll, params.id]);
 
     if(isLoading) {
         return <div>
@@ -47,27 +47,21 @@ export default function PageID({params}: Props) {
 
     const handleSubmitTestFront = async () => {
       try{
-        const response = await handleSubmitTest(params.id ,userAnswers)
-        const data = response.data
+        const response: Result[] = await handleSubmitTest(params.id ,userAnswers)
+        setResults(response)
       }catch(err){
         console.log(err)
       }
     };
     if(finished){
         return (
-            <ResultsComponent criticalData={criticalData} userAnswers={userAnswers} />
+            <div>
+                {results[0].isCorrect}
+            </div>
         )
     }
     return (
         <div>
-            <div>
-                <label htmlFor="category">Select Category:</label>
-                <select id="category" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
-                    <option value="criticalThinking">Critical Thinking</option>
-                    <option value="math">Math</option>
-                </select>
-            </div>
-
             {criticalData?.test.map((question, index) => (
                 <div key={index}>
                     <p><strong>Statement:</strong><br/>{question.statement}</p>

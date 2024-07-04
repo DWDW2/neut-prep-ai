@@ -2,7 +2,6 @@
 import React, {useEffect} from 'react'
 import useMath from '@/hooks/useMath'
 import Test from '@/components/testing/Test'
-import TestMath from '@/components/testing/TestMath'
 
 type Props = {}
 
@@ -51,7 +50,7 @@ return (
     </div>
     <div className='w-[80%] h-screen p-2 flex flex-col space-y-3'>
       {mathDataAll?.map((test, index) => (
-        <TestMath id={test._id} key={index} />
+        <Test id={test._id} key={index} path='math/'/>
       ))
       }
     </div>
