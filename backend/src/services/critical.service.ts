@@ -14,7 +14,7 @@ export default class CriticalService {
         answer: "",
         explanation: "",
         table: null,
-        question_type: ""
+        questionType: ""
     }
     const results: criticalTestType[] = [];
     let i = 0
@@ -50,7 +50,7 @@ export default class CriticalService {
                 answer: "",
                 explanation: "",
                 table: null,
-                question_type: ""
+                questionType: ""
             }
         }
     }
