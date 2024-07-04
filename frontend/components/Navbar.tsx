@@ -1,43 +1,23 @@
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuViewport,
-} from "@/components/ui/navigation-menu"
+import React from 'react'
 
-const Navbar = () => {
+type Props = {}
+
+export default function Navbar({}: Props) {
   return (
-<NavigationMenu>
-  <NavigationMenuList>
-    <NavigationMenuItem>
-      <NavigationMenuTrigger>Product</NavigationMenuTrigger>
-      <NavigationMenuContent>
-        <div className="flex flex-col pt-5 pl-5">
-          <NavigationMenuLink>Link</NavigationMenuLink>
-          <NavigationMenuLink>Link</NavigationMenuLink>
-          <NavigationMenuLink>Link</NavigationMenuLink>
+    <div className='flex flex-row justify-between p-5'>
+        <div className='flex flex-row space-x-10'>
+            <div> 
+                NUET AI
+            </div>
+            <ul className='flex flex-row space-x-5'>
+                <li>Home</li>
+                <li>About</li>
+                <li>Contact</li>
+            </ul>
         </div>
-      </NavigationMenuContent>
-    </NavigationMenuItem>
-    <NavigationMenuItem>
-      <NavigationMenuTrigger>About</NavigationMenuTrigger>
-      <NavigationMenuContent>
-        <NavigationMenuLink>Link</NavigationMenuLink>
-      </NavigationMenuContent>
-    </NavigationMenuItem>
-    <NavigationMenuItem>
-      <NavigationMenuTrigger>Pricing</NavigationMenuTrigger>
-      <NavigationMenuContent>
-        <NavigationMenuLink>Link</NavigationMenuLink>
-      </NavigationMenuContent>
-    </NavigationMenuItem>
-  </NavigationMenuList>
-</NavigationMenu>
-)
+        <div> 
+            Login
+        </div>
+    </div>
+  )
 }
-
-export default Navbar

@@ -9,7 +9,7 @@ const mathTestSchema: Schema = new Schema({
         question: { type: String, required: true },
         questionType: { type: String, required: true },
         explanation: { type: String, required: true },
-        options: { type: Object, required: true },
+        options: { type: Array, required: true },
         correct_option: { type: String, required: true },
         svg_file: { type: String, default: null }
     }],

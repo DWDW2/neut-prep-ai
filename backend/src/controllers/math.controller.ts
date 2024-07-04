@@ -13,15 +13,14 @@ export default class MathController {
     async getMath(req: Request, res: Response) {
         try {
             const result = await this.mathService.getMathData()
-            res.json(result)
-            // const test = await this.mathService.saveMathDataToDB(result)
-            // if (test) {
-            //     res.json({id: test._id});
-            //     return {id: test._id}
-            // } else {
-            //     res.status(500).send('Error saving math data to database');
-            //     return null;
-            // }
+            const test = await this.mathService.saveMathDataToDB(result)
+            if (test) {
+                res.json({id: test._id});
+                return {id: test._id}
+            } else {
+                res.status(500).send('Error saving math data to database');
+                return null;
+            }
         } catch (error) {
             res.status(500).send(error);
         }
