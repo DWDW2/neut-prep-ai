@@ -7,7 +7,7 @@ interface mathTestType {
     test:[{
         id: string;
         question: string;
-        question_type: string;
+        questionType: string;
         explanation: string;
         options: string[];
         correct_option: string;

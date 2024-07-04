@@ -12,7 +12,7 @@ interface criticalTestType {
         answer: string;
         explanation: string;
         table: string | null;
-        question_type: string; // change to camelCase for consistency
+        questionType: string; // change to camelCase for consistency
     }],
     answers: string[];
     createdAt: string;
