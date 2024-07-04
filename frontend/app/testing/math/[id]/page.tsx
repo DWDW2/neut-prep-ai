@@ -4,7 +4,7 @@ import useMath from '@/hooks/useMath';
 import { mathTestType, useMathUpdateResponseType } from '@/types/useMath.types';
 import Loading from '@/components/Loading';
 import MathRenderer from '@/components/MathRender';
-
+import { useRouter } from 'next/navigation';
 type Props = {
     params: {
         id: string
@@ -21,7 +21,8 @@ export default function PageID({ params }: Props) {
     const [mathData, setMathData] = useState<mathTestType | undefined>(undefined);
     const [userAnswers, setUserAnswers] = useState<{ [questionId: string]: string }>({});
     const [results, setResults] = useState<useMathUpdateResponseType>();
-    const [timer, setTimer] = useState<number>(60 * 60); // 60 minutes timer
+    const [timer, setTimer] = useState<number>(60 * 60); 
+    const router = useRouter();
 
     useEffect(() => {
         getAllMathTests();
@@ -71,11 +72,7 @@ export default function PageID({ params }: Props) {
     }
 
     if (finished) {
-        return (
-            <div>
-                finished {results?.results[0].isCorrect ? "true" : "false"}
-            </div>
-        );
+        router.push(`/testing/math`);
     }
 
     return (

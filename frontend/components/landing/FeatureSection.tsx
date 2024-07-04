@@ -1,5 +1,6 @@
 import { ArrowRight, Book, PenTool, BarChart2 } from 'lucide-react';
 import React from 'react';
+
 interface Popa {
   icon: React.ComponentType;
   title: string;
@@ -9,7 +10,7 @@ interface Popa {
 const FeatureCard = ({ icon: Icon, title, description }: Popa) => (
     <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300">
       <div className="w-12 h-12 bg-[#DCAF52] rounded-full flex items-center justify-center mb-4">
-        <Icon className="text-white" size={24} />
+        <Icon />
       </div>
       <h3 className="text-xl font-semibold mb-2 text-black">{title}</h3>
       <p className="text-gray-600">{description}</p>
