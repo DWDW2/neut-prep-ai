@@ -2,14 +2,20 @@
 import React, { useState, useEffect } from 'react'
 import useCritical from '@/hooks/useCritical'
 import { criticalTestType } from '@/types/useCritical.types'
+import ResultsComponent from '@/components/testing/Result'
 type Props = {
     params: {
         id: string
     }
 }
 
+interface Result {
+    id: string;
+    isCorrect: boolean; 
+}
+
 export default function PageID({params}: Props) {
-    const {criticalDataAll, isLoading, error, getAllCriticalTests} = useCritical()
+    const {criticalDataAll, isLoading, error, getAllCriticalTests, finished, setFinished, handleSubmitTest} = useCritical()
     const [criticalData, setCriticalData] = useState<criticalTestType | undefined>(undefined);
     const [userAnswers, setUserAnswers] = useState<{ [questionId: string]: string }>({}); 
     const [selectedCategory, setSelectedCategory] = useState('criticalThinking'); 
@@ -39,27 +45,19 @@ export default function PageID({params}: Props) {
         setUserAnswers({ ...userAnswers, [questionId]: answer });
     };
 
-    const handleSubmitTest = async () => {
-       try {
-            const response = await fetch(`http://localhost:5000/critical/${params.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userAnswers),
-            });
-
-            if (response.ok) {
-                console.log('Test submitted successfully!');
-                setUserAnswers({});
-            } else {
-                console.error('Error submitting test:', response.status);
-            }
-        } catch (error) {
-            console.error('Error submitting test:', error);
-        }
+    const handleSubmitTestFront = async () => {
+      try{
+        const response = await handleSubmitTest(params.id ,userAnswers)
+        const data = response.data
+      }catch(err){
+        console.log(err)
+      }
     };
-
+    if(finished){
+        return (
+            <ResultsComponent criticalData={criticalData} userAnswers={userAnswers} />
+        )
+    }
     return (
         <div>
             <div>
@@ -90,7 +88,7 @@ export default function PageID({params}: Props) {
                     </ul>
                 </div>
             ))}
-            <button onClick={handleSubmitTest}>Submit Test</button>
+            <button onClick={handleSubmitTestFront}>Submit Test</button>
         </div>
     );
 }

@@ -19,4 +19,13 @@ interface criticalTestType {
     updatedAt: string;
 }
 
-export type { useCriticalResponseType, criticalTestType };
+interface useCriticalUpdateResponseType{
+    results: [
+        {
+            questionId: string;
+            isCorrect: boolean;
+        }
+    ]
+}
+
+export type { useCriticalResponseType, criticalTestType, useCriticalUpdateResponseType };

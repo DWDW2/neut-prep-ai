@@ -1,3 +1,5 @@
+import { Document } from "mongoose";
+import { mathTestModelType } from "./useMath.types";
 type criticalTestType = {
     id: string;
     question: string;
@@ -10,7 +12,7 @@ type criticalTestType = {
 }
 
 type criticalTestModelType = {
-    test:{
+    test:[{
         id: string;
         question: string;
         statement: string;
@@ -19,7 +21,7 @@ type criticalTestModelType = {
         explanation: string;
         table: string | null;
         question_type: string; // change to camelCase for consistency
-    },
+    }],
     answers: object,
     createdAt: string;
     updatedAt: string;

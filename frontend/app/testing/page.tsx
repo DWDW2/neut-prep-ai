@@ -3,65 +3,45 @@ import React, { useEffect, useState } from 'react'
 import useCritical from '@/hooks/useCritical'
 import { useCriticalResponseType } from '@/types/useCritical.types'
 import Test from '@/components/testing/Test'
-import { Skeleton } from '@/components/ui/skeleton'
+import Link from 'next/link'
+import useMath from '@/hooks/useMath'
+
 type Props = {}
 
 export default function Testing({}: Props) {
-    const {isLoading, fetchCriticalData, error, criticalData, criticalUrl, getAllCriticalTests, criticalDataAll} = useCritical()
+    
+ return (
+  <>
+    <aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
+      <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+          <Link href="" className="flex items-center ps-2.5 mb-5">
+            <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">NUET AI</span>
+          </Link>
+          <ul className="space-y-2 font-medium">
+            <li>
+                <Link href={'/testing/critical'} className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
 
-    const handleAnswer = () => {
-        return (answer: string) => {
-            console.log(answer)
-        }
-    }
-
-    const handleFetch = async () => {
-        await fetchCriticalData()
-        getAllCriticalTests()
-    }
-
-    useEffect(() => {
-        getAllCriticalTests()
-    }, []) 
-
-
-    if (isLoading) {
-        return(
-          <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
-            <div className="flex flex-col space-y-3">
-                <Skeleton className="h-[925px] w-[1440px] rounded-xl" />
-                <div className="space-y-2">
-                    <Skeleton className="h-10 w-[1440px]" />
-                    <Skeleton className="h-10 w-[1040px]" />
-                </div>
-            </div>
-        </div>
-        )
-    }
-    if (error) {
-        return <div>Error: ere</div>
-    }
-    console.log(criticalData, criticalUrl, criticalDataAll)
-  return (
-    <main className='flex flex-row '>
-      <div className='w-[20%] h-screen p-2 flex flex-col space-y-3'>
-        <button className="shadow-[0_0_0_3px_#000000_inset] px-6 py-2 bg-transparent border border-black text-black rounded-lg font-bold transform hover:-translate-y-1 transition duration-400" onClick={handleFetch}>
-          Generate test
-        </button>
-        <button className="shadow-[0_0_0_3px_#000000_inset] px-6 py-2 bg-transparent border border-black text-black rounded-lg font-bold transform hover:-translate-y-1 transition duration-400" onClick={handleFetch}>
-          Previous tests
-        </button>
-        <button className="shadow-[0_0_0_3px_#000000_inset] px-6 py-2 bg-transparent border border-black text-black rounded-lg font-bold transform hover:-translate-y-1 transition duration-400" onClick={handleFetch}>
-          Practice specific questions
-        </button>
-
+                  <span className="ms-3">Critical thinking</span>
+                </Link>
+            </li>
+            <li>
+                <Link href={'/testing/math'}  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                  <span className="flex-1 ms-3 whitespace-nowrap">Math</span>
+                </Link>
+            </li>
+            <li>
+                <Link href={'/testing/specific'}  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                  <span className="flex-1 ms-3 whitespace-nowrap">Practice specific questions</span>
+                </Link>
+            </li>
+            
+          </ul>
       </div>
-      <div className='w-[80%] h-screen p-2 flex flex-col space-y-3'>
-        {criticalDataAll?.map((test, index) => (
-          <Test id={test._id} key={index} />
-        ))
-        }
-      </div>
-    </main>
+    </aside>
+
+    <div className="p-4 sm:ml-64">
+      {/* there will be dashboard about user's progress and roadmap */}
+    </div>
+  </>
   )
 }

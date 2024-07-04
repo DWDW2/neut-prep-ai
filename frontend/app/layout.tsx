@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Rubik } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/ui/next-themes";
 
-
-const inter = Inter({ subsets: ["latin"] });
+const rubik = Rubik({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
+}); 
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,13 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <ThemeProvider
-        attribute="class"
-        disableTransitionOnChange
-        >
+      <body className={rubik.className}>
           {children}
-        </ThemeProvider>
         </body>
     </html>
   );

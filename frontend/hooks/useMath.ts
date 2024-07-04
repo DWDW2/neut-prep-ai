@@ -1,25 +1,26 @@
 import axios from 'axios';
 import { BASE_URL } from '@/constants';
-import { useCriticalResponseType, criticalTestType, useCriticalUpdateResponseType } from '@/types/useCritical.types';
+import { UseMathResponseType, UseMathUpdateResponseType, mathTestType } from '@/types/useMath.types';
 import { useState } from 'react';
 
-const useCritical = () => {
-  const [criticalUrl, setCriticalUrl] = useState<useCriticalResponseType>({id: ''});
-  const [criticalData, setCriticalData] = useState<criticalTestType | null>(null);
-  const [criticalDataAll, setCriticalDataAll] = useState<criticalTestType[] | null>(null);
+const useMath = () => {
+  const [mathUrl, setMathUrl] = useState<UseMathResponseType>({id: ''});
+  const [mathData, setMathData] = useState<mathTestType | null>(null);
+  const [mathDataAll, setMathDataAll] = useState<mathTestType[] | null>(null);
   const [finished , setFinished] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<any>(null);
-  const fetchCriticalData = async () => {
+
+  const fetchMathData = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await axios.get(`${BASE_URL}/critical`);
-      const data:useCriticalResponseType = response.data
-      setCriticalUrl(data);
+      const response = await axios.get(`${BASE_URL}/math`);
+      const data:UseMathResponseType = response.data
+      setMathUrl(data);
     } catch (error) {
-      console.error('Error fetching critical data:', error);
+      console.error('Error fetching math data:', error);
       setError(error);
     } finally {
       setIsLoading(false);
@@ -31,26 +32,25 @@ const useCritical = () => {
     setError(null);
 
     try {
-      const response = await axios.get(`${BASE_URL}/critical/${id}`);
-      setCriticalData(response.data);
+      const response = await axios.get(`${BASE_URL}/math/${id}`);
+      setMathData(response.data);
     } catch (error) {
-      console.error('Error fetching critical data:', error);
+      console.error('Error fetching math data:', error);
       setError(error);
     } finally {
       setIsLoading(false);
-      
     }
   }
 
-  const getAllCriticalTests = async () => {
+  const getAllMathTests = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await axios.get(`${BASE_URL}/critical/all`);
-      setCriticalDataAll(response.data);
+      const response = await axios.get(`${BASE_URL}/math/all`);
+      setMathDataAll(response.data);
     } catch (error) {
-      console.error('Error fetching critical data:', error);
+      console.error('Error fetching math data:', error);
       setError(error);
     } finally {
       setIsLoading(false);
@@ -62,7 +62,7 @@ const useCritical = () => {
     setError(null);
 
     try {
-      const response = await axios.put(`${BASE_URL}/critical/${id}`, userAnswers);
+      const response = await axios.put(`${BASE_URL}/math/${id}`, userAnswers);
       if (response.status === 200) {
         console.log('Test submitted successfully!');
         return response.data;
@@ -80,18 +80,18 @@ const useCritical = () => {
   };
   
   return {
-    criticalData,
+    mathData,
     isLoading,
     error,
-    fetchCriticalData,
+    fetchMathData,
     fetchById,
-    criticalUrl,
-    getAllCriticalTests,
-    criticalDataAll,
+    mathUrl,
+    getAllMathTests,
+    mathDataAll,
     handleSubmitTest,
     finished,
     setFinished
   };
 };
 
-export default useCritical;
+export default useMath;
