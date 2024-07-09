@@ -2,7 +2,7 @@ import React from 'react';
 
 const DSATScoreCard = () => {
   return (
-    <div className="bg-purple-100 p-6 rounded-3xl max-w-sm mx-auto">
+    <div className="bg-purple-100 p-6 rounded-3x w-[400px]">
       <div className="bg-white rounded-2xl p-4 mb-4 relative">
         <div className="absolute top-3 right-3 bg-green-300 text-xs px-2 py-1 rounded-full">
           Valid

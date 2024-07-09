@@ -1,13 +1,12 @@
 import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import 'chart.js/auto';
-import './Dashboard.css';
 
 type Props = {
-    points: number,
-    skills: Array<{ name: string, points: number }>,
-    bestSkills: Array<{ name: string, points: number }>,
-    continueCourse: () => void,
+  points: number,
+  skills: Array<{ name: string, points: number }>,
+  bestSkills: Array<{ name: string, points: number }>,
+  continueCourse: () => void,
 }
 
 const Dashboard = ({ points, skills, bestSkills, continueCourse } : Props) => {
@@ -44,19 +43,22 @@ const Dashboard = ({ points, skills, bestSkills, continueCourse } : Props) => {
   };
 
   return (
-    <div className="dashboard-container">
-      <div className="chart-container">
+    <div className="w-full h-full flex flex-col items-center bg-white border-2 border-gray-200 rounded-lg p-6 shadow-lg">
+      <div className="w-full h-2/3">
         <Doughnut data={data} options={options} />
       </div>
-      <div className="info-container">
-        <h2>Points Received in Last Test: {points}</h2>
-        <h3>Best Skills:</h3>
-        <ul>
+      <div className="w-full h-1/3 mt-4 flex flex-col items-center">
+        <h2 className="text-xl font-bold mb-2">Points Received in Last Test: {points}</h2>
+        <h3 className="text-lg font-semibold mb-1">Best Skills:</h3>
+        <ul className="list-disc list-inside mb-4">
           {bestSkills.map(skill => (
-            <li key={skill.name}>{skill.name} - {skill.points} points</li>
+            <li key={skill.name} className="text-base">{skill.name} - {skill.points} points</li>
           ))}
         </ul>
-        <button className="continue-button" onClick={continueCourse}>
+        <button
+          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
+          onClick={continueCourse}
+        >
           Continue Course
         </button>
       </div>
