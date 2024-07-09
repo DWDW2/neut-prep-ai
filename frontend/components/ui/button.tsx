@@ -24,8 +24,8 @@ const buttonVariants = cva(
           "bg-slate-500 text-primary-foreground hover:bg-slate-500/90 border-slate-600 border-b-4 active:border-b-0",
         superOutline: "bg-white text-slate-500 hover:bg-slate-100",
         sidebar:
-        "bg-sky-200 text-sky-500 hover:bg-sky-200/90 border-sky-500 border-2",
-        sidebarOutline: "bg-white text-slate-500 hover:bg-slate-100"
+        "bg-sky-200 text-sky-500 hover:bg-sky-200/90 border-sky-500 border-2 border-b-4 active:border-b-2",
+        sidebarOutline: "bg-sky-400 text-white hover:bg-sky-200/90 border-sky-700 border-2 border-b-4 active:border-b-2"
       },
       size: {
         default: "h-10 px-4 py-2",

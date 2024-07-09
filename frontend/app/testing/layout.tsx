@@ -8,7 +8,7 @@ type Props = {
 
 export default function layout({children}: Props) {
   return (
-    <main className='flex flex-row'>
+    <>
         <MobileHeader />
         <SideBar className='hidden lg:flex'/>
         <div className='lg:pl-[256px] h-full pt-[50px] lg:pt-[0px]'>
@@ -16,6 +16,6 @@ export default function layout({children}: Props) {
                 {children}
             </div>
         </div>
-    </main>
+    </>
   )
 }

@@ -10,7 +10,7 @@ export default function MobileSideBar({}: Props) {
         <SheetTrigger>
             <Menu className='text-white'/>
         </SheetTrigger>
-        <SheetContent className='p-0 z-[100]' side={'left'}>
+        <SheetContent className='p-0 z-[100] w-fit' side={'left'}>
             <SideBar/>
         </SheetContent>
     </Sheet>

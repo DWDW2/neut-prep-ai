@@ -1,17 +1,27 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
+import Link from 'next/link'
+import SideBarItem from './SideBarItem'
 type Props = {
     className?: string
 }
 
 export default function SideBar({className}: Props) {
   return (
-    <section className={cn('w-[256px] h-full bg-slate-500 lg:fixed left-0 top-0 border-r-2 flex-col', className)}>
-        <div className='flex flex-row items-center justify-between w-[14%]'>
-            <div className='h-fit w-fit'><Image src={'/drago.svg'} width={36} height={36} alt={'logo'}/></div>
-            <div className="text-2xl  text-black font-extrabold">NUET AI</div>
-        </div>
+    <section className={cn('w-[256px] h-full bg-white lg:fixed left-0 top-0 border-r-2 flex-col', className)}>
+        <Link href={'/'}>
+            <div className='flex flex-row items-center p-10'>
+                <div className='h-fit w-fit'><Image src={'/drago.svg'} width={36} height={36} alt={'logo'}/></div>
+                <div className="text-2xl text-black font-extrabold ml-4">NUET AI</div>
+            </div>
+        </Link>
+        <main className='flex flex-col items-center justify-center gap-4'>
+            <SideBarItem href='/testing/critical' text='Critical thinking tests' imageAlt='image' imageSrc='/testing/pizza-slice.svg'/>
+            <SideBarItem href='/testing/math' text='Math tests' imageAlt='image' imageSrc='/testing/calculator.svg'/>
+            <SideBarItem href='/testing/specific' text='Practice questions' imageAlt='image' imageSrc='/testing/archery-focus-goal-svgrepo-com.svg'/>
+            <SideBarItem href='/leaderboard' text='Leaderboard' imageAlt='image' imageSrc='/testing/crown-svgrepo-com.svg'/>
+        </main>
     </section>
   )
 }
