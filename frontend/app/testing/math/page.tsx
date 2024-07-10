@@ -1,94 +1,31 @@
 'use client'
-import Loading from '@/components/Loading'
-import Test from '@/components/testing/Test'
-import useMath from '@/hooks/useMath'
-import React, {useEffect} from 'react'
-import { RiAiGenerate } from "react-icons/ri";
-import { FaRoad } from "react-icons/fa";
-import { MdOutlineWork } from "react-icons/md";
-import Link from 'next/link'
+
+import FeedWrapper from "@/components/testing/Feed-sidebar"
+import StickySideBar from "../../../components/testing/Sticky-sidebar"
+import UserSideBar from "@/components/testing/XPgained"
+import UserProgress from "@/components/testing/UserProgress"
+import UnitButton from "@/components/testing/UnitButton"
+import Unit from "@/components/testing/Unit"
+import UnitSection from "@/components/testing/UnitSection"
 
 type Props = {}
 
-export default function MathDetailed({}: Props) {
-  const {isLoading, fetchMathData, error, mathData, mathUrl, getAllMathTests, mathDataAll} = useMath()
-
-  const handleFetch = async () => {
-      await fetchMathData()
-      getAllMathTests()
-  }
-
-  useEffect(() => {
-      getAllMathTests()
-  }, []) 
-
-
-  if (isLoading) {
-      return(
-        <Loading />
-      )
-  }
-  if (error) {
-      return <div>Error: ere</div>
-  }
-  console.log(mathData, mathUrl, mathDataAll)
+export default function CriticalDetailed({}: Props) {
+  
   return (
-    <main className='flex flex-row'>
-      <div className='w-[30%] h-fit p-2 flex flex-col space-y-3 bg-slate-400'>
-        <div className='font-bold text-white text-2xl ml-2'>Math</div>
-        <div className='block max-w-sm p-6 bg-gray-800 border border-gray-100 rounded-lg shadow hover:bg-gray-600 '>
-          <div className='flex flex-row items-center justify-between space-x-5 mb-10'>
-            <RiAiGenerate color='white' size={60}/>
-              <div>
-                <h1 className='text-xl font-bold text-white'>Generate test</h1>
-                <h3 className='text-sm text-gray-400'>Create unlimited nuet practice questions</h3>
-              </div>
-          </div>
-          <div>
-              <button className='px-6 py-4 bg-white rounded-lg' onClick={handleFetch}>
-                Create
-              </button>
-          </div>
-        </div>
-        <div className='block max-w-sm p-6 bg-gray-800 border border-gray-100 rounded-lg shadow hover:bg-gray-600 '>
-          <div className='flex flex-row items-center justify-between space-x-5 mb-10'>
-          <FaRoad size={60} color='white'/>
-              <div>
-                <h1 className='text-xl font-bold text-white'>Roadmap</h1>
-                <h3 className='text-sm text-gray-400'>Follow instructions from AI to achieve your goals</h3>
-              </div>
-          </div>
-          <div>
-          <Link href={'/testing/specific'}>
-              <button className='px-6 py-4 bg-white rounded-lg'>
-                View
-              </button>
-            </Link>
-          </div>
-        </div>
-        <div className='block max-w-sm p-6 bg-gray-800 border border-gray-100 rounded-lg shadow hover:bg-gray-600 '>
-          <div className='flex flex-row items-center justify-between space-x-5 mb-10'>
-              <MdOutlineWork size={60} color='white'/>
-              <div>
-                <h1 className='text-xl font-bold text-white'>Practice</h1>
-                <h3 className='text-sm text-gray-400'>Practice specific question types to enhance your knowledge</h3>
-              </div>
-          </div>
-          <div>
-            <Link href={'/testing/specific'}>
-              <button className='px-6 py-4 bg-white rounded-lg'>
-                Practice
-              </button>
-            </Link>
-          </div>
-        </div>
-      </div>
-      <div className='w-[80%] h-screen p-2 flex flex-col space-y-3'>
-        {mathDataAll?.map((test, index) => (
-          <Test id={test._id} key={index} path='math/' />
-        ))
-        }
-      </div>
-    </main>
+    <div className="flex flex-row-reverse gap-[48px] px-6">
+      <StickySideBar>
+        <UserSideBar title="Daily quest" dailyGoal={100} xp={10}/>
+        <section className="flex flex-col gap-y-4 p-4">
+          <UserProgress dailyGoal={100} xp={20}/>
+        </section>
+      </StickySideBar>
+      <FeedWrapper>
+        <section className="pt-6 gap-y-4 flex flex-col">
+          <UnitSection UnitName="Getting strted with nuet" Unit="1 section, 1 unit"/>
+          <Unit />
+        </section>
+      </FeedWrapper>
+    </div>
   )
 }

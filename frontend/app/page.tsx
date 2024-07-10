@@ -1,9 +1,9 @@
 'use client'
+import AboutPage from "@/components/landing/About";
 import FeaturesSection from "@/components/landing/FeatureSection";
 import HeroSection from "@/components/landing/Herosection";
-import UniversitySection from "@/components/landing/UniversitySection";
 import Header from "@/components/Navbar";
-
+import Footer from "@/components/landing/Footer";
 
 
 export default function Home() {
@@ -13,7 +13,8 @@ export default function Home() {
     <main>
       <HeroSection />
       <FeaturesSection />
-      <UniversitySection />
+      <AboutPage />
+      <Footer />
     </main>
   </div>
   );

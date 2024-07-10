@@ -4,62 +4,61 @@ import { FaRegDotCircle } from "react-icons/fa";
 import { FaRegArrowAltCircleLeft } from "react-icons/fa";
 import { FaRegCheckCircle } from "react-icons/fa";
 import Link from 'next/link'
+import Streak from '@/components/testing/dashboard/Streak';
+import TestStatistics from '@/components/testing/dashboard/TestStatistics';
+import Themes from '@/components/testing/dashboard/Themes';
+import Calendar from '@/components/testing/dashboard/Calendar';
 
 
 type Props = {}
 
 export default function Testing({}: Props) {
+  const skills = [
+    { name: 'Reading', points: 80 },
+    { name: 'Writing', points: 70 },
+    { name: 'Listening', points: 90 },
+    { name: 'Speaking', points: 60 },
+  ];
     
- return (
-  <>
-    <aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
-      <div className="h-full px-3 py-4 overflow-y-auto bg-[#DCAF52]">
-          <Link href="" className="flex items-center ps-2.5 mb-5">
-            <span className="self-center text-xl font-semibold whitespace-nowrap text-black">NUET AI</span>
-          </Link>
-          <ul className="space-y-2 font-medium">
-            <li>
-                <Link href={'/testing/critical'} className="flex items-center p-2  rounded-lg text-black hover:text-slate-700">
-                  <div className='flex flex-row justify-between items-center'>
-                    <FaRegDotCircle />
-                    <span className="ms-3">Critical thinking</span>
-                  </div>
-                </Link>
-            </li>
-            <li>
-                <Link href={'/testing/math'}  className="flex items-center p-2  rounded-lg text-black  hover:text-slate-700">
-                <div className='flex flex-row justify-between items-center'>
-                    <FaRegDotCircle />
-                    <span className="ms-3">Math</span>
-                  </div>
-                </Link>
-            </li>
-            <li>
-                <Link href={'/testing/specific'}  className="flex items-center p-2  rounded-lg text-black  hover:text-slate-700">
-                <div className='flex flex-row justify-between items-center'>
-                    <FaRegDotCircle />
-                    <span className="ms-3">Practice questions</span>
-                  </div>
-                </Link>
-            </li>
-            <li>
-                <Link href={'/'}  className="flex items-center p-2  rounded-lg text-black  hover:text-slate-900">
-                <div className='flex flex-row justify-between items-center'>
-                    <FaRegArrowAltCircleLeft />
-                    <span className="ms-3 font-semibold">Go back</span>
-                  </div>
-                </Link>
-            </li>
-          </ul>
-      </div>
-    </aside>
-    
+  const performanceData = [
+    { name: 'Critical Thinking', score: 45 },
+    { name: 'Math', score: 60 },
+    { name: 'Reading Comprehension', score: 35 },
+    { name: 'Writing', score: 75 }
+  ];
+  const bestSkills = skills.filter(skill => skill.points >= 70);
+  
+  const continueCourse = () => {
+    alert('Continuing course...');
+  };
+  const visits = [
+    new Date(2024, 6, 2),
+    new Date(2024, 6, 5),
+    new Date(2024, 6, 11),
+    new Date(2024, 6, 18),
+    new Date(2024, 6, 22)
+  ];
+  const [visitDates, setVisitDates] = useState<Date[]>([]);
 
-    <div className="p-4 sm:ml-64">
-      {/* result component */}
-      {/* statistics */}
-      {/* plan */}
+  useEffect(() => {
+    setVisitDates(visits);
+  }, []);
+ return (
+  <div className="min-h-screen flex flex-col">
+  <div className="flex lg:flex-row flex-col">
+    <div className="w-full p-4 lg:w-1/2 mx-auto">
+      <Themes performanceData={performanceData} />
+      <Calendar visitedDays={visitDates}/>
     </div>
-  </>
+    <div className="lg:w-[40%] w-full p-4">
+      <TestStatistics
+        points={85}
+        skills={skills}
+        bestSkills={bestSkills}
+        continueCourse={continueCourse}
+      />
+    </div>
+  </div>
+</div>
   )
 }

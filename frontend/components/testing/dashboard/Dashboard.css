@@ -1,0 +1,32 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .chart-container {
+    width: 80%;
+    height: 400px;
+    margin-bottom: 20px;
+  }
+  
+  .info-container {
+    text-align: center;
+  }
+  
+  .continue-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .continue-button:hover {
+    background-color: #45a049;
+  }
+  
