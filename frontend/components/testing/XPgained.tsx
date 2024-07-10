@@ -7,9 +7,8 @@ type Props = {
 }
 
 export default function UserSideBar({title, dailyGoal, xp}: Props) {
-    const progress = (xp / dailyGoal) * 100
   return (
-    <div className="flex items-center justify-between p-4">
+    <div className="flex items-center justify-between p-5 rounded-2xl border-2 border-slate-500 w-full">
     <div className="flex items-center">
       <div className="bg-purple-100 p-3 rounded-full mr-4">
         <Zap className="text-purple-500" size={24} />

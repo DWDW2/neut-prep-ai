@@ -5,7 +5,7 @@ type Props = {}
 
 export default function Unit({}: Props) {
   return (
-    <section className='flex flex-col items-center gap-4 mr-'>
+    <section className='flex flex-col items-center gap-4'>
         <UnitButton place={0}/>
         <UnitButton place={1}/>
         <UnitButton place={5}/>

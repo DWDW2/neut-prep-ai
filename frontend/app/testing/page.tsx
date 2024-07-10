@@ -7,6 +7,7 @@ import Link from 'next/link'
 import Streak from '@/components/testing/dashboard/Streak';
 import TestStatistics from '@/components/testing/dashboard/TestStatistics';
 import Themes from '@/components/testing/dashboard/Themes';
+import Calendar from '@/components/testing/dashboard/Calendar';
 
 
 type Props = {}
@@ -30,14 +31,24 @@ export default function Testing({}: Props) {
   const continueCourse = () => {
     alert('Continuing course...');
   };
+  const visits = [
+    new Date(2024, 6, 2),
+    new Date(2024, 6, 5),
+    new Date(2024, 6, 11),
+    new Date(2024, 6, 18),
+    new Date(2024, 6, 22)
+  ];
+  const [visitDates, setVisitDates] = useState<Date[]>([]);
+
+  useEffect(() => {
+    setVisitDates(visits);
+  }, []);
  return (
   <div className="min-h-screen flex flex-col">
   <div className="flex lg:flex-row flex-col">
     <div className="w-full p-4 lg:w-1/2 mx-auto">
       <Themes performanceData={performanceData} />
-      <Themes performanceData={performanceData} />
-      <Themes performanceData={performanceData} />
-      <Themes performanceData={performanceData} />
+      <Calendar visitedDays={visitDates}/>
     </div>
     <div className="lg:w-[40%] w-full p-4">
       <TestStatistics
