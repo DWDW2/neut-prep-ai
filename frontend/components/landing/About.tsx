@@ -6,9 +6,9 @@ const AboutPage = () => {
       <div className="container mx-auto px-4 py-16">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="md:flex">
-            <div className="md:flex-shrink-0">
+            <div className="md:flex-shrink-0 max-[800px]:w-full max-[800px]:h-fit">
               <Image
-                className="h-48 w-full object-cover md:w-48"
+                className="h-fit w-full object-cover md:w-48"
                 src="/landing/Uni.png"
                 alt="Team photo"
                 width={500}

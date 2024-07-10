@@ -10,8 +10,8 @@ interface Popa {
 
 const Header = () => (
   <header className="flex justify-between items-center p-6 max-w-6xl mx-auto">
-    <div className='flex flex-row items-center justify-between w-[14%]'>
-      <div className='h-fit w-fit'><Image src={'/drago.svg'} width={36} height={36} alt={'logo'}/></div>
+    <div className='flex flex-row items-center justify-between w-[14%] max-[800px]:w-[20%]'>
+      <div className='h-fit w-fit max-[800px]:w-4 max-[800px]:h-4'><Image src={'/drago.svg'} width={36} height={36} alt={'logo'}/></div>
       <div className="text-2xl  text-black font-extrabold">NUET AI</div>
     </div>
     <nav className="space-x-6">
