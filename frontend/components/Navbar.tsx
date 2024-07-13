@@ -19,7 +19,7 @@ const Header = () => (
       <Link href="#features" className="text-gray-600 hover:text-gray-800">Features</Link>
       <Link href="#about" className="text-gray-600 hover:text-gray-800">About</Link>
     </nav>
-    <button className="">Login</button>
+    <button className="">SignUp</button>
   </header>
 );
 

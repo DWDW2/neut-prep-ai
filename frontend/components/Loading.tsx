@@ -11,8 +11,6 @@ const Loading = () => {
       preserveAspectRatio: 'xMidYMid slice',
     },
   };
-
-  const [loadingText, setLoadingText] = useState('Loading...');
   const [textIndex, setTextIndex] = useState(0);
 
   const loadingTexts = ['Loading...', 'Generating tests...', 'Fetching database...'];
