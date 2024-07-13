@@ -13,7 +13,7 @@ interface RoadMap {
 
 interface UserType {
   email: string;
-  name: string;
+  username: string;
   password: string;
   roadmaps?: RoadMap[];
   totalPoints?: number;
@@ -25,7 +25,7 @@ const UserSchema = new Schema<UserType>({
     required: true,
     unique: true,
   },
-  name: {
+  username: {
     type: String,
     required: true,
   },

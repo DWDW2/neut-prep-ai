@@ -24,9 +24,9 @@ export default class UserService {
     }
   }
 
-  async loginUser(credentials: { username: string; password: string }) {
+  async loginUser(credentials: { email: string; password: string }) {
     try {
-      const user = await UserModel.findOne({ username: credentials.username });
+      const user = await UserModel.findOne({ email: credentials.email });
 
       if (!user) {
         return { success: false, message: 'UserModel not found' };
@@ -55,4 +55,32 @@ export default class UserService {
       return false;
     }
   }
+
+  async getUserById(userId: string) {
+    try {
+      const user = await UserModel.findById(userId);
+      return user;
+    } catch (error) {
+      console.error('Error getting user by ID:', error);
+      return null;
+    }
+
+  }
+
+    async updateUser(userId: string, updatedData: Partial<UserType>) {
+      try {
+        const user = await UserModel.findById(userId);
+        if (!user) {
+          return null;
+        }
+        Object.assign(user, updatedData);
+        await user.save();
+        return user;
+      } catch (error) {
+        console.error('Error updating user:', error);
+        return null;
+      }
+    }
+
+
 }
