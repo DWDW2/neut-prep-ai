@@ -1,0 +1,5 @@
+class CourseService {
+    async saveCompleteLesson() {
+
+    }
+}

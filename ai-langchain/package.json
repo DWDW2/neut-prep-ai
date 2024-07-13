@@ -4,16 +4,14 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@google/generative-ai": "^0.14.0",
-    "@langchain/cohere": "^0.1.0",
-    "@langchain/community": "^0.2.15",
+    "@google/generative-ai": "^0.14.1",
     "@langchain/google-genai": "^0.0.21",
     "@langchain/pinecone": "^0.0.7",
+    "@llm-tools/embedjs": "^0.0.91",
     "@pinecone-database/pinecone": "^2.2.2",
-    "chromadb": "^1.8.1",
-    "chromadb-default-embed": "^2.13.2",
-    "cohere-ai": "^7.10.6",
-    "langchain": "^0.2.8",
+    "dotenv": "^16.4.5",
+    "langchain": "^0.2.9",
+    "mongoose": "^8.5.0",
     "pdf-parse": "^1.1.1"
   },
   "type": "module"
