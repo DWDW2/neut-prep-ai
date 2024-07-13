@@ -3,7 +3,8 @@ import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import CriticalRouter from './routes/critical.routes'
 import MathRouter from './routes/math.routes'
-import RoadMapRouter from './routes/roadmap.route'
+import RoadMapRouter from './routes/roadmap.routes'
+import UserRouter from './routes/user.routes'
 import cors from 'cors';
 import { HttpCode, ONE_HUNDRED, ONE_THOUSAND, SIXTY } from './core/constants/index';
 import { logger } from './logger';
@@ -30,7 +31,8 @@ export class Server {
   this.app.use('/critical', CriticalRouter);
   this.app.use('/math', MathRouter);
   this.app.use('/roadmap', RoadMapRouter);
-
+  this.app.use('/user', UserRouter);
+  
   this.app.get('/health', (_req: Request, res: Response) => {
    return res.status(HttpCode.OK).send({
     message: 'Server is healthy'
