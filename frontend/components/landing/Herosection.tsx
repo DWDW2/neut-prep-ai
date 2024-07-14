@@ -3,9 +3,10 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
+
 const ParallaxBackground = () => {
   const [offsetY, setOffsetY] = useState(0);
-  const router = useRouter()
+  const router = useRouter();
   const handleScroll = () => {
     setOffsetY(window.scrollY);
   };
@@ -50,11 +51,11 @@ const ParallaxBackground = () => {
           <polygon points="20,10 40,40 10,40" stroke="white" strokeWidth="0.5" fill="none" />
         </svg>
       </div>
-      <div className="relative z-10 flex items-center justify-center h-full text-white">
-        <main className="container py-16 flex items-center justify-center mx-20 max-[800px]:block max-[800px]:px-1 max-[800px]: max-[800px]:py-8 max-[800px]:text-center bg-black/30">
-            <div className="w-1/2 pr-8 max-[800px]:w-fit max-[800px]:px-5 text-center">
-              <h1 className="text-5xl font-bold mb-4 max-[800px]:text-3xl">Achieve best scores on <span className="text-[#DCAF52]">NUET exam</span> with us!</h1>
-              <p className="text-white mb-8">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati itaque voluptatibus harum debitis quia reprehenderit expedita deserunt provident dolores. Consectetur ipsam eos molestias distinctio quam at aliquam expedita veniam aspernatur?</p>
+      <div className="relative z-10 flex items-center justify-center h-full text-black">
+        <main className="container py-16 flex items-center justify-center mx-20 max-[800px]:block max-[800px]:px-1 max-[800px]: max-[800px]:py-8 max-[800px]:text-center bg-white">
+          <div className="w-1/2 pr-8 max-[800px]:w-fit max-[800px]:px-5 text-center">
+            <h1 className="text-5xl font-bold mb-4 max-[800px]:text-3xl text-black">Achieve best scores on <span className="text-[#DCAF52]">NUET exam</span> with us!</h1>
+            <p className="text-black mb-8">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati itaque voluptatibus harum debitis quia reprehenderit expedita deserunt provident dolores. Consectetur ipsam eos molestias distinctio quam at aliquam expedita veniam aspernatur?</p>
             <Button variant={'primary'} size={'lg'} onClick={() => router.push('/testing')}>Get Started</Button>
           </div>
         </main>

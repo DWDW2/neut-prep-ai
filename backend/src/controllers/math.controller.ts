@@ -1,7 +1,5 @@
-import { EnhancedGenerateContentResponse } from '@google/generative-ai';
 import MathService from '../services/math.service';
 import { Request, Response } from 'express';
-import { mathTestModelType } from '../types/useMath.types';
 import MathTestModel from '../models/math.models';
 export default class MathController {
     private mathService: MathService

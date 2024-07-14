@@ -7,4 +7,6 @@ export const envs = {
  NODE_ENV: get('NODE_ENV').default('development').asString(),
  MONGO_URI: get('MONGO_URI').required().asString(),
  GEMINI_API: get('GEMINI_API').required().asString(),
+ JWT_SECRET: get('JWT_SECRET').required().asString(),
+ 
 };

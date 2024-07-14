@@ -3,7 +3,7 @@ import Image from 'next/image';
 const AboutPage = () => {
   return (
     <div className="bg-gray-100 h-fit" id='about'>
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-16 min-[800px]:w-[70%] h-auto">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="md:flex">
             <div className="md:flex-shrink-0 max-[800px]:w-full max-[800px]:h-fit">
