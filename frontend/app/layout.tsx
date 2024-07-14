@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
-import { SessionProvider } from "next-auth/react";
+import { ClerkProvider } from '@clerk/nextjs'
 const nunito = Nunito({
   subsets: ["latin"],
   weight: ["400", "800"],
@@ -15,12 +15,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <SessionProvider>
+    <ClerkProvider>
       <html lang="en">
         <body className={nunito.className}>
             {children}
         </body>
       </html>
-    </SessionProvider>
+    </ClerkProvider>
   );
 }

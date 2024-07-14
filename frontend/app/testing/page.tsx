@@ -8,15 +8,14 @@ import Streak from '@/components/testing/dashboard/Streak';
 import TestStatistics from '@/components/testing/dashboard/TestStatistics';
 import Themes from '@/components/testing/dashboard/Themes';
 import Calendar from '@/components/testing/dashboard/Calendar';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import Loading from '@/components/Loading';
+import { useSession } from '@clerk/nextjs';
 
 type Props = {}
 
 export default function Testing({}: Props) {
-  const {data:session} = useSession()
-  const router = useRouter()
+  const {session} = useSession()
+  console.log(session?.getToken())
   const [visitDates, setVisitDates] = useState<Date[]>([]);
 
   const skills = [
