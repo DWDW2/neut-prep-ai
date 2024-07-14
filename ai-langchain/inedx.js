@@ -4,7 +4,8 @@ import mongoose from 'mongoose'
 import path from 'path'
 import { GoogleGenerativeAI } from "@google/generative-ai";
 mongoose.connect(process.env.MONGO_URI).then(console.log('Connected to MongoDB'))
-const DocumentsSchema = mongoose.Schema({
+
+const KDocumentSchema = mongoose.Schema({
   text: {
     type: String,
     required: true,
@@ -17,22 +18,35 @@ const DocumentsSchema = mongoose.Schema({
     type: Object,
     default: {},
   },
-})
+  pdfPath: {
+    type: String,
+    required: true,
+  },
+});
 
-const Documents = mongoose.model('Documents', DocumentsSchema)
+const KDocument = mongoose.model('KDocument', KDocumentSchema);
 
-const loader = new PDFLoader(path.resolve('NUET 2022 Critical Thinking and Problem Solving specimen paper.pdf'), {splitPages: true})
+async function loadAndSavePDF(pdfPath) {
+  const loader = new PDFLoader(path.resolve(pdfPath), { splitPages: true });
+  const docs = await loader.load();
 
-const docs = await loader.load()
+  let allText = "";
+  for (const doc of docs) {
+    allText += doc.pageContent;
+  }
 
-// for (const doc of docs) {
-//   const newDocument = Documents({
-//     text: doc.pageContent,
-//     metadata: {
-//       source: doc.metadata.source,
-//     }
-//   });
-//   await newDocument.save()
-// }
+  const newDocument = new KDocument({
+    text: allText,
+    metadata: {
+      source: pdfPath,
+    },
+    pdfPath: pdfPath,
+  });
+  await newDocument.save();
+}
 
-console.log(docs)
+// Example usage:
+const pdfPath = 'NUET 2022 Critical Thinking and Problem Solving specimen paper.pdf'; // Replace with your PDF path
+await loadAndSavePDF(pdfPath);
+
+console.log("PDF loaded and saved to KDocument");

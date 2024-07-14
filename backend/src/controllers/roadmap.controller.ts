@@ -1,4 +1,3 @@
-
 import { Request, Response } from 'express';
 import RoadMapService from '../services/roadmap.service';
 
@@ -17,13 +16,30 @@ export default class RoadMapController {
     this.roadmapService = roadmapService;
   }
 
-  async generateRoadMap(req: RequestWithUser, res: Response) {
+  async generateRoadMapCritical(req: RequestWithUser, res: Response) {
     try {
       if (!req.body.user) {
         return res.status(401).json({ message: 'Unauthorized' });
       }
       const userId = req.body.user.userId;
-      const roadmap = await this.roadmapService.generateRoadMap(userId);
+      const roadmap = await this.roadmapService.generateRoadMapCritical(userId);
+      if(roadmap === null){
+        res.status(500).json({message: 'User doesnt existts'})
+      }
+      res.status(201).json(roadmap);
+    } catch (error) {
+      console.error('Error generating roadmap:', error);
+      res.status(500).json({ message: 'Failed to generate roadmap' });
+    }
+  }
+
+  async generateRoadMapMath(req: RequestWithUser, res: Response) {
+    try {
+      if (!req.body.user) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+      const userId = req.body.user.userId;
+      const roadmap = await this.roadmapService.generateRoadMapMath(userId);
       if(roadmap === null){
         res.status(500).json({message: 'User doesnt existts'})
       }
@@ -41,7 +57,8 @@ export default class RoadMapController {
       }
       const userId = req.body.user.userId;
       const roadmapData = req.body;
-      const success = await this.roadmapService.saveRoadMapToDb(roadmapData, userId);
+      const isCritical = req.query.isCritical === 'true'; 
+      const success = await this.roadmapService.saveRoadMapToDb(roadmapData, userId, isCritical);
       if (success) {
         res.status(201).json({ message: 'Roadmap saved successfully' });
       } else {
@@ -103,7 +120,7 @@ export default class RoadMapController {
       const roadmapId = req.params.id;
       const success = await this.roadmapService.deleteRoadMap(roadmapId);
       if (success) {
-        res.status(204).send(); // No content
+        res.status(204).send(); 
       } else {
         res.status(404).json({ message: 'Roadmap not found' });
       }

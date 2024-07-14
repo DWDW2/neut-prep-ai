@@ -5,7 +5,7 @@ interface Lesson {
   skills: string;
   points: number;
 }
-interface RoadMap {
+interface RoadMapType {
   roadmap:[
     {
       section: string;
@@ -39,6 +39,6 @@ const RoadMapSchema = new mongoose.Schema({
   }
 })
 
-const RoadMap = mongoose.model<RoadMap>('RoadMap', RoadMapSchema);
+const RoadMap = mongoose.model<RoadMapType>('RoadMap', RoadMapSchema);
 
-export default RoadMap
+export {RoadMap, RoadMapType}

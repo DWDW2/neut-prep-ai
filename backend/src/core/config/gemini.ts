@@ -108,7 +108,6 @@ const generationConfig = {
   responseMimeType: "application/json",
 };
 
-  
 export {
   model,
   generationConfig,

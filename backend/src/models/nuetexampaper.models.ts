@@ -4,6 +4,7 @@ interface Document {
   text: string;
   createdAt: Date;
   metadata: object;
+  pdfPath: string;
 }
 
 const DocumentsSchema = new mongoose.Schema<Document>({
@@ -19,7 +20,11 @@ const DocumentsSchema = new mongoose.Schema<Document>({
     type: Object,
     default: {},
   },
+  pdfPath: {
+    type: String,
+    required: true,
+  },            
 });
-const NuetDocument = mongoose.model<Document>('Documents', DocumentsSchema);
+const NuetDocument = mongoose.model<Document>('KDocuments', DocumentsSchema);
 
 export default NuetDocument 
