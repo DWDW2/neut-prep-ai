@@ -15,7 +15,8 @@ interface UserType {
   email: string;
   username: string;
   password: string;
-  roadmapId?: mongoose.Types.ObjectId; 
+  roadmapCriticalId?: mongoose.Types.ObjectId; 
+  roadmapMathId?: mongoose.Types.ObjectId; 
   totalPoints?: number;
 }
 
@@ -33,7 +34,11 @@ const UserSchema = new Schema<UserType>({
     type: String,
     required: true,
   },
-  roadmapId: { 
+  roadmapCriticalId: { 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'RoadMap',
+  },
+  roadmapMathId: { 
     type: mongoose.Schema.Types.ObjectId,
     ref: 'RoadMap',
   },
