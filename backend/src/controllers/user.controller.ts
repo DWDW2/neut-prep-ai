@@ -32,7 +32,8 @@ export default class UserController {
       const loginResult = await userService.loginUser({ email, password });
 
       if (loginResult.success) {
-        res.status(200).json({ token: loginResult.token });
+        res.cookie('token', loginResult.token, { httpOnly: true });
+        res.status(200).json({ token: loginResult.token })
       } else {
         res.status(401).json({ message: loginResult.message });
       }

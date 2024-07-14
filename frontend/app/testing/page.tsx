@@ -19,18 +19,6 @@ export default function Testing({}: Props) {
   const router = useRouter()
   const [visitDates, setVisitDates] = useState<Date[]>([]);
 
-  // useEffect(() => {
-  //   setVisitDates(visits);
-  // }, []);
-
-  useLayoutEffect(() => {
-    if(!session){
-      router.push('/login')
-    }
-  }, [router, session])
-  if(!session){
-    return <Loading />
-  }
   const skills = [
     { name: 'Reading', points: 80 },
     { name: 'Writing', points: 70 },

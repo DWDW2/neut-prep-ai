@@ -2,7 +2,8 @@ import { UserModel, UserType } from '../models/user.models';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = 'your_secret_key'; // Replace with your actual secret key
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'your-refresh-token-secret'; 
 
 export default class UserService {
 
@@ -81,6 +82,33 @@ export default class UserService {
         return null;
       }
     }
+    
+  async generateRefreshToken(userId: string) {
+    try {
+      const refreshToken = jwt.sign({ userId }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' }); 
+      return refreshToken;
+    } catch (error) {
+      console.error('Error generating refresh token:', error);
+      return null;
+    }
+  }
 
+  async refreshAccessToken(refreshToken: string) {
+    try {
+      const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET) as { userId: string };
+      const user = await UserModel.findById(decoded.userId);
+
+      if (!user) {
+        return { success: false, message: 'User not found' };
+      }
+
+      const accessToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
+      
+      return { success: true, token: accessToken };
+    } catch (error) {
+      console.error('Error refreshing access token:', error);
+      return { success: false, message: 'Refresh token invalid' };
+    }
+  }
 
 }

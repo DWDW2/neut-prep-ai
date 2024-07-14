@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 
 interface RoadMap {
   _id: string;
@@ -15,7 +15,7 @@ interface UserType {
   email: string;
   username: string;
   password: string;
-  roadmaps?: RoadMap[];
+  roadmapId?: mongoose.Types.ObjectId; 
   totalPoints?: number;
 }
 
@@ -33,12 +33,9 @@ const UserSchema = new Schema<UserType>({
     type: String,
     required: true,
   },
-  roadmaps: {
-    type: [{
-      type: Schema.Types.ObjectId,
-      ref: 'RoadMap',
-    }],
-    default: [],
+  roadmapId: { 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'RoadMap',
   },
   totalPoints: {
     type: Number,

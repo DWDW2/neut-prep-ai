@@ -5,42 +5,39 @@ interface Lesson {
   skills: string;
   points: number;
 }
-
 interface RoadMap {
-  section: string;
-  unit: string;
-  lessons: Lesson[];
+  roadmap:[
+    {
+      section: string;
+      unit: string;
+      lessons: Lesson[];
+    }
+  ],
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }
 }
 
-const RoadMapSchema = new mongoose.Schema<RoadMap>({
-  section: {
-    type: String,
-    required: true,
-  },
-  unit: {
-    type: String,
-    required: true,
-  },
-  lessons: {
-    type: [
-      {
-        theme: {
-          type: String,
-          required: true,
-        },
-        skills: {
-          type: String,
-          required: true,
-        },
-        points: {
-          type: Number,
-          required: true,
-        },
-      },
-    ],
-    required: true,
-  },
-});
+const RoadMapSchema = new mongoose.Schema({
+  roadmap: [
+    {
+      section: String,
+      unit: String,
+      lessons: [
+        {
+          theme: String,
+          skills: String,
+          points: Number,
+        }
+      ]
+    }
+  ],
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }
+})
 
 const RoadMap = mongoose.model<RoadMap>('RoadMap', RoadMapSchema);
 

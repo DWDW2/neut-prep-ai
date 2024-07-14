@@ -1,14 +1,15 @@
 import { model, generationConfig, safetySetting } from "../core/config/gemini";
 import RoadMap from "../models/roadmap.models";
 import NuetDocument from "../models/nuetexampaper.models";
+import { UserModel as User } from "../models/user.models";
 
 export default class RoadMapService {
-  async generateRoadMap() {
+  async generateRoadMap(userId: string) {
     const documents = await NuetDocument.find();
     let generalString = "";
 
     for (const document of documents) {
-      generalString += document.text + " "; // Assuming 'text' is the field containing the document text
+      generalString += document.text + " "; 
     }
     console.log(generalString,  'data')
     const parts = [
@@ -24,15 +25,29 @@ export default class RoadMapService {
     });
 
     const resJson = JSON.parse(result.response.text());
-    return resJson;
+    const user = await User.findById(userId); 
+    if (!user) {
+      return null;
+    }
+    const newRoadMap = new RoadMap({ roadmap: resJson, user: user._id }); 
+    await newRoadMap.save();
+
+    user.roadmapId = newRoadMap._id; 
+    await user.save();
+    return newRoadMap;
   }
 
-  async saveRoadMapToDb(roadmap: any) {
+  async saveRoadMapToDb(roadmap: any, userId: string) {
     try {
-      for (const roadmapData of roadmap) {
-        const newRoadMap = new RoadMap(roadmapData);
-        await newRoadMap.save();
+      const user = await User.findById(userId); 
+      if (!user) {
+        throw new Error('User not found');
       }
+      const newRoadMap = new RoadMap({ roadmap, user: user._id }); 
+      await newRoadMap.save();
+
+      user.roadmapId = newRoadMap._id; 
+      await user.save();
       return true;
     } catch (error) {
       console.error('Error saving roadmap to database:', error);
@@ -40,9 +55,9 @@ export default class RoadMapService {
     }
   }
 
-  async getRoadMapFromDb() {
+  async getRoadMapFromDb(userId: string) {
     try {
-      const roadmaps = await RoadMap.find();
+      const roadmaps = await RoadMap.find({ user: userId });
       return roadmaps;
     } catch (error) {
       console.error('Error retrieving roadmap from database:', error);
