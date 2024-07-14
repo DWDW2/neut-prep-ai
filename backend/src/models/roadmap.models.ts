@@ -4,6 +4,7 @@ interface Lesson {
   theme: string;
   skills: string;
   points: number;
+  lessonContent: string;
 }
 interface RoadMapType {
   roadmap:[
@@ -29,6 +30,11 @@ const RoadMapSchema = new mongoose.Schema({
           theme: String,
           skills: String,
           points: Number,
+          lessonContent: {
+            type:mongoose.Types.ObjectId,
+            ref: 'LessonContent',
+            default: null
+          }
         }
       ]
     }

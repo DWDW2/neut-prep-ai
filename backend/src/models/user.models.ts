@@ -17,7 +17,10 @@ interface UserType {
   password: string;
   roadmapCriticalId?: mongoose.Types.ObjectId; 
   roadmapMathId?: mongoose.Types.ObjectId; 
-  totalPoints?: number;
+  themesToImprove: string[]; 
+  totalXp: number; 
+  streak: number; 
+  todaysXp: number; 
 }
 
 const UserSchema = new Schema<UserType>({
@@ -42,10 +45,22 @@ const UserSchema = new Schema<UserType>({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'RoadMap',
   },
-  totalPoints: {
+  themesToImprove: {
+    type: [String],
+    default: [],
+  },
+  totalXp: {
     type: Number,
     default: 0,
-  }
+  },
+  streak: {
+    type: Number,
+    default: 0,
+  },
+  todaysXp: { // Add todaysXp field
+    type: Number,
+    default: 0,
+  },
 });
 
 const UserModel = model('User', UserSchema);
