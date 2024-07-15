@@ -1,14 +1,6 @@
 import { Request, Response } from 'express';
 import RoadMapService from '../services/roadmap.service';
 
-interface RequestWithUser extends Request {
-  body: {
-    user?:{
-      userId: string;
-    }
-  };
-}
-
 export default class RoadMapController {
   private roadmapService: RoadMapService;
 
@@ -16,98 +8,127 @@ export default class RoadMapController {
     this.roadmapService = roadmapService;
   }
 
-  async generateRoadMapCritical(req: RequestWithUser, res: Response) {
+  async generateRoadMapCritical(req: Request, res: Response) {
     try {
-      if (!req.body.user) {
-        return res.status(401).json({ message: 'Unauthorized' });
+      const { userId } = req.body.user; // Assuming user object is in req.body.user
+      const newRoadMap = await this.roadmapService.generateRoadMapCritical(userId);
+
+      if (newRoadMap) {
+        res.status(201).json(newRoadMap);
+      } else {
+        res.status(500).json({ message: 'Error generating critical roadmap' });
       }
-      const userId = req.body.user.userId;
-      const roadmap = await this.roadmapService.generateRoadMapCritical(userId);
-      if(roadmap === null){
-        res.status(500).json({message: 'User doesnt existts'})
-      }
-      res.status(201).json(roadmap);
     } catch (error) {
-      console.error('Error generating roadmap:', error);
-      res.status(500).json({ message: 'Failed to generate roadmap' });
+      console.error('Error generating critical roadmap:', error);
+      res.status(500).json({ message: 'Internal server error' });
     }
   }
 
-  async generateRoadMapMath(req: RequestWithUser, res: Response) {
+  async generateRoadMapMath(req: Request, res: Response) {
     try {
-      if (!req.body.user) {
-        return res.status(401).json({ message: 'Unauthorized' });
+      const { userId } = req.body.user; // Assuming user object is in req.body.user
+      const newRoadMap = await this.roadmapService.generateRoadMapMath(userId);
+
+      if (newRoadMap) {
+        res.status(201).json(newRoadMap);
+      } else {
+        res.status(500).json({ message: 'Error generating math roadmap' });
       }
-      const userId = req.body.user.userId;
-      const roadmap = await this.roadmapService.generateRoadMapMath(userId);
-      if(roadmap === null){
-        res.status(500).json({message: 'User doesnt existts'})
-      }
-      res.status(201).json(roadmap);
     } catch (error) {
-      console.error('Error generating roadmap:', error);
-      res.status(500).json({ message: 'Failed to generate roadmap' });
+      console.error('Error generating math roadmap:', error);
+      res.status(500).json({ message: 'Internal server error' });
     }
   }
 
-  async saveRoadMap(req: RequestWithUser, res: Response) {
+  async getMathRoadMap(req: Request, res: Response) {
     try {
-      if (!req.body.user) {
-        return res.status(401).json({ message: 'Unauthorized' });
+      const { userId } = req.body.user; // Assuming user object is in req.body.user
+      const roadmap = await this.roadmapService.getMathRoadMap(userId);
+
+      if (roadmap) {
+        res.status(200).json(roadmap);
+      } else {
+        res.status(404).json({ message: 'Math roadmap not found' });
       }
-      const userId = req.body.user.userId;
-      const roadmapData = req.body;
-      const isCritical = req.query.isCritical === 'true'; 
-      const success = await this.roadmapService.saveRoadMapToDb(roadmapData, userId, isCritical);
+    } catch (error) {
+      console.error('Error retrieving math roadmap:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  }
+
+  async getCriticalThinkingRoadMap(req: Request, res: Response) {
+    try {
+      const { userId } = req.body.user; // Assuming user object is in req.body.user
+      const roadmap = await this.roadmapService.getCriticalThinkingRoadMap(userId);
+
+      if (roadmap) {
+        res.status(200).json(roadmap);
+      } else {
+        res.status(404).json({ message: 'Critical thinking roadmap not found' });
+      }
+    } catch (error) {
+      console.error('Error retrieving critical thinking roadmap:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  }
+
+  async saveRoadMapToDb(req: Request, res: Response) {
+    try {
+      const { userId } = req.body.user; // Assuming user object is in req.body.user
+      const { roadmap, isCritical } = req.body;
+
+      const success = await this.roadmapService.saveRoadMapToDb(roadmap, userId, isCritical);
+
       if (success) {
         res.status(201).json({ message: 'Roadmap saved successfully' });
       } else {
-        res.status(500).json({ message: 'Failed to save roadmap' });
+        res.status(500).json({ message: 'Error saving roadmap' });
       }
     } catch (error) {
-      console.error('Error saving roadmap:', error);
+      console.error('Error saving roadmap to database:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   }
 
-  async getRoadMaps(req: RequestWithUser, res: Response) {
+  async getRoadMapFromDb(req: Request, res: Response) {
     try {
-      if (!req.body.user) {
-        return res.status(401).json({ message: 'Unauthorized' });
-      }
-      const userId = req.body.user.userId;
+      const { userId } = req.body.user; // Assuming user object is in req.body.user
       const roadmaps = await this.roadmapService.getRoadMapFromDb(userId);
+
       res.status(200).json(roadmaps);
     } catch (error) {
-      console.error('Error retrieving roadmaps:', error);
+      console.error('Error retrieving roadmaps from database:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   }
 
-  async getRoadMap(req: RequestWithUser, res: Response) {
+  async getRoadMapById(req: Request, res: Response) {
     try {
-      const roadmapId = req.params.id;
-      const roadmap = await this.roadmapService.getRoadMapById(roadmapId);
+      const { id } = req.params;
+      const roadmap = await this.roadmapService.getRoadMapById(id);
+
       if (roadmap) {
         res.status(200).json(roadmap);
       } else {
         res.status(404).json({ message: 'Roadmap not found' });
       }
     } catch (error) {
-      console.error('Error retrieving roadmap:', error);
+      console.error('Error retrieving roadmap by ID:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   }
 
-  async updateRoadMap(req: RequestWithUser, res: Response) {
+  async updateRoadMap(req: Request, res: Response) {
     try {
-      const roadmapId = req.params.id;
-      const roadmapData = req.body;
-      const updatedRoadMap = await this.roadmapService.updateRoadMap(roadmapId, roadmapData);
+      const { id } = req.params;
+      const { roadmapData } = req.body;
+
+      const updatedRoadMap = await this.roadmapService.updateRoadMap(id, roadmapData);
+
       if (updatedRoadMap) {
         res.status(200).json(updatedRoadMap);
       } else {
-        res.status(404).json({ message: 'Roadmap not found' });
+        res.status(500).json({ message: 'Error updating roadmap' });
       }
     } catch (error) {
       console.error('Error updating roadmap:', error);
@@ -115,14 +136,15 @@ export default class RoadMapController {
     }
   }
 
-  async deleteRoadMap(req: RequestWithUser, res: Response) {
+  async deleteRoadMap(req: Request, res: Response) {
     try {
-      const roadmapId = req.params.id;
-      const success = await this.roadmapService.deleteRoadMap(roadmapId);
+      const { id } = req.params;
+      const success = await this.roadmapService.deleteRoadMap(id);
+
       if (success) {
-        res.status(204).send(); 
+        res.status(204).json({ message: 'Roadmap deleted successfully' });
       } else {
-        res.status(404).json({ message: 'Roadmap not found' });
+        res.status(500).json({ message: 'Error deleting roadmap' });
       }
     } catch (error) {
       console.error('Error deleting roadmap:', error);

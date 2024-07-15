@@ -1,9 +1,13 @@
 import React from 'react'
 import UnitButton from './UnitButton'
+import { Roadmap } from '@/types/useRoadmap.types'
 
-type Props = {}
+type Props = {
+  data?: Roadmap | Roadmap[] | null
+}
 
-export default function Unit({}: Props) {
+export default function Unit({data}: Props) {
+  
   return (
     <section className='flex flex-col items-center gap-4'>
         <UnitButton place={0}/>

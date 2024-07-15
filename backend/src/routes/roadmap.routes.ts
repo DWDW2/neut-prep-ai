@@ -4,36 +4,26 @@ import RoadMapService from '../services/roadmap.service';
 import AuthMiddleware from '../middleware/auth.middleware';
 
 const router = express.Router();
-
 const roadmapService = new RoadMapService();
 const roadmapController = new RoadMapController(roadmapService);
 
-router.post('/critical', AuthMiddleware, (req, res) => {
-  roadmapController.generateRoadMapCritical(req, res);
-});
+router.post('/generate-critical-roadmap', AuthMiddleware, (req, res) => roadmapController.generateRoadMapCritical(req,res));
 
-router.post('/math', AuthMiddleware, (req, res) => {
-  roadmapController.generateRoadMapMath(req, res);
-});
+router.post('/generate-math-roadmap',AuthMiddleware,  (req, res) => roadmapController.generateRoadMapMath(req, res));
 
-router.post('/', AuthMiddleware, (req, res) => {
-  roadmapController.saveRoadMap(req, res);
-});
+router.get('/users/:userId/math-roadmap',AuthMiddleware, (req, res) => roadmapController.getMathRoadMap(req,res));
 
-router.get('/', AuthMiddleware, (req, res) => {
-  roadmapController.getRoadMaps(req, res);
-});
+router.get('/users/:userId/critical-roadmap',AuthMiddleware, (req, res) => roadmapController.getCriticalThinkingRoadMap(req, res));
 
-router.get('/:id', AuthMiddleware, (req, res) => {
-  roadmapController.getRoadMap(req, res);
-});
 
-router.put('/:id', AuthMiddleware, (req, res) => {
-  roadmapController.updateRoadMap(req, res);
-});
+router.post('/roadmaps',AuthMiddleware, (req, res) => roadmapController.saveRoadMapToDb(req, res));
 
-router.delete('/:id', AuthMiddleware, (req, res) => {
-  roadmapController.deleteRoadMap(req, res);
-});
+router.get('/users/:userId/roadmaps', AuthMiddleware,  (req, res) => roadmapController.getRoadMapFromDb(req, res));
+
+router.get('/roadmaps/:id',AuthMiddleware, (req, res) => roadmapController.getRoadMapById(req, res));
+
+router.put('/roadmaps/:id',AuthMiddleware, (req, res) => roadmapController.updateRoadMap(req, res));
+
+router.delete('/roadmaps/:id', roadmapController.deleteRoadMap);
 
 export default router;

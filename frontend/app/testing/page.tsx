@@ -14,8 +14,6 @@ import { useSession } from '@clerk/nextjs';
 type Props = {}
 
 export default function Testing({}: Props) {
-  const {session} = useSession()
-  console.log(session?.getToken())
   const [visitDates, setVisitDates] = useState<Date[]>([]);
 
   const skills = [

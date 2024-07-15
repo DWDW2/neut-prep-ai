@@ -73,6 +73,34 @@ export default class RoadMapService {
     }
   }
 
+  async getMathRoadMap(userId: string) {
+    try {
+      const user = await User.findById(userId);
+      if (!user || !user.roadmapMathId) {
+        return null; 
+      }
+      const roadmap = await RoadMap.findById(user.roadmapMathId);
+      return roadmap;
+    } catch (error) {
+      console.error("Error retrieving math roadmap:", error);
+      return null;
+    }
+  }
+
+  async getCriticalThinkingRoadMap(userId: string) {
+    try {
+      const user = await User.findById(userId);
+      if (!user || !user.roadmapCriticalId) {
+        return null; 
+      }
+      const roadmap = await RoadMap.findById(user.roadmapCriticalId);
+      return roadmap;
+    } catch (error) {
+      console.error("Error retrieving critical thinking roadmap:", error);
+      return null;
+    }
+  }
+
   async saveRoadMapToDb(roadmap: any, userId: string, isCritical: boolean) {
     try {
       const user = await User.findById(userId);
