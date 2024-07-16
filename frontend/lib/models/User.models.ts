@@ -1,4 +1,4 @@
-import mongoose, { Schema, model } from 'mongoose';
+import mongoose, { Schema, model, models } from 'mongoose';
 
 interface RoadMap {
   _id: string;
@@ -12,24 +12,16 @@ interface RoadMap {
 }
 
 interface UserType {
-  id:string;
   email: string;
   username: string;
   password?: string;
   roadmapCriticalId?: mongoose.Types.ObjectId; 
   roadmapMathId?: mongoose.Types.ObjectId; 
-  themesToImprove: string[]; 
-  totalXp: number; 
-  streak: number; 
-  todaysXp: number; 
+  totalPoints?: number;
+  imageUrl?: string;
 }
 
 const UserSchema = new Schema<UserType>({
-  id:{
-    type: String,
-    required: true,
-    unique: true,
-  },
   email: {
     type: String,
     required: true,
@@ -39,32 +31,30 @@ const UserSchema = new Schema<UserType>({
     type: String,
     required: true,
   },
+  password: {
+    type: String,
+  },
   roadmapCriticalId: { 
     type: mongoose.Schema.Types.ObjectId,
     ref: 'RoadMap',
+    default: null,
   },
   roadmapMathId: { 
     type: mongoose.Schema.Types.ObjectId,
     ref: 'RoadMap',
+    default: null,
   },
-  themesToImprove: {
-    type: [String],
-    default: [],
-  },
-  totalXp: {
+  totalPoints: {
     type: Number,
     default: 0,
   },
-  streak: {
-    type: Number,
-    default: 0,
-  },
-  todaysXp: { 
-    type: Number,
-    default: 0,
-  },
+  imageUrl: {
+    type: String,
+    default: null,
+  }
 });
 
-const UserModel = model('User', UserSchema);
+const UserModel = models?.User || model<UserType>('User', UserSchema);
 
-export  {UserModel, UserType};
+export { UserModel };
+export type { UserType };

@@ -27,6 +27,7 @@
     "start": "node dist/app.js"
   },
   "dependencies": {
+    "@clerk/clerk-sdk-node": "^5.0.15",
     "@google/generative-ai": "^0.14.0",
     "@types/bcrypt": "^5.0.2",
     "@types/compression": "^1.7.5",

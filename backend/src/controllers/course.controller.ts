@@ -1,32 +1,89 @@
-// import { Request, Response } from 'express';
-// import CourseService from '../services/course.service';
+import { Request, Response } from 'express';
+import CourseService from '../services/course.service';
 
-// interface RequestWithUser extends Request {
-//   body:{
-//     user?:{
-//         userId: string;
-//     }
-//   }
-// }
+export default class CourseController {
+  private courseService: CourseService;
 
-// export default class CourseController {
-//   private courseService: CourseService;
+  constructor(courseService: CourseService) {
+    this.courseService = new CourseService();
+  }
 
-//   constructor(courseService: CourseService) {
-//     this.courseService = courseService;
-//   }
+  async generateLessonMath(req: Request, res: Response) {
+    try {
+      const { roadmapId, lessonIndex, unitIndex } = req.body
+      const lessonJson = await this.courseService.generateLessonMath(
+        roadmapId,
+        parseInt(lessonIndex),
+        parseInt(unitIndex)
+      );
+      res.status(200).json(lessonJson);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to generate math lesson' });
+    }
+  }
 
-//   async generateLessons(req: RequestWithUser, res: Response) {
-//     try {
-//       if (!req.body.user) {
-//         return res.status(401).json({ message: 'Unauthorized' });
-//       }
-//       const userId = req.body.user.userId;
-//       await this.courseService.generateLessons(userId);
-//       res.status(200).json({ message: 'Lessons generated successfully' });
-//     } catch (error) {
-//       console.error('Error generating lessons:', error);
-//       res.status(500).json({ message: 'Failed to generate lessons' });
-//     }
-//   }
-// }
+  async generateLessonCritical(req: Request, res: Response) {
+    try {
+      const { roadmapId, lessonIndex, unitIndex } = req.body;
+      const lessonJson = await this.courseService.generateLessonCritical(
+        roadmapId,
+        parseInt(lessonIndex),
+        parseInt(unitIndex)
+      );
+      res.status(200).json(lessonJson);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to generate critical thinking lesson' });
+    }
+  }
+
+  async handleIncorrectThemes(req: Request, res: Response) {
+    try {
+      const { userId } = req.body.user; 
+      const { incorrectThemes } = req.body;
+      const success = await this.courseService.handleIncorrectThemes(userId, incorrectThemes);
+      if (success) {
+        res.status(200).json({ message: 'Incorrect themes updated successfully' });
+      } else {
+        res.status(500).json({ error: 'Failed to update incorrect themes' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to handle incorrect themes' });
+    }
+  }
+
+  async updateXpAndStreak(req: Request, res: Response) {
+    try {
+      const { userId } = req.body.user; 
+      const { points } = req.body;
+      const success = await this.courseService.updateXpAndStreak(userId, points);
+      if (success) {
+        res.status(200).json({ message: 'XP and streak updated successfully' });
+      } else {
+        res.status(500).json({ error: 'Failed to update XP and streak' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to update XP and streak' });
+    }
+  }
+
+  async resetTodaysXp(req: Request, res: Response) {
+    try {
+      const { userId } = req.body.user; 
+      const success = await this.courseService.resetTodaysXp(userId);
+      if (success) {
+        res.status(200).json({ message: 'Today\'s XP reset successfully' });
+      } else {
+        res.status(500).json({ error: 'Failed to reset today\'s XP' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to reset today\'s XP' });
+    }
+  }
+}
+
+

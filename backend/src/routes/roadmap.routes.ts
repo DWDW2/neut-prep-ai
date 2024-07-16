@@ -1,39 +1,31 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import RoadMapController from '../controllers/roadmap.controller';
 import RoadMapService from '../services/roadmap.service';
+import {
+    LooseAuthProp,
+    WithAuthProp,
+  } from '@clerk/clerk-sdk-node';
 import AuthMiddleware from '../middleware/auth.middleware';
-
 const router = express.Router();
-
 const roadmapService = new RoadMapService();
 const roadmapController = new RoadMapController(roadmapService);
 
-router.post('/critical', AuthMiddleware, (req, res) => {
-  roadmapController.generateRoadMapCritical(req, res);
-});
+router.get('/critical/generate-and-get-roadmapCritical', AuthMiddleware, (req:WithAuthProp<Request>, res:Response) => roadmapController.getRoadMapCriticalByUserId(req,res));
 
-router.post('/math', AuthMiddleware, (req, res) => {
-  roadmapController.generateRoadMapMath(req, res);
-});
+router.get('/math/generate-and-get-roadmapMath', AuthMiddleware, (req:WithAuthProp<Request>, res:Response) =>roadmapController.getRoadMapMathByUserId(req,res));
 
-router.post('/', AuthMiddleware, (req, res) => {
-  roadmapController.saveRoadMap(req, res);
-});
+router.get('/math/:userId', AuthMiddleware, (req:WithAuthProp<Request>, res:Response) => roadmapController.getMathRoadMap(req,res));
 
-router.get('/', AuthMiddleware, (req, res) => {
-  roadmapController.getRoadMaps(req, res);
-});
+router.get('/critical/:userId', AuthMiddleware, (req:WithAuthProp<Request>, res:Response) => roadmapController.getCriticalThinkingRoadMap(req,res));
 
-router.get('/:id', AuthMiddleware, (req, res) => {
-  roadmapController.getRoadMap(req, res);
-});
+router.post('/:userId', AuthMiddleware,  (req:WithAuthProp<Request>, res:Response) => roadmapController.saveRoadMapToDb(req,res));
 
-router.put('/:id', AuthMiddleware, (req, res) => {
-  roadmapController.updateRoadMap(req, res);
-});
+router.get('/:userId', AuthMiddleware, (req:WithAuthProp<Request>, res:Response) =>roadmapController.getRoadMapFromDb(req,res));
 
-router.delete('/:id', AuthMiddleware, (req, res) => {
-  roadmapController.deleteRoadMap(req, res);
-});
+router.get('/id/:roadmapId', AuthMiddleware, (req:WithAuthProp<Request>, res:Response) => roadmapController.getRoadMapById(req,res));
+
+router.put('/id/:roadmapId', AuthMiddleware, (req:WithAuthProp<Request>, res:Response) => roadmapController.updateRoadMap(req,res));
+
+router.delete('/id/:roadmapId', AuthMiddleware, (req:WithAuthProp<Request>, res:Response) => roadmapController.deleteRoadMap(req,res));
 
 export default router;

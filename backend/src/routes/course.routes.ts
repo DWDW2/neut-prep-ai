@@ -1,14 +1,20 @@
-// import express from 'express';
-// import CourseController from '../controllers/course.controller';
-// import CourseService from '../services/course.service';
-// import AuthMiddleware from '../middleware/auth.middleware';
-// const router = express.Router();
+import { Router } from 'express';
+import CourseController from '../controllers/course.controller';
+import AuthMiddleware from '../middleware/auth.middleware';
+import CourseService from '../services/course.service';
 
-// const courseService = new CourseService();
-// const courseController = new CourseController(courseService);
+const router = Router();
+const courseService = new CourseService()
+const courseController = new CourseController(courseService)
 
-// router.use(AuthMiddleware); 
+router.post('/generate-lesson-math', AuthMiddleware, (req, res) => courseController.generateLessonMath(req, res));
 
-// router.post('/generate-lessons', (req, res) => courseController.generateLessons(req, res));
+router.post('/generate-lesson-critical', AuthMiddleware, (req, res) => courseController.generateLessonCritical(req, res));
 
-// export default router;
+router.post('/handle-incorrect-themes', AuthMiddleware, (req, res) => courseController.handleIncorrectThemes(req, res));
+
+router.post('/update-xp-and-streak', AuthMiddleware, (req, res) => courseController.updateXpAndStreak(req,res));
+
+router.post('/reset-todays-xp', AuthMiddleware, (req, res) => courseController.resetTodaysXp(req, res));
+
+export default router;

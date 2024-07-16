@@ -17,7 +17,7 @@ const PerformanceSummary = ({ performanceData } : Props) => {
   );
 
   return (
-    <div className="max-w-xl mx-auto mt-8 p-6 bg-gray-100 rounded-lg shadow-md">
+    <div className="p-6 bg-gray-100 rounded-lg shadow-md m-4">
       <h2 className="text-2xl font-semibold text-center mb-4">Themes to Improve</h2>
       {themesToImprove.length > 0 ? (
         <ul className="list-none p-0">
