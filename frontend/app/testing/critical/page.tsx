@@ -17,17 +17,13 @@ import { Button } from "@/components/ui/button"
 type Props = {}
 
 export default function CriticalDetailed({}: Props) {
-  const {generateCriticalRoadmap, isLoading, error} = useRoadmapApi()
-  useSession().session?.getToken().then((res) => {
-    axiosInstance.interceptors.request.use((config) => {
-      config.headers.Authorization = `Bearer ${res}`
-      console.log('finished')
-      return config
-    })
-  })
-  const handleClick = async() => {
-    await generateCriticalRoadmap()
-  } 
+  const {generateCriticalRoadmap, isLoading, error, criticalRoadmap} = useRoadmapApi()
+  // useEffect(() => {
+  //   generateCriticalRoadmap()
+  //   if(criticalRoadmap){
+
+  //   }
+  // })
   if(isLoading){
     return(
       <Loading/>
@@ -45,7 +41,6 @@ export default function CriticalDetailed({}: Props) {
       <StickySideBar>
         <section className="flex flex-col gap-y-4 p-4">
           <UserSideBar title="Daily quest" dailyGoal={100} xp={10}/>
-          <Button variant={'primary'} onClick={() => handleClick()}>Generate</Button>
           <UserProgress dailyGoal={100} xp={20}/>
         </section>
       </StickySideBar>

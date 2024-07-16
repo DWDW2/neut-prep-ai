@@ -24,7 +24,6 @@ const useRoadmapApi = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const {session} = useSession() 
-  const {token} = useAuth()
 
   // Generate a critical roadmap
   const generateCriticalRoadmap = async (): Promise<GenerateCriticalRoadmapResponse> => {

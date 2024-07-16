@@ -10,10 +10,8 @@ type Props = {
 }
 
 export default function layout({children}: Props) {
-
   return (
     <>
-
         <MobileHeader />
         <SideBar className='hidden lg:flex' userProfLink={''} userProfImage={''} />
         <div className='lg:pl-[256px] h-full pt-[50px] lg:pt-[0px]'>

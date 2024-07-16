@@ -16,8 +16,7 @@ type Props = {}
 export default function Testing({}: Props) {
   const [visitDates, setVisitDates] = useState<Date[]>([]);
   const {session} = useSession()
-  session?.getToken().then(res => 
-  console.log(res))
+  session?.getToken().then(res => window.localStorage.setItem('token', res!))
   const skills = [
     { name: 'Reading', points: 80 },
     { name: 'Writing', points: 70 },
@@ -45,19 +44,15 @@ export default function Testing({}: Props) {
   ];
  return (
   <div className="min-h-screen flex flex-col">
-  <div className="flex lg:flex-row flex-col">
-    <div className="w-full p-4 lg:w-1/2 mx-auto">
+  <div className="flex flex-col m-4">
       <Themes performanceData={performanceData} />
-      {/* <Calendar visitedDays={visitDates}/> */}
-    </div>
-    <div className="lg:w-[40%] w-full p-4">
+
       <TestStatistics
         points={85}
         skills={skills}
         bestSkills={bestSkills}
         continueCourse={continueCourse}
       />
-    </div>
   </div>
 </div>
   )
