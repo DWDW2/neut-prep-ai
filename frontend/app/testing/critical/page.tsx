@@ -11,16 +11,41 @@ import { useEffect, useState } from "react"
 import Loading from "@/components/Loading"
 import {toast, ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { useSession } from "@clerk/nextjs"
+import axiosInstance from "@/axiosInstance"
+import { Button } from "@/components/ui/button"
 type Props = {}
 
 export default function CriticalDetailed({}: Props) {
-  const {useCriticalRoadmap} = useRoadmapApi()
-  const {i} = useCriticalRoadmap
+  const {generateCriticalRoadmap, isLoading, error} = useRoadmapApi()
+  useSession().session?.getToken().then((res) => {
+    axiosInstance.interceptors.request.use((config) => {
+      config.headers.Authorization = `Bearer ${res}`
+      console.log('finished')
+      return config
+    })
+  })
+  const handleClick = async() => {
+    await generateCriticalRoadmap()
+  } 
+  if(isLoading){
+    return(
+      <Loading/>
+    )
+  }
+
+  if(error){
+    return(
+      <div>Error</div>
+    )
+  }
+
   return (
     <div className="flex flex-row-reverse gap-[48px] px-6">
       <StickySideBar>
         <section className="flex flex-col gap-y-4 p-4">
           <UserSideBar title="Daily quest" dailyGoal={100} xp={10}/>
+          <Button variant={'primary'} onClick={() => handleClick()}>Generate</Button>
           <UserProgress dailyGoal={100} xp={20}/>
         </section>
       </StickySideBar>

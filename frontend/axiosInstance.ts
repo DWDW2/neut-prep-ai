@@ -1,21 +1,17 @@
 import axios from 'axios';
+import { useSession } from '@clerk/nextjs';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5000',
+  baseURL: 'http://localhost:5000', // Replace with your actual API base URL
 });
 
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Njk0NGU4ZjZhMjc0MWJjZDY1Y2JjMjQiLCJpYXQiOjE3MjEwNDc0OTUsImV4cCI6MTcyMTA1MTA5NX0.gtrkJbUZ5V6tPtpO3bdYSb88_w5xHVW2_R7g0fESBU8"
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+// axiosInstance.interceptors.request.use(
+//   (config) => {
+//     config.headers.Authorization = `Bearer `;
+//       return config;
+//     },
+//     (error) => Promise.reject(error)
+  // );
 
 axiosInstance.interceptors.response.use(
   (response) => response,

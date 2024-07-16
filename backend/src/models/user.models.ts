@@ -12,9 +12,10 @@ interface RoadMap {
 }
 
 interface UserType {
+  id:string;
   email: string;
   username: string;
-  password: string;
+  password?: string;
   roadmapCriticalId?: mongoose.Types.ObjectId; 
   roadmapMathId?: mongoose.Types.ObjectId; 
   themesToImprove: string[]; 
@@ -24,16 +25,17 @@ interface UserType {
 }
 
 const UserSchema = new Schema<UserType>({
+  id:{
+    type: String,
+    required: true,
+    unique: true,
+  },
   email: {
     type: String,
     required: true,
     unique: true,
   },
   username: {
-    type: String,
-    required: true,
-  },
-  password: {
     type: String,
     required: true,
   },
@@ -57,7 +59,7 @@ const UserSchema = new Schema<UserType>({
     type: Number,
     default: 0,
   },
-  todaysXp: { // Add todaysXp field
+  todaysXp: { 
     type: Number,
     default: 0,
   },

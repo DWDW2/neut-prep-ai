@@ -4,7 +4,7 @@ import NuetDocument from "../models/nuetexampaper.models";
 import { UserModel as User, UserType } from "../models/user.models";
 
 export default class RoadMapService {
-  async generateRoadMapCritical(userId: string) {
+  async getRoadMapCriticalByUserId(userId: string) {
     try {
       const documents = await NuetDocument.findById('6693c1e849ce670483ae0cc7')
       let generalString = documents?.text;
@@ -26,19 +26,32 @@ export default class RoadMapService {
       if (!user) {
         return null;
       }
-      const newRoadMap = new RoadMap({ roadmap: resJson, user: user._id });
-      await newRoadMap.save();
 
-      user.roadmapCriticalId = newRoadMap._id; 
-      await user.save();
-      return newRoadMap;
+      if (user.roadmapCriticalId) {
+        const existingRoadMap = await RoadMap.findById(user.roadmapCriticalId);
+        if (existingRoadMap) {
+          return existingRoadMap; 
+        } else {
+          const newRoadMap = new RoadMap({ roadmap: resJson, user: user._id });
+          await newRoadMap.save();
+          user.roadmapCriticalId = newRoadMap._id;
+          await user.save();
+          return newRoadMap;
+        }
+      } else {
+        const newRoadMap = new RoadMap({ roadmap: resJson, user: user._id });
+        await newRoadMap.save();
+        user.roadmapCriticalId = newRoadMap._id;
+        await user.save();
+        return newRoadMap;
+      }
     } catch (error) {
       console.error("Error generating critical roadmap:", error);
       return null;
     }
   }
 
-  async generateRoadMapMath(userId: string) {
+  async getRoadMapMathByUserId(userId: string) {
     try {
       const documents = await NuetDocument.findById('6693c1970c4480a49aafc1c1')
       let generalString  = documents?.text
@@ -61,12 +74,25 @@ export default class RoadMapService {
       if (!user) {
         return null;
       }
-      const newRoadMap = new RoadMap({ roadmap: resJson, user: user._id });
-      await newRoadMap.save();
 
-      user.roadmapMathId = newRoadMap._id; // Update roadmapMathId
-      await user.save();
-      return newRoadMap;
+      if (user.roadmapMathId) {
+        const existingRoadMap = await RoadMap.findById(user.roadmapMathId);
+        if (existingRoadMap) {
+          return existingRoadMap; 
+        } else {
+          const newRoadMap = new RoadMap({ roadmap: resJson, user: user._id });
+          await newRoadMap.save();
+          user.roadmapMathId = newRoadMap._id;
+          await user.save();
+          return newRoadMap;
+        }
+      } else {
+        const newRoadMap = new RoadMap({ roadmap: resJson, user: user._id });
+        await newRoadMap.save();
+        user.roadmapMathId = newRoadMap._id;
+        await user.save();
+        return newRoadMap;
+      }
     } catch (error) {
       console.error("Error generating math roadmap:", error);
       return null;

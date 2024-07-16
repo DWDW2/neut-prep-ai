@@ -1,79 +1,182 @@
-// useRoadmapApi.ts
-
-import { useQuery, useMutation, useQueryClient } from 'react-query';
-import axiosInstance from '../axiosInstance';
+import { useState, useEffect } from 'react';
+import axiosInstance from '@/axiosInstance'; // Assuming you have your axiosInstance setup
 import { RoadmapPayload, Roadmap } from '@/types/useRoadmap.types';
+import { useSession } from '@clerk/nextjs';
+import useAuth from './useauth';
+
+// Define types for API responses
+type GenerateCriticalRoadmapResponse = Roadmap;
+type GenerateMathRoadmapResponse = Roadmap;
+type GetMathRoadmapResponse = Roadmap;
+type GetCriticalThinkingRoadmapResponse = Roadmap;
+type SaveRoadmapResponse = Roadmap;
+type GetRoadmapFromDbResponse = Roadmap;
+type GetRoadmapByIdResponse = Roadmap;
+type UpdateRoadmapResponse = Roadmap;
+type DeleteRoadmapResponse = void;
 
 const useRoadmapApi = () => {
-  const queryClient = useQueryClient();
+  // States for caching, loading, and error
+  const [criticalRoadmap, setCriticalRoadmap] = useState<Roadmap | null>(null);
+  const [mathRoadmap, setMathRoadmap] = useState<Roadmap | null>(null);
+  const [roadmapFromDb, setRoadmapFromDb] = useState<Roadmap | null>(null);
+  const [roadmapById, setRoadmapById] = useState<Roadmap | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const {session} = useSession() 
+  const {token} = useAuth()
 
-  const generateCriticalRoadmap = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useMutation<Roadmap>(() => axiosInstance.post<Roadmap>('/roadmap/generate-critical-roadmap'), {
-      onSuccess: (data) => {
-        queryClient.setQueryData<Roadmap>('criticalRoadmap', data);
-      },
-    });
+  // Generate a critical roadmap
+  const generateCriticalRoadmap = async (): Promise<GenerateCriticalRoadmapResponse> => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await axiosInstance.get('/roadmap/critical/generate-and-get-roadmapCritical');
+      setCriticalRoadmap(response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('Error generating critical roadmap:', error);
+      setError(error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const generateMathRoadmap = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useMutation<Roadmap, Error, RoadmapPayload>((payload) =>
-      axiosInstance.post<Roadmap>('/roadmap/generate-math-roadmap', payload)
-    , {
-      onSuccess: (data) => {
-        queryClient.setQueryData<Roadmap>(['mathRoadmap', payload], data);
-      },
-    });
+  // Generate a math roadmap
+  const generateMathRoadmap = async (payload: RoadmapPayload): Promise<GenerateMathRoadmapResponse> => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await axiosInstance.post('/roadmap/math/generate-and-get-roadmapMath', payload);
+      setMathRoadmap(response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('Error generating math roadmap:', error);
+      setError(error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const getMathRoadmap = (userId: string) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useQuery<Roadmap, Error>(['mathRoadmap', userId], () =>
-      axiosInstance.get<Roadmap>(`/roadmap/users/${userId}/math-roadmap`).then((res) => res.data)
-    );
+  // Get a math roadmap for a user
+  const getMathRoadmap = async (userId: string): Promise<GetMathRoadmapResponse> => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await axiosInstance.get(`/roadmap/math/${userId}`);
+      setMathRoadmap(response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('Error getting math roadmap:', error);
+      setError(error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const getCriticalThinkingRoadmap = (userId: string) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useQuery<Roadmap, Error>(['criticalRoadmap', userId], () =>
-      axiosInstance.get<Roadmap>(`/roadmap/users/${userId}/critical-roadmap`).then((res) => res.data)
-    );
+  // Get a critical thinking roadmap for a user
+  const getCriticalThinkingRoadmap = async (userId: string): Promise<GetCriticalThinkingRoadmapResponse> => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await axiosInstance.get(`/roadmap/critical/${userId}`);
+      setCriticalRoadmap(response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('Error getting critical thinking roadmap:', error);
+      setError(error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const saveRoadmap = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useMutation<Roadmap, Error, RoadmapPayload>((payload) =>
-      axiosInstance.post<Roadmap>('/roadmap/roadmaps', payload)
-    , {
-      onSuccess: () => {
-        queryClient.invalidateQueries('roadmaps');
-      },
-    });
+  // Save a roadmap to the database
+  const saveRoadmap = async (userId: string, payload: RoadmapPayload): Promise<SaveRoadmapResponse> => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await axiosInstance.post(`/roadmap/${userId}`, payload);
+      setRoadmapFromDb(response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('Error saving roadmap:', error);
+      setError(error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const updateRoadmap = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useMutation<Roadmap, Error, { id: string; payload: RoadmapPayload }>(
-      ({ id, payload }) => axiosInstance.put<Roadmap>(`/roadmap/roadmaps/${id}`, payload),
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries('roadmaps');
-        },
-      }
-    );
+  // Get a roadmap from the database for a user
+  const getRoadmapFromDb = async (userId: string): Promise<GetRoadmapFromDbResponse> => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await axiosInstance.get(`/roadmap/${userId}`);
+      setRoadmapFromDb(response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('Error getting roadmap from database:', error);
+      setError(error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const deleteRoadmap = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useMutation<void, Error, string>((id) =>
-      axiosInstance.delete(`/roadmap/roadmaps/${id}`)
-    , {
-      onSuccess: () => {
-        queryClient.invalidateQueries('roadmaps');
-      },
-    });
+  // Get a roadmap by its ID
+  const getRoadmapById = async (roadmapId: string): Promise<GetRoadmapByIdResponse> => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await axiosInstance.get(`/roadmap/id/${roadmapId}`);
+      setRoadmapById(response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('Error getting roadmap by ID:', error);
+      setError(error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  // Update a roadmap in the database
+  const updateRoadmap = async (roadmapId: string, payload: RoadmapPayload): Promise<UpdateRoadmapResponse> => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await axiosInstance.put(`/roadmap/id/${roadmapId}`, payload);
+      setRoadmapById(response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('Error updating roadmap:', error);
+      setError(error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Delete a roadmap from the database
+  const deleteRoadmap = async (roadmapId: string): Promise<DeleteRoadmapResponse> => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      await axiosInstance.delete(`/roadmap/id/${roadmapId}`);
+    } catch (error: any) {
+      console.error('Error deleting roadmap:', error);
+      setError(error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
 
   return {
     generateCriticalRoadmap,
@@ -81,8 +184,16 @@ const useRoadmapApi = () => {
     getMathRoadmap,
     getCriticalThinkingRoadmap,
     saveRoadmap,
+    getRoadmapFromDb,
+    getRoadmapById,
     updateRoadmap,
     deleteRoadmap,
+    criticalRoadmap,
+    mathRoadmap,
+    roadmapFromDb,
+    roadmapById,
+    isLoading,
+    error,
   };
 };
 
