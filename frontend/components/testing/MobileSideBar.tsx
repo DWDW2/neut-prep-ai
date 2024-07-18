@@ -11,7 +11,7 @@ export default function MobileSideBar({}: Props) {
             <Menu className='text-white'/>
         </SheetTrigger>
         <SheetContent className='p-0 z-[100] w-fit' side={'left'}>
-            <SideBar/>
+            <SideBar userProfLink={''} className='flex'/>
         </SheetContent>
     </Sheet>
   )

@@ -3,7 +3,8 @@ import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from "next-auth/providers/credentials";
 
 interface CustomUser extends User {
-  accessToken: string;
+  accessToken: string; // Make accessToken optional
+  refreshToken: string; // Add refreshToken field
   provider: string;
 }
 
@@ -20,16 +21,26 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
-        const res = await fetch('http://localhost:5000/user/login', {
-          method: 'POST',
-          body: JSON.stringify(credentials),
-          headers: { "Content-Type": "application/json" },
-        });
-        const user = await res.json();
-        if (res.ok && user) {
-          return user as CustomUser;
+        try {
+          const res = await fetch('http://localhost:5000/user/login', {
+            method: 'POST',
+            body: JSON.stringify(credentials),
+            headers: { "Content-Type": "application/json" },
+          });
+          if (!res.ok) {
+            const errorText = await res.text();
+            throw new Error(`Login failed: ${errorText}`);
+          }
+          const user = await res.json();
+          return {
+            ...user,
+            provider: 'credentials', // Specify the provider type
+          } as CustomUser;
+        } catch (error:any) {
+          // Handle login errors
+          console.error('Login failed:', error.message);
+          return null;
         }
-        return null;
       },
     }),
   ],
@@ -47,32 +58,32 @@ export const authOptions: NextAuthOptions = {
         customUser.provider = account.provider; 
 
         if (account.provider === 'google') {
-          const response = await fetch('http://localhost:5000/user/registerGoogle', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              id_token: account.id_token,
-            }),
-          });
-
-          const tokenaccess = await fetch('http://localhost:5000/user/loginGoogle', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              id_token: account.id_token
-            }),
-          })
-          const data = await tokenaccess.json();
-          if (data.accessToken) {
-            token.accessToken = data.accessToken;
+          try {
+            const tokenAccess = await fetch('http://localhost:5000/user/login', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                id_token: account.id_token
+              }),
+            });
+            if (!tokenAccess.ok) {
+              const errorText = await tokenAccess.text();
+              throw new Error(`Token fetch failed: ${errorText}`);
+            }
+            const data = await tokenAccess.json();
+            if (data.accessToken && data.refreshToken) {
+              token.accessToken = data.accessToken;
+              token.refreshToken = data.refreshToken; 
+            }
+          } catch (error:any) {
+            console.error('Token fetch failed:', error.message);
           }
         } else if (account.provider === 'credentials') {
-          if (user.accessToken) {
+          if (user.accessToken && user.refreshToken) {
             token.accessToken = user.accessToken;
+            token.refreshToken = user.refreshToken;
           }
         }
       }
@@ -81,6 +92,7 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken as string;
+      session.refreshToken = token.refreshToken as string; 
       return session;
     },
   },

@@ -3,7 +3,7 @@ import { UserModel } from '../models/user.models';
 import verifyGoogleToken from '../verifygoogle';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET!;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'your-refresh-token-secret';
 
 export default class UserService {
@@ -64,8 +64,12 @@ export default class UserService {
       if(credentials.id_token){
         const payload = await verifyGoogleToken(credentials.id_token);
         const user = await UserModel.findOne({ email: payload?.email });
-        const token = jwt.sign({ userId: user?._id }, JWT_SECRET, { expiresIn: '1h' });
-        return { success: true, token };
+        if (!user) {
+          return { success: false, message: 'User not found' };
+        }
+        const accessToken = jwt.sign({ userId: user?._id }, JWT_SECRET, { expiresIn: '1h' });
+        const refreshToken = jwt.sign({ userId: user?._id }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+        return { success: true, accessToken, refreshToken };
       }
       
       const user = await UserModel.findOne({ email: credentials.email });
@@ -82,8 +86,9 @@ export default class UserService {
         return { success: false, message: 'Incorrect password' };
       }
   
-      const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
-      return { success: true, token };
+      const accessToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
+      const refreshToken = jwt.sign({ userId: user._id }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+      return { success: true, accessToken, refreshToken };
     } catch (error) {
       console.error('Error logging in user:', error);
       return { success: false, message: 'Login failed' };

@@ -1,21 +1,35 @@
 import React from 'react'
-import UnitButton from './UnitButton'
+import UnitButton from './LessonButton'
 import { Roadmap } from '@/types/useRoadmap.types'
-
-type Props = {
-  data?: Roadmap | Roadmap[] | null
+interface handleLesson {
+  activeLesson: boolean,
+  isCurrent: boolean;
+  isLoked: boolean;
+  lessonId: string
 }
 
-export default function Unit({data}: Props) {
-  
+type Props = {
+  data?: Roadmap | null
+  onClick: ({lessonId, isCurrent, isLoked, activeLesson}:handleLesson) => void;
+}
+
+interface Lesson {
+  activeLesson: boolean,
+  isCurrent: boolean;
+  isLoked: boolean;
+}
+
+export default function Unit({data, onClick}: Props) {
+
   return (
     <section className='flex flex-col items-center gap-4'>
-        <UnitButton place={0}/>
-        <UnitButton place={1}/>
-        <UnitButton place={5}/>
-        <UnitButton place={7}/>
-        <UnitButton place={9}/>
-        <UnitButton place={10}/>
+        {
+          data && data.roadmap.map((lesson, index) => {
+            return(
+              <UnitButton key={index} onClick={() => onClick}/>
+            )
+          })
+        }
     </section>
   )
 }

@@ -4,7 +4,7 @@ import FeedWrapper from "@/components/testing/Feed-sidebar"
 import StickySideBar from "../../../components/testing/Sticky-sidebar"
 import UserSideBar from "@/components/testing/XPgained"
 import UserProgress from "@/components/testing/UserProgress"
-import UnitButton from "@/components/testing/UnitButton"
+import UnitButton from "@/components/testing/LessonButton"
 import Unit from "@/components/testing/Unit"
 import UnitSection from "@/components/testing/UnitSection"
 

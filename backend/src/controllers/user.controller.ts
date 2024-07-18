@@ -2,19 +2,20 @@ import { Request, Response } from 'express';
 import UserService from '../services/user.service';
 
 export default class UserController {
-  private userService: UserService
+  private userService: UserService;
 
-  constructor(userService: UserService){
-    this.userService = userService
+  constructor(userService: UserService) {
+    this.userService = userService;
   }
+
   async register(req: Request, res: Response) {
     try {
-      const { username, email, password, id_token  } = req.body
-      const success = await this.userService.registerUser({ username, email, password, id_token});
+      const { username, email, password, id_token } = req.body;
+      const success = await this.userService.registerUser({ username, email, password, id_token });
       if (success.success) {
         res.status(201).json({ message: 'User registered successfully' });
       } else {
-        res.status(500).json({ message: success.message });
+        res.status(400).json({ message: success.message }); // Changed to 400 for bad request
       }
     } catch (error) {
       console.error('Error in register controller:', error);
@@ -25,10 +26,9 @@ export default class UserController {
   async login(req: Request, res: Response) {
     try {
       const { email, password, id_token } = req.body;
-      console.log(req.body)
       const loginResult = await this.userService.loginUser({ email, password, id_token });
       if (loginResult.success) {
-        res.status(200).json({ accessToken: loginResult.token });
+        res.status(200).json({ accessToken: loginResult.accessToken, refreshToken: loginResult.refreshToken }); 
       } else {
         res.status(401).json({ message: loginResult.message });
       }
@@ -116,5 +116,4 @@ export default class UserController {
       res.status(500).json({ message: 'Internal server error' });
     }
   }
-
 }

@@ -1,5 +1,5 @@
-
 interface Roadmap {
+  map(arg0: (lesson: any, index: any) => import("react").JSX.Element): import("react").ReactNode;
   _id: string;
   roadmap:[
     {
@@ -18,6 +18,7 @@ interface RoadmapPayload {
 }
 
 interface Lesson {
+  _id: string;
   theme: string;
   skills: string;
   points: number;
