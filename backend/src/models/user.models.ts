@@ -12,7 +12,6 @@ interface RoadMap {
 }
 
 interface UserType {
-  id:string;
   email: string;
   username: string;
   password?: string;
@@ -25,15 +24,13 @@ interface UserType {
 }
 
 const UserSchema = new Schema<UserType>({
-  id:{
-    type: String,
-    required: true,
-    unique: true,
-  },
   email: {
     type: String,
     required: true,
     unique: true,
+  },
+  password: {
+    type: String,
   },
   username: {
     type: String,

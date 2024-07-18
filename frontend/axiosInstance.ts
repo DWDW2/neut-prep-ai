@@ -1,24 +1,17 @@
-import axios from 'axios';
-import { useSession } from '@clerk/nextjs';
 
-const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5000', // Replace with your actual API base URL
-});
+// import axios from "axios";
+// import { getSession } from "next-auth/react";
 
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = window.localStorage.getItem('token');
-    config.headers.Authorization = `Bearer ${token}`;
-      return config;
-    },
-    (error) => Promise.reject(error)
-  );
+// const axiosInstance = axios.create({
+//   baseURL: "http://localhost:5000/",
+// });
 
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+// axiosInstance.interceptors.request.use(async (config) => {
+//   const session = await getSession();
+//   if (session?.accessToken) {
+//     config.headers.Authorization = `Bearer ${session.accessToken}`;
+//   }
+//   return config;
+// });
 
-export default axiosInstance;
+// export default axiosInstance;

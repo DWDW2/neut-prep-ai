@@ -1,33 +1,17 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import { UserModel } from '../models/user.models';
-import { clerk } from '../server';
-const AuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  const auth = req.auth
-  if (!auth) {
-    return res.status(401).json({ message: 'Unauthorized' });
+const authMiddleware = (req:Request, res:Response, next:NextFunction) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    return res.status(401).send('Unauthorized');
   }
   try {
-    const user = await clerk.users.getUser(auth.userId!);
-    let userMongo = await UserModel.findOne({id:user.id})
-    console.log('got there')
-    if (!userMongo) {
-      userMongo = new UserModel({
-        id: user.id,
-        email: user.emailAddresses[0].emailAddress,
-        username: user.username ? user.username : user.firstName
-      });
-      console.log(user)
-      console.log('got there2')
-      await userMongo.save();
-    }
-    req.body.userId = userMongo._id; 
-    console.log('lets go')
-    next()
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    req.body.user = decoded;
+    next();
   } catch (error) {
-    console.log(error)
-    return res.status(401).json({ message: 'Unauthorized' });
+    return res.status(401).send('Unauthorized');
   }
 };
 
-export default AuthMiddleware;
+export default authMiddleware;

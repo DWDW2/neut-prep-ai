@@ -1,32 +1,46 @@
 'use client'
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState } from 'react';
-import { signIn } from 'next-auth/react';
+import React, { useEffect, useState } from 'react';
+import { signIn, useSession } from 'next-auth/react';
 import { Button } from '../ui/button';
 import { FaGoogle } from 'react-icons/fa';
-interface RegistrationFormProps {
-  onSubmit: (userData: { email: string; password: string; username: string }) => void;
-}
+import { getServerSession } from 'next-auth';
 
-const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit }) => {
+const RegistrationForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-
-    if (!termsAccepted) {
-      alert('Please accept the Terms and Conditions!');
-      return;
+  const handleRegistration = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const res = await fetch('http://localhost:5000/user/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password,
+        username,
+      }),
+    });
+    if(res.ok){
+      await signIn('credentials', {
+        email,
+        password,
+        redirect: true,
+        callbackUrl: '/'
+      });
     }
-
-    onSubmit({ email, password, username });
+  }
+  const handleGoogleRegistration = async () => {
+    await signIn('google', { callbackUrl: '/' }); 
   };
 
+  const { data: session } = useSession();
+ 
+  console.log(session)
   return (
     <section className="bg-gray-100"> {/* Light gray background */}
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 my-10">
@@ -40,7 +54,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit }) => {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
               Create an account
             </h1>
-            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+            <form className="space-y-4 md:space-y-6" onSubmit={handleRegistration}>
               <div>
                 <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">
                   Your email
@@ -88,7 +102,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit }) => {
               </div>
               <div className="flex items-start">
                 <div className="flex items-center h-5 w-full">
-                  <Button variant={'sidebar'} className='w-full flex flex-row gap-3 ' onClick={() => signIn('google')}>
+                  <Button variant={'sidebar'} className='w-full flex flex-row gap-3 ' onClick={handleGoogleRegistration}>
                     <FaGoogle />Sign Up with Google
                   </Button>
                 </div>
