@@ -27,7 +27,10 @@ axiosInstance.interceptors.response.use(
             refreshToken: session.refreshToken,
           });
           const { accessToken } = response.data;
-          session.accessToken = accessToken;
+
+          const {update} = await useSession();
+          update({accessToken:accessToken})
+          
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           return axiosInstance(originalRequest);
         }

@@ -10,11 +10,11 @@ export default class CourseController {
 
   async generateLessonMath(req: Request, res: Response) {
     try {
-      const { roadmapId, lessonIndex, unitIndex } = req.body
+      const { roadmapId, lessonIndex, sectionIndex } = req.body
       const lessonJson = await this.courseService.generateLessonMath(
         roadmapId,
         parseInt(lessonIndex),
-        parseInt(unitIndex)
+        parseInt(sectionIndex)
       );
       res.status(200).json(lessonJson);
     } catch (error) {
@@ -25,11 +25,11 @@ export default class CourseController {
 
   async generateLessonCritical(req: Request, res: Response) {
     try {
-      const { roadmapId, lessonIndex, unitIndex } = req.body;
+      const { roadmapId, lessonIndex, sectionIndex } = req.body;
       const lessonJson = await this.courseService.generateLessonCritical(
         roadmapId,
         parseInt(lessonIndex),
-        parseInt(unitIndex)
+        parseInt(sectionIndex)
       );
       res.status(200).json(lessonJson);
     } catch (error) {

@@ -7,7 +7,7 @@ type Props = {
 
 export default function UnitSection({UnitName, Unit}: Props) {
   return (
-    <section className='bg-yellow-400 p-5 px-10 rounded-2xl'>
+    <section className='bg-yellow-400 p-5 px-10 rounded-2xl border-b-8 border-yellow-500'>
         <p className='text-white text font-bold'>
             {Unit}
         </p>

@@ -2,10 +2,10 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import axiosInstance from '@/axiosInstance'; // Assuming axiosInstance is properly configured
 import { RoadmapPayload, Roadmap } from '@/types/useRoadmap.types';
 import { useSession } from 'next-auth/react';
-
+import { PayloadCourse } from '@/types/useCourse.types';
 // Define types for API responses
-type GenerateLessonMathResponse = any; 
-type GenerateLessonCriticalResponse = any; 
+type GenerateLessonMathResponse = Roadmap; 
+type GenerateLessonCriticalResponse = Roadmap; 
 type HandleIncorrectThemesResponse = any; 
 type UpdateXpAndStreakResponse = any; 
 type ResetTodaysXpResponse = any; 
@@ -17,8 +17,8 @@ const useCourseApi = () => {
   // Generate lesson for math
   const useGenerateLessonMath = () => {
     return useMutation<GenerateLessonMathResponse, Error, any>(
-      async (payload) => {
-        const { data } = await axiosInstance.post('/generate-lesson-math', payload, {
+      async (payload: PayloadCourse) => {
+        const { data } = await axiosInstance.post('/course/generate-lesson-math', payload, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },
@@ -36,8 +36,8 @@ const useCourseApi = () => {
   // Generate lesson for critical thinking
   const useGenerateLessonCritical = () => {
     return useMutation<GenerateLessonCriticalResponse, Error, any>(
-      async (payload) => {
-        const { data } = await axiosInstance.post('/generate-lesson-critical', payload, {
+      async (payload:PayloadCourse) => {
+        const { data } = await axiosInstance.post('/course/generate-lesson-critical', payload, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },
