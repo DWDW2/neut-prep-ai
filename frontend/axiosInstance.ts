@@ -18,6 +18,8 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+
+
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
@@ -26,12 +28,11 @@ axiosInstance.interceptors.response.use(
           const response = await axiosInstance.post('/user/refresh-token', {
             refreshToken: session.refreshToken,
           });
+
           const { accessToken } = response.data;
 
-          const {update} = await useSession();
-          update({accessToken:accessToken})
-          
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+          
           return axiosInstance(originalRequest);
         }
       } catch (error) {

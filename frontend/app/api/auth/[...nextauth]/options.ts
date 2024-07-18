@@ -34,10 +34,9 @@ export const authOptions: NextAuthOptions = {
           const user = await res.json();
           return {
             ...user,
-            provider: 'credentials', // Specify the provider type
+            provider: 'credentials',
           } as CustomUser;
         } catch (error:any) {
-          // Handle login errors
           console.error('Login failed:', error.message);
           return null;
         }

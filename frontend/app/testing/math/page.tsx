@@ -13,6 +13,8 @@ import {toast, ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import useCourseApi from "@/hooks/useCourse"
 import Loading from "@/components/Loading"
+import { RoadMap, RoadMapLesson} from "@/app/constants"
+import { useRouter } from "next/navigation"
 type Props = {}
 interface handleLesson {
   sectionIndex: number,
@@ -20,27 +22,32 @@ interface handleLesson {
   roadmapId: string
 }
 export default function CriticalDetailed({}: Props) {
-  const {useGenerateMathRoadmap} = useRoadmapQuery()
-  const {useGenerateLessonMath} = useCourseApi()
-  const {mutate, isLoading:isLoadingMath, isError: isErrorMath, data:MathRoadmapLesson} = useGenerateLessonMath()
-  const [isLessonActive, setLessonActive] = useState(false)
-  const {data: MathRoadmap, isLoading, isError} = useGenerateMathRoadmap()
-  const handleLessonClick = ({ sectionIndex, lessonIndex, roadmapId}: handleLesson) => {
-    setLessonActive(!isLessonActive)
-    console.log()
-    mutate({sectionIndex, lessonIndex, roadmapId})
-  }
-  if(isLoading){
-    return(
-      <Loading />
-    )
-  }
+  // const {useGenerateMathRoadmap} = useRoadmapQuery()
+  // const {useGenerateLessonMath} = useCourseApi()
+  // const {mutate, isLoading:isLoadingMath, isError: isErrorMath, data:MathRoadmapLesson} = useGenerateLessonMath()
+  // const [isLessonActive, setLessonActive] = useState(false)
+  // const {data: RoadMap, isLoading, isError} = useGenerateMathRoadmap()
+  // const handleLessonClick = ({ sectionIndex, lessonIndex, roadmapId}: handleLesson) => {
+  //   setLessonActive(!isLessonActive)
+  //   console.log()
+  //   mutate({sectionIndex, lessonIndex, roadmapId})
+  // }
+  // if(isLoading){
+  //   return(
+  //     <Loading />
+  //   )
+  // }
 
-  if(isError){
-    toast('error')
+  // if(isError){
+  //   toast('error')
+  // }
+  // console.log(RoadMap)
+  // console.log(MathRoadmapLesson)
+  
+  const router = useRouter()
+  const handleLessonClick = ({lessonIndex, sectionIndex, roadmapId}:handleLesson) => {
+    router.push(`/testing/math/${roadmapId}/${sectionIndex}/${lessonIndex}`)
   }
-  console.log(MathRoadmap)
-  console.log(MathRoadmapLesson)
   return (
     <div className="flex flex-row-reverse gap-[48px] px-6">
       <StickySideBar>
@@ -52,14 +59,14 @@ export default function CriticalDetailed({}: Props) {
       <FeedWrapper>
         <section className="pt-6 gap-y-4 flex flex-col">
           {
-            MathRoadmap?.roadmap.map((section, index) => {
+            RoadMap?.roadmap.map((section, index) => {
               return(
                 <div key={index}>
                   <UnitSection Unit={section.unit} UnitName={section.section}/>
                   {
                     section.lessons.map((lesson, lessonindex) => {
                       return(
-                        <UnitButton index={lessonindex} totalCount={section.lessons.length} onClick={() => handleLessonClick({sectionIndex: index, lessonIndex: lessonindex, roadmapId: MathRoadmap._id})} key={lessonindex}/>
+                        <UnitButton index={lessonindex} totalCount={section.lessons.length} onClick={() => handleLessonClick({roadmapId: RoadMap._id, sectionIndex: index, lessonIndex: lessonindex})}  key={lessonindex}/>
                       )
                     })
                   }

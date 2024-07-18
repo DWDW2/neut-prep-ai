@@ -121,4 +121,17 @@ export default class CourseService {
       return false; 
     }
   }
+  async fetchAllUserData(userId: string) {
+    try {
+      const user = await User.findById(userId)
+      if (!user) {
+        return null; 
+      }
+
+      return user; 
+    } catch (error) {
+      console.log("Error fetching user data:", error);
+      return null; // Indicate failure
+    }
+  }
 }
