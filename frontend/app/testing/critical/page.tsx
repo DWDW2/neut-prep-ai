@@ -3,39 +3,40 @@ import FeedWrapper from "@/components/testing/Feed-sidebar"
 import StickySideBar from "../../../components/testing/Sticky-sidebar"
 import UserSideBar from "@/components/testing/XPgained"
 import UserProgress from "@/components/testing/UserProgress"
-import UnitButton from "@/components/testing/UnitButton"
+import UnitButton from "@/components/testing/LessonButton"
 import Unit from "@/components/testing/Unit"
 import UnitSection from "@/components/testing/UnitSection"
-import useRoadmapApi from "@/hooks/useRoadmap"
+import { useRoadmapQuery } from "@/hooks/useRoadmap"
 import { useEffect, useState } from "react"
-import Loading from "@/components/Loading"
 import {toast, ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import { useSession } from "@clerk/nextjs"
-import axiosInstance from "@/axiosInstance"
 import { Button } from "@/components/ui/button"
+import Loading from "@/components/Loading"
 type Props = {}
-
+interface handleLesson {
+  activeLesson: boolean,
+  isCurrent: boolean;
+  isLoked: boolean;
+  lessonId: string
+}
 export default function CriticalDetailed({}: Props) {
-  const {generateCriticalRoadmap, isLoading, error, criticalRoadmap} = useRoadmapApi()
-  // useEffect(() => {
-  //   generateCriticalRoadmap()
-  //   if(criticalRoadmap){
-
-  //   }
-  // })
+  const {useGenerateCriticalRoadmap} = useRoadmapQuery()
+  const [isLessonActive, setLessonActive] = useState(false)
+  const {data: CriticalRoadmap, isLoading, isError} = useGenerateCriticalRoadmap()
+  const handleLessonClick = ({lessonId, isCurrent, isLoked, activeLesson}: handleLesson) => {
+    setLessonActive(!activeLesson)
+    
+  }
   if(isLoading){
     return(
-      <Loading/>
+      <Loading />
     )
   }
 
-  if(error){
-    return(
-      <div>Error</div>
-    )
+  if(isError){
+    toast('error')
   }
-
+  console.log(CriticalRoadmap)
   return (
     <div className="flex flex-row-reverse gap-[48px] px-6">
       <StickySideBar>
@@ -46,8 +47,18 @@ export default function CriticalDetailed({}: Props) {
       </StickySideBar>
       <FeedWrapper>
         <section className="pt-6 gap-y-4 flex flex-col">
-          <UnitSection UnitName="Getting strted with nuet" Unit="1 section, 1 unit"/>
-          <Unit/>
+          {
+
+            CriticalRoadmap?.roadmap.map((route, index) => {
+              return(
+                <div key={index}>
+                  <UnitSection Unit={route.unit} UnitName={route.section}/>
+                  <Unit data={CriticalRoadmap} onClick={handleLessonClick}/>
+                </div>
+              )
+            })
+          }
+
         </section>
       </FeedWrapper>
       <ToastContainer/>

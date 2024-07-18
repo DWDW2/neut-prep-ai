@@ -11,24 +11,24 @@ import cors from 'cors';
 import { HttpCode, ONE_HUNDRED, ONE_THOUSAND, SIXTY } from './core/constants/index';
 import { logger } from './logger';
 import connectdb from './core/connectdb';
-import {
-    createClerkClient,
-    ClerkExpressRequireAuth,
-    LooseAuthProp,
-    clerkClient
-  } from '@clerk/clerk-sdk-node';
+// import {
+//     createClerkClient,
+//     ClerkExpressRequireAuth,
+//     LooseAuthProp,
+//     clerkClient
+//   } from '@clerk/clerk-sdk-node';
 
 interface ServerOptions {
  port: number;
 }
-declare global {
-    namespace Express {
-      interface Request extends LooseAuthProp {}
-    }
-  }
-  const authorizedParties = ['http://localhost:3000', 'https://example.com'];
+// declare global {
+//     namespace Express {
+//       interface Request extends LooseAuthProp {}
+//     }
+//   }
+//   const authorizedParties = ['http://localhost:3000', 'https://example.com'];
 
-  export const clerk = createClerkClient({ jwtKey: process.env.JWT_SECRET!, secretKey: process.env.CLERK_SECRET_KEY!, publishableKey: process.env.CLERK_PUBLISHABLE_KEY!});
+//   export const clerk = createClerkClient({ jwtKey: process.env.JWT_SECRET!, secretKey: process.env.CLERK_SECRET_KEY!, publishableKey: process.env.CLERK_PUBLISHABLE_KEY!});
 
 export class Server {
  private readonly app = express();
@@ -44,7 +44,7 @@ export class Server {
   this.app.use(express.urlencoded({ extended: true })); 
   this.app.use(compression());
   this.app.use(cors())
-  this.app.use(ClerkExpressRequireAuth({authorizedParties}))
+  // this.app.use(ClerkExpressRequireAuth({authorizedParties}))
   connectdb()
   this.app.use(logger)
   this.app.use('/critical', CriticalRouter);
@@ -52,10 +52,8 @@ export class Server {
   this.app.use('/roadmap', RoadMapRouter);
   this.app.use('/user', UserRouter);
   this.app.use('/course', CourseRoute)
-  this.app.get('/health', async (req:Request, res:Response) =>{
-      const users = await clerk.users.getUserList()
-      console.log(users)
-      res.json({users})
+  this.app.get('/health', (_req: Request, res: Response) => {
+     res.send('Sever health')
   })
   this.app.get('/error', (_req: Request, res: Response) => {
    return res.status(HttpCode.INTERNAL_SERVER_ERROR).send({

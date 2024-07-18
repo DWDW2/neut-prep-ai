@@ -9,14 +9,12 @@ import TestStatistics from '@/components/testing/dashboard/TestStatistics';
 import Themes from '@/components/testing/dashboard/Themes';
 import Calendar from '@/components/testing/dashboard/Calendar';
 import Loading from '@/components/Loading';
-import { useSession} from '@clerk/nextjs';
+
 
 type Props = {}
 
 export default function Testing({}: Props) {
   const [visitDates, setVisitDates] = useState<Date[]>([]);
-  const {session} = useSession()
-  session?.getToken().then(res => window.localStorage.setItem('token', res!))
   const skills = [
     { name: 'Reading', points: 80 },
     { name: 'Writing', points: 70 },
@@ -46,7 +44,6 @@ export default function Testing({}: Props) {
   <div className="min-h-screen flex flex-col">
   <div className="flex flex-col m-4">
       <Themes performanceData={performanceData} />
-
       <TestStatistics
         points={85}
         skills={skills}

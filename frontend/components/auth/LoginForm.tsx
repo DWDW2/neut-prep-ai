@@ -2,22 +2,29 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { Button } from '../ui/button';
 import { FaGoogle } from 'react-icons/fa';
 
-interface LoginFormProps {
-  onSubmit: (userData: { email: string; password: string }) => void;
-}
-
-const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
+const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    onSubmit({ email, password });
+  const {data: screen} = useSession()
+  console.log(screen?.accessToken)
+  console.log(screen)
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const result = await signIn('credentials', {
+      email,
+      password,
+      redirect: false,
+      callbackUrl: '/'
+    });
+    if (result?.error) {
+      console.error('Authentication failed:', result.error);
+    } else {
+      console.log('Authentication successful:', result);
+    }
   };
 
   return (
@@ -66,7 +73,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
               </div>
               <div className="flex items-start">
                 <div className="flex items-center h-5 w-full">
-                  <Button variant={'sidebar'} className='w-full flex flex-row gap-3' onClick={() => signIn('google')}>
+                  <Button variant={'sidebar'} className='w-full flex flex-row gap-3' onClick={ () => { const result = signIn('google', {callbackUrl: '/'}) }}>
                     <FaGoogle />Sign In with Google
                   </Button>
                 </div>
