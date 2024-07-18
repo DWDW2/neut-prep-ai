@@ -9,12 +9,12 @@ type GenerateLessonCriticalResponse = Roadmap;
 type HandleIncorrectThemesResponse = any; 
 type UpdateXpAndStreakResponse = any; 
 type ResetTodaysXpResponse = any; 
+type GeTUserData = any; 
 
 const useCourseApi = () => {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
 
-  // Generate lesson for math
   const useGenerateLessonMath = () => {
     return useMutation<GenerateLessonMathResponse, Error, any>(
       async (payload: PayloadCourse) => {
@@ -33,7 +33,6 @@ const useCourseApi = () => {
     );
   };
 
-  // Generate lesson for critical thinking
   const useGenerateLessonCritical = () => {
     return useMutation<GenerateLessonCriticalResponse, Error, any>(
       async (payload:PayloadCourse) => {
@@ -52,7 +51,6 @@ const useCourseApi = () => {
     );
   };
 
-  // Handle incorrect themes
   const useHandleIncorrectThemes = () => {
     return useMutation<HandleIncorrectThemesResponse, Error, any>(
       async (payload) => {
@@ -109,12 +107,27 @@ const useCourseApi = () => {
     );
   };
 
+  const useGetUser = () => {
+    return useQuery<GeTUserData, Error>(
+      'getUser',
+      async () => {
+        const { data } = await axiosInstance.get('/course/get-user', {
+          headers: {
+            'Authorization': `Bearer ${session?.accessToken}`
+          }
+        });
+        return data;
+      }
+    );
+  };
+
   return {
     useGenerateLessonMath,
     useGenerateLessonCritical,
     useHandleIncorrectThemes,
     useUpdateXpAndStreak,
     useResetTodaysXp,
+    useGetUser,
   };
 };
 
