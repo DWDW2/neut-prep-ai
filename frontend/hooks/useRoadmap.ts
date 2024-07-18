@@ -32,6 +32,14 @@ export const useRoadmapQuery = () => {
       }).then(res => res.data);
     });
 
+  const useGenerateMathRoadmap = () => 
+    useQuery('mathRoadmap', async () => {
+      const authHeader = await fetchAuthHeader();
+      return axiosInstance.get<Roadmap>('/roadmap/math/generate-and-get-roadmapMath', {
+        headers: { Authorization: authHeader }
+      }).then(res => res.data);
+    });
+
   const useGetMathRoadmap = (userId: string) => 
     useQuery(['mathRoadmap', userId], async () => {
       const authHeader = await fetchAuthHeader();
@@ -41,17 +49,7 @@ export const useRoadmapQuery = () => {
     });
 
   // Mutations (example for useGenerateMathRoadmap)
-  const useGenerateMathRoadmap = () => 
-    useMutation(async (payload: RoadmapPayload) => {
-      const authHeader = await fetchAuthHeader();
-      return axiosInstance.post<Roadmap>('/roadmap/math/generate-and-get-roadmapMath', payload, {
-        headers: { Authorization: authHeader }
-      }).then(res => res.data);
-    }, {
-      onSuccess: () => {
-        queryClient.invalidateQueries('mathRoadmap');
-      },
-    });
+
 
   // Other mutations and queries follow a similar pattern
 

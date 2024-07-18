@@ -107,7 +107,7 @@ export default class UserController {
       const refreshToken = req.body.refreshToken;
       const refreshResult = await this.userService.refreshAccessToken(refreshToken);
       if (refreshResult.success) {
-        res.status(200).json({ token: refreshResult.token });
+        res.status(200).json({ accessToken: refreshResult.token });
       } else {
         res.status(401).json({ message: refreshResult.message });
       }

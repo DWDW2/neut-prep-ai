@@ -147,6 +147,7 @@ export default class UserService {
         return { success: false, message: 'User not found' };
       }
       const accessToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
+      console.log(accessToken)
       return { success: true, token: accessToken };
     } catch (error) {
       console.error('Error refreshing access token:', error);

@@ -20,6 +20,7 @@ export default function SideBar({className, userProfImage, userProfLink}: Props)
                 </div>
             </Link>
             <main className='flex flex-col items-center justify-center gap-4'>
+                <SideBarItem href='/testing' text='Dashboard' imageAlt='image' imageSrc='/testing/pizza-slice.svg'/>
                 <SideBarItem href='/testing/critical' text='Critical thinking tests' imageAlt='image' imageSrc='/testing/pizza-slice.svg'/>
                 <SideBarItem href='/testing/math' text='Math tests' imageAlt='image' imageSrc='/testing/calculator.svg'/>
                 <SideBarItem href='/testing/specific' text='Practice questions' imageAlt='image' imageSrc='/testing/archery-focus-goal-svgrepo-com.svg'/>

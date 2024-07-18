@@ -10,22 +10,24 @@ import { useRoadmapQuery } from "@/hooks/useRoadmap"
 import { useEffect, useState } from "react"
 import {toast, ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import { Button } from "@/components/ui/button"
+import useCourseApi from "@/hooks/useCourse"
 import Loading from "@/components/Loading"
 type Props = {}
 interface handleLesson {
-  activeLesson: boolean,
-  isCurrent: boolean;
-  isLoked: boolean;
-  lessonId: string
+  sectionIndex: number,
+  lessonIndex: number,
+  roadmapId: string
 }
 export default function CriticalDetailed({}: Props) {
   const {useGenerateCriticalRoadmap} = useRoadmapQuery()
+  const {useGenerateLessonCritical} = useCourseApi()
+  const {mutate, isLoading:isLoadingCritical, isError: isErrorCritical, data:CriticalRoadmapLesson} = useGenerateLessonCritical()
   const [isLessonActive, setLessonActive] = useState(false)
   const {data: CriticalRoadmap, isLoading, isError} = useGenerateCriticalRoadmap()
-  const handleLessonClick = ({lessonId, isCurrent, isLoked, activeLesson}: handleLesson) => {
-    setLessonActive(!activeLesson)
-    
+  const handleLessonClick = ({ sectionIndex, lessonIndex, roadmapId}: handleLesson) => {
+    setLessonActive(!isLessonActive)
+    console.log()
+    mutate({sectionIndex, lessonIndex, roadmapId})
   }
   if(isLoading){
     return(
@@ -37,6 +39,7 @@ export default function CriticalDetailed({}: Props) {
     toast('error')
   }
   console.log(CriticalRoadmap)
+  console.log(CriticalRoadmapLesson)
   return (
     <div className="flex flex-row-reverse gap-[48px] px-6">
       <StickySideBar>
@@ -49,11 +52,17 @@ export default function CriticalDetailed({}: Props) {
         <section className="pt-6 gap-y-4 flex flex-col">
           {
 
-            CriticalRoadmap?.roadmap.map((route, index) => {
+            CriticalRoadmap?.roadmap.map((section, index) => {
               return(
                 <div key={index}>
-                  <UnitSection Unit={route.unit} UnitName={route.section}/>
-                  <Unit data={CriticalRoadmap} onClick={handleLessonClick}/>
+                  <UnitSection Unit={section.unit} UnitName={section.section}/>
+                  {
+                    section.lessons.map((lesson, lessonindex) => {
+                      return(
+                        <UnitButton index={lessonindex} totalCount={section.lessons.length} onClick={() => handleLessonClick({sectionIndex: index, lessonIndex: lessonindex, roadmapId: CriticalRoadmap._id})} key={lessonindex}/>
+                      )
+                    })
+                  }
                 </div>
               )
             })
