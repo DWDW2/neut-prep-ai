@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const ParallaxBackground = () => {
   const [offsetY, setOffsetY] = useState(0);
@@ -52,11 +53,14 @@ const ParallaxBackground = () => {
         </svg>
       </div>
       <div className="relative z-10 flex items-center justify-center h-full text-black">
-        <main className="container py-16 flex items-center justify-center mx-20 max-[800px]:block max-[800px]:px-1 max-[800px]: max-[800px]:py-8 max-[800px]:text-center bg-white">
-          <div className="w-1/2 pr-8 max-[800px]:w-fit max-[800px]:px-5 text-center">
+        <main className="container py-16 flex items-center justify-center mx-20 max-[800px]:block max-[800px]:px-0 max-[800px]: max-[800px]:py-8 max-[800px]:text-center bg-white">
+          <div className="w-1/2 pr-8 max-[800px]:w-fit max-[800px]:px-5 float-left max-[800px]:text-center">
             <h1 className="text-5xl font-bold mb-4 max-[800px]:text-3xl text-black">Achieve best scores on <span className="text-[#DCAF52]">NUET exam</span> with us!</h1>
             <p className="text-black mb-8">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati itaque voluptatibus harum debitis quia reprehenderit expedita deserunt provident dolores. Consectetur ipsam eos molestias distinctio quam at aliquam expedita veniam aspernatur?</p>
             <Button variant={'primary'} size={'lg'} onClick={() => router.push('/testing')}>Get Started</Button>
+          </div>
+          <div className='ml-14 max-[800px]:hidden'>
+            <Image src={'/Graduate-person.svg'} width={300} height={700} alt='persom'/> 
           </div>
         </main>
       </div>

@@ -21,8 +21,11 @@ export default function Testing({}: Props) {
   const {useGetUser} = useCourseApi()
   const {data:user, isLoading, isError} = useGetUser()
   const [visitDates, setVisitDates] = useState<Date[]>([]);
-  // if(!user.tested){
-  //   router.push('/check/experience')
+  console.log(user)
+  // if(isLoading){
+  //   return(
+  //     <Loading />
+  //   )
   // }
   const skills = [
     { name: 'Reading', points: 80 },

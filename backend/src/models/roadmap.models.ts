@@ -1,16 +1,18 @@
 import mongoose from 'mongoose';
 
 interface Lesson {
-  theme: string;
-  skills: string;
-  points: number;
-  lessonContent: string;
+  title: string;
+  description: string;
+  difficulty: string;
+  xp: number; 
 }
 interface RoadMapType {
   roadmap:[
     {
+      id: string;
       section: string;
       unit: string;
+      questionType: string;
       lessons: Lesson[];
     }
   ],

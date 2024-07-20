@@ -1,18 +1,24 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import { Document } from 'mongoose';
 
 export interface ILesson extends Document {
+  statement: string;
   question: string;
-  answer: string;
-  questionVariants: string[];
+  variants: string[];
+  rightAnswer: number;
+  type: string;
   explanation: string;
 }
 
-const LessonSchema: Schema = new Schema({
+
+const lessonSchema: Schema = new Schema({
+  statement: { type: String, required: true },
   question: { type: String, required: true },
-  answer: { type: String, required: true },
-  questionVariants: { type: [String], required: true },
-  explanation: { type: String, required: true },
+  variants: { type: [String], required: true },
+  rightAnswer: { type: Number, required: true },
+  type: { type: String, required: true },
+  explanation: { type: String, required: true }
 });
 
-const LessonModel = mongoose.model<ILesson>('Lesson', LessonSchema);
+const LessonModel = mongoose.model<ILesson>('Lesson', lessonSchema);
 export default LessonModel;

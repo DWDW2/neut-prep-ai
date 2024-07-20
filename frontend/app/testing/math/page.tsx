@@ -22,29 +22,25 @@ interface handleLesson {
   roadmapId: string
 }
 export default function CriticalDetailed({}: Props) {
-  // const {useGenerateMathRoadmap} = useRoadmapQuery()
-  // const {useGenerateLessonMath} = useCourseApi()
-  // const {mutate, isLoading:isLoadingMath, isError: isErrorMath, data:MathRoadmapLesson} = useGenerateLessonMath()
-  // const [isLessonActive, setLessonActive] = useState(false)
-  // const {data: RoadMap, isLoading, isError} = useGenerateMathRoadmap()
-  // const handleLessonClick = ({ sectionIndex, lessonIndex, roadmapId}: handleLesson) => {
-  //   setLessonActive(!isLessonActive)
-  //   console.log()
-  //   mutate({sectionIndex, lessonIndex, roadmapId})
-  // }
-  // if(isLoading){
-  //   return(
-  //     <Loading />
-  //   )
-  // }
-
-  // if(isError){
-  //   toast('error')
-  // }
-  // console.log(RoadMap)
-  // console.log(MathRoadmapLesson)
-  
   const router = useRouter()
+  const {useGenerateMathRoadmap} = useRoadmapQuery()
+  const {useGenerateLessonMath} = useCourseApi()
+  const {mutate, isLoading:isLoadingMath, isError: isErrorMath, data:MathRoadmapLesson} = useGenerateLessonMath()
+  const [isLessonActive, setLessonActive] = useState(false)
+  const {data: RoadMap, isLoading, isError} = useGenerateMathRoadmap()
+  if(isLoading){
+    return(
+      <Loading />
+    )
+  }
+
+  if(isError){
+    toast('error')
+  }
+  console.log(RoadMap)
+  console.log(MathRoadmapLesson)
+  
+  
   const handleLessonClick = ({lessonIndex, sectionIndex, roadmapId}:handleLesson) => {
     router.push(`/testing/math/${roadmapId}/${sectionIndex}/${lessonIndex}`)
   }

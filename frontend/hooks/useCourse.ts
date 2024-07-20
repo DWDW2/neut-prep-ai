@@ -5,11 +5,21 @@ import { useSession } from 'next-auth/react';
 import { PayloadCourse } from '@/types/useCourse.types';
 // Define types for API responses
 type GenerateLessonMathResponse = Roadmap; 
-type GenerateLessonCriticalResponse = Roadmap; 
+type GenerateLessonCriticalResponse = {
+  statement: string;
+  question: string;
+  variants: string[];
+  rightAnswer: number;
+  type: string;
+  explanation: string;
+}
 type HandleIncorrectThemesResponse = any; 
 type UpdateXpAndStreakResponse = any; 
 type ResetTodaysXpResponse = any; 
 type GeTUserData = any; 
+type UpdateUserResponse = any; 
+type UpdateUserPayload = any; 
+
 
 const useCourseApi = () => {
   const queryClient = useQueryClient();
@@ -117,6 +127,24 @@ const useCourseApi = () => {
           }
         });
         return data;
+      }
+    );
+  };
+
+  const useUpdateUser = () => {
+    return useMutation<UpdateUserResponse, Error, UpdateUserPayload>(
+      async (payload: UpdateUserPayload) => {
+        const { data } = await axiosInstance.put('/course/update-user', payload, {
+          headers: {
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+        });
+        return data;
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries('getUser'); // Invalidate the user data query
+        },
       }
     );
   };

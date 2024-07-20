@@ -10,24 +10,24 @@ type Question = {
 
 const questions: Question[] = [
   {
-    text: 'What is your primary learning goal?',
-    options: ['Improve my English skills', 'Prepare for a test', 'Learn for fun', 'Other'],
-    correctAnswer: 'Improve my English skills',
+    text: 'What is the primary focus of the NUET exam?',
+    options: ['General knowledge', 'English proficiency', 'Math skills', 'Science knowledge'],
+    correctAnswer: 'English proficiency',
   },
   {
-    text: 'How much time are you willing to dedicate to learning each week?',
-    options: ['Less than 1 hour', '1-3 hours', '3-5 hours', 'More than 5 hours'],
-    correctAnswer: '1-3 hours',
+    text: 'Which section of the NUET exam assesses reading comprehension?',
+    options: ['Listening', 'Writing', 'Reading', 'Speaking'],
+    correctAnswer: 'Reading',
   },
   {
-    text: 'What is your preferred learning style?',
-    options: ['Visual', 'Auditory', 'Kinesthetic', 'Other'],
-    correctAnswer: 'Visual',
+    text: 'What type of questions are typically found in the NUET writing section?',
+    options: ['Multiple choice', 'Essay writing', 'Fill-in-the-blanks', 'Short answer'],
+    correctAnswer: 'Essay writing',
   },
   {
-    text: 'What is your current English level?',
-    options: ['Beginner', 'Intermediate', 'Advanced', 'Native'],
-    correctAnswer: 'Intermediate',
+    text: 'How many sections are there in the NUET exam?',
+    options: ['Two', 'Three', 'Four', 'Five'],
+    correctAnswer: 'Four',
   },
 ];
 
@@ -65,19 +65,35 @@ const ExperienceCheck: React.FC = () => {
         <div className="grid grid-cols-1 gap-4">
           <div className="bg-white rounded-lg shadow-md p-4">
             <p className="text-lg font-medium mb-2">{currentQuestion.text}</p>
-            <ul className="list-disc pl-6">
+            <div className="grid grid-cols-1 gap-4 mt-4">
               {currentQuestion.options.map((option) => (
-                <li
+                <div
                   key={option}
-                  className={`cursor-pointer ${
-                    selectedAnswer === option ? 'text-blue-500' : ''
+                  className={`bg-gray-100 rounded-lg shadow-md p-4 cursor-pointer flex items-center justify-between ${
+                    selectedAnswer === option ? 'bg-blue-500 text-white' : ''
                   }`}
                   onClick={() => handleAnswerClick(option)}
                 >
-                  {option}
-                </li>
+                  <p className="text-lg font-medium">{option}</p>
+                  {selectedAnswer === option && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  )}
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
 
           <button
