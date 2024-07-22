@@ -14,33 +14,33 @@ axiosInstance.interceptors.request.use(async (config) => {
   return config;
 });
 
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+// axiosInstance.interceptors.response.use(
+//   (response) => response,
+//   async (error) => {
+//     const originalRequest = error.config;
 
 
-    if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {
-        const session = await getSession();
-        if (session) {
-          const response = await axiosInstance.post('/user/refresh-token', {
-            refreshToken: session.refreshToken,
-          });
+//     if (error.response.status === 401 && !originalRequest._retry) {
+//       originalRequest._retry = true;
+//       try {
+//         const session = await getSession();
+//         if (session) {
+//           const response = await axiosInstance.post('/user/refresh-token', {
+//             refreshToken: session.refreshToken,
+//           });
 
-          const { accessToken } = response.data;
+//           const { accessToken } = response.data;
 
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+//           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           
-          return axiosInstance(originalRequest);
-        }
-      } catch (error) {
-        console.error('Refresh token failed:', error);
-      }
-    }
-    return Promise.reject(error);
-  }
-);
+//           return axiosInstance(originalRequest);
+//         }
+//       } catch (error) {
+//         console.error('Refresh token failed:', error);
+//       }
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 
 export default axiosInstance;

@@ -1,7 +1,6 @@
 'use client'
 import useCourseApi from '@/hooks/useCourse'
 import React, { useState } from 'react'
-import { RoadMapLesson } from '@/app/constants'
 import Loading from '@/components/Loading'
 import { useRouter } from 'next/navigation';
 

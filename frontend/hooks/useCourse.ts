@@ -4,7 +4,14 @@ import { RoadmapPayload, Roadmap } from '@/types/useRoadmap.types';
 import { useSession } from 'next-auth/react';
 import { PayloadCourse } from '@/types/useCourse.types';
 // Define types for API responses
-type GenerateLessonMathResponse = Roadmap; 
+type GenerateLessonMathResponse = {
+  statement: string;
+  question: string;
+  variants: string[];
+  rightAnswer: number;
+  type: string;
+  explanation: string;
+}; 
 type GenerateLessonCriticalResponse = {
   statement: string;
   question: string;
@@ -26,7 +33,7 @@ const useCourseApi = () => {
   const { data: session } = useSession();
 
   const useGenerateLessonMath = () => {
-    return useMutation<GenerateLessonMathResponse, Error, any>(
+    return useMutation<GenerateLessonMathResponse[], Error, any>(
       async (payload: PayloadCourse) => {
         const { data } = await axiosInstance.post('/course/generate-lesson-math', payload, {
           headers: {
