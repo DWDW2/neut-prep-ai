@@ -1,5 +1,5 @@
 import { RoadMap, RoadMapType } from "../models/roadmap.models";
-import { UserModel as User, UserType } from "../models/user.models";
+import { UserModel as User, UserModel, UserType } from "../models/user.models";
 import { model, generationConfig, safetySetting } from "../core/config/gemini";
 import LessonModel from "../models/lessoncontent.models";
 
@@ -12,7 +12,7 @@ export default class CourseService {
       if (!lesson) return null;
 
         const parts =  [
-          {text: `Given the lesson structure ${lesson}, generate 5 questions based on the provided questions below. Ensure the questions cover various mathematical concepts and follow the structure exactly. Use  better-react-mathjax markdown for mathematical expressions to ensure proper rendering.\n\n### Example Questions:\n\n[\n  {\n    \"statement\": \"Evaluate the following argument:\",\n    \"question\": \"The symbol \\\\(\\\\geq\\\\) defines a mathematical binary operation such that \\\\(y \\\\geq x = \\\\frac{y}{x^x}\\\\) for all positive integers. What is the value of \\\\((2 \\\\geq 3) \\\\geq 2\\\\)?\",\n    \"variants\": [\n      \"0.074074\",\n      \"0.027778\",\n      \"0.148148\",\n      \"0.222222\"\n    ],\n    \"rightAnswer\": 0,\n    \"type\": \"Mathematics\",\n    \"explanation\": \"First, compute \\\\(2 \\\\geq 3\\\\): \\\\(2 \\\\geq 3 = \\\\frac{2}{3^3} = \\\\frac{2}{27} \\\\approx 0.074074\\\\). Then, compute \\\\(0.074074 \\\\geq 2\\\\): \\\\(0.074074 \\\\geq 2 = \\\\frac{0.074074}{2^2} = \\\\frac{0.074074}{4} \\\\approx 0.018518\\\\).\"\n  },\n  {\n    \"statement\": \"Solve the inequality:\",\n    \"question\": \"\\\\(x^2 \\\\geq 8 - 2x\\\\)\",\n    \"variants\": [\n      \"x \\\\leq -4 \\\\text{ or } x \\\\geq 2\",\n      \"x \\\\geq -4 \\\\text{ or } x \\\\leq 2\",\n      \"x \\\\leq -2 \\\\text{ or } x \\\\geq 4\",\n      \"x \\\\geq -2 \\\\text{ or } x \\\\leq 4\"\n    ],\n    \"rightAnswer\": 0,\n    \"type\": \"Mathematics\",\n    \"explanation\": \"Rearrange the inequality: \\\\(x^2 + 2x - 8 \\\\geq 0\\\\). Factorize: \\\\((x + 4)(x - 2) \\\\geq 0\\\\). The solution is \\\\(x \\\\leq -4\\\\) or \\\\(x \\\\geq 2\\\\).\"\n  },\n  {\n    \"statement\": \"Find the sum of the two values of x that satisfy the simultaneous equations:\",\n    \"question\": \"\\\\(x - 3y + 1 = 0\\\\) and \\\\(3x^2 - 7xy = 5\\\\)\",\n    \"variants\": [\n      \"7\",\n      \"5\",\n      \"9\",\n      \"11\"\n    ],\n    \"rightAnswer\": 0,\n    \"type\": \"Mathematics\",\n    \"explanation\": \"Solving the first equation for \\\\(x\\\\) gives \\\\(x = 3y - 1\\\\). Substitute into the second equation: \\\\(3(3y-1)^2 - 7(3y-1)y = 5\\\\). Simplify and solve for \\\\(y\\\\), then find \\\\(x\\\\) values and their sum.\"\n  },\n  {\n    \"statement\": \"Calculate the length of a line joining a vertex to the midpoint of one of the opposite faces of a cube with unit length sides.\",\n    \"question\": \"A cube has unit length sides. What is the length of a line joining a vertex to the midpoint of one of the opposite faces?\",\n    \"variants\": [\n      \"\\\\(\\\\frac{\\\\sqrt{3}}{2}\\\\)\",\n      \"\\\\(\\\\frac{\\\\sqrt{2}}{2}\\\\)\",\n      \"\\\\(\\\\frac{\\\\sqrt{3}}{4}\\\\)\",\n      \"\\\\(\\\\frac{\\\\sqrt{2}}{4}\\\\)\"\n    ],\n    \"rightAnswer\": 0,\n    \"type\": \"Mathematics\",\n    \"explanation\": \"The diagonal of a cube face is \\\\(\\\\sqrt{2}\\\\). The midpoint of the opposite face is at half this distance, so the line length is \\\\(\\\\frac{\\\\sqrt{3}}{2}\\\\).\"\n  },\n  {\n    \"statement\": \"Find the expression for the difference between the \\\\((n+1)\\\\)-th term and the \\\\(n\\\\)-th term of the sequence:\",\n    \"question\": \"The \\\\(n\\\\)-th term of a sequence is \\\\(\\\\frac{n}{n+1}\\\\). What is an expression for the difference between the \\\\((n+1)\\\\)-th term and the \\\\(n\\\\)-th term?\",\n    \"variants\": [\n      \"-\\\\frac{1}{(n+1)(n+2)}\",\n      \"\\\\frac{1}{(n+1)(n+2)}\",\n      \"-\\\\frac{n}{(n+1)(n+2)}\",\n      \"\\\\frac{n}{(n+1)(n+2)}\"\n    ],\n    \"rightAnswer\": 0,\n    \"type\": \"Mathematics\",\n    \"explanation\": \"The \\\\(n\\\\)-th term is \\\\(\\\\frac{n}{n+1}\\\\). The \\\\((n+1)\\\\)-th term is \\\\(\\\\frac{n+1}{n+2}\\\\). The difference is \\\\(\\\\frac{n+1}{n+2} - \\\\frac{n}{n+1} = -\\\\frac{1}{(n+1)(n+2)}\\\\).\"\n  }\n]`},
+          {text: "Goal: Create a comprehensive JSON file containing 30 unique and challenging math practice questions for the National University Entrance Test (NUET).\nRequest: Generate an array named questions.\nStructure: Each element in the array should be a JSON object adhering to the specified format:\n\nEXAMPLE:\n[\n  {\n    \"statement\": \"STRING\",  // A brief description of the problem or the task to be performed\n    \"question\": \"STRING\",  // The main question text using better-react-mathjax markdown\n    \"variants\": [\n      \"STRING\",  // Option 1 text\n      \"STRING\",  // Option 2 text\n      \"STRING\",  // Option 3 text\n      \"STRING\"   // Option 4 text\n    ],\n    \"rightAnswer\": NUMBER,  // The index of the correct option (0-based index)\n    \"type\": \"STRING\",  // The category of the question, e.g., \"Mathematics\"\n    \"explanation\": \"STRING\"  // A detailed explanation of the solution using better-react-mathjax markdown\n  },\n]\n\nEmphasis: Focus on open-ended scenarios that demand: Application of logical reasoning to draw conclusions and evaluate outcomes. Multi-perspective examination for a comprehensive understanding.\nQuestion Types: Cover classic NUET question formats, including:\n\n1. The symbol \\( \\ge \\) defines a mathematical binary operation such that \\( y \\ge x = \\frac{y}{x^x} \\) for all positive integers. What is the value of \\( (2 \\ge 3) \\ge 2 \\)?\n2. Solve the inequality: \\( x^2 \\ge 8 - 2x \\)\n3. The sum of the two values of \\( x \\) that satisfy the simultaneous equations \\( x - 3y + 1 = 0 \\) and \\( 3x^2 - 7xy = 5 \\) is:\n4. Calculate the length of DE (with a diagram not provided):\n5. A cube has unit length sides. What is the length of a line joining a vertex to the midpoint of one of the opposite faces (the dashed line in the diagram below)?\n6. The diagram shows three similar right-angled triangles. What is the area of the largest triangle, in \\( \\text{cm}^2 \\)?\n7. The \\( n \\)-th term of a sequence is \\( \\frac{n}{n+1} \\). What is an expression for the difference between the \\( (n+1) \\)-th term and the \\( n \\)-th term?\n8. Given that \\( c \\) and \\( d \\) are non-zero integers, when is the expression \\( \\frac{10^{c-2d} \\times 20^{2c+d}}{8^c \\times 125^{c+d}} \\) an integer?\n9. For what values of the non-zero real number \\( a \\) does the quadratic equation \\( ax^2 + (a-2)x = 2 \\) have real distinct roots?\n10. The sum of the roots of a quadratic equation is 7, the product of the roots is 9. What is the equation?\n11. The roots of the equation \\( 2x^2 - 11x + a = 0 \\) differ by 2. What is the value of \\( a \\)?\n12. The longest side of a right-angled triangle is \\( 6 + \\sqrt{5} \\) units. One of the shorter sides is \\( 3 + 2\\sqrt{5} \\) units. What is the length of the third side?\n13. Given that \\( y \\) is a solution to the simultaneous equations \\( 4x^2 + y^2 + 10y = 47 \\) and \\( 2x - y = 5 \\), what is the value of \\( y \\) when \\( x \\ge 0 \\)?\n14. Five runners competed in a race: Fred, George, Hermione, Lavender, and Ron. Fred beat George. Hermione beat Lavender. Lavender beat George. Ron beat George. Assuming there were no ties, how many possible finishing orders could there have been, given only this information?\n15. Simplify \\( \\frac{4 - x^2(1 - 16x^2)}{(4x - 1)2x^3} \\):\n16. Which of the expressions below has the largest value for \\( 0 < x < 1 \\)?\n17. The diagram shows a quadrant of a circle, centre O, radius 20 cm. The chord AB has been drawn. What fraction of the quadrant is shaded?\n18. What is the equation of the straight line passing through (4, 1) which is parallel to the line given by the equation \\( 3x + 2y = 12 \\)?\n19. For any real numbers \\( a \\), \\( b \\), and \\( c \\) where \\( a \\ge b \\), consider these three statements\n20. For any integer \\( x \\), consider the three statements:\n \n\nRETURN:\n\n[\n  {\n    \"statement\": \"STRING\",  // A brief description of the problem or the task to be performed\n    \"question\": \"STRING\",  // The main question text using better-react-mathjax markdown\n    \"variants\": [\n      \"STRING\",  // Option 1 text\n      \"STRING\",  // Option 2 text\n      \"STRING\",  // Option 3 text\n      \"STRING\"   // Option 4 text\n    ],\n    \"rightAnswer\": NUMBER,  // The index of the correct option (0-based index)\n    \"type\": \"STRING\",  // The category of the question, e.g., \"Mathematics\"\n    \"explanation\": \"STRING\"  // A detailed explanation of the solution using better-react-mathjax markdown\n  },\n]\n\n\n\nHere are the extracted questions from the NUET 2022 Mathematics specimen paper:"},
           {text: "[ {    \"statement\": \"Evaluate the following argument:\",    \"question\": \"If all humans are mortal, and Socrates is a human, what can we conclude about Socrates?\",    \"variants\": [      \"Socrates is immortal.\",      \"Socrates is a god.\",      \"Socrates is mortal.\",      \"Socrates is an animal.\",      \"Socrates is an alien.\"    ],    \"rightAnswer\": 2,    \"type\": \"Critical Thinking\",    \"explanation\": \"Since the premises state that all humans are mortal and Socrates is a human, the conclusion logically follows that Socrates is mortal.\" } "},
         ];
 
@@ -82,19 +82,13 @@ export default class CourseService {
     }
   }
 
-  async updateXpAndStreak(userId: string, points: number) {
+  async updateXp(userId: string, points: number) {
     try {
       const user = await User.findById(userId);
       if (!user) return null;
 
       user.todaysXp += points;
       user.totalXp += points;
-
-      if (user.todaysXp > 0) {
-        user.streak++;
-      } else {
-        user.streak = 0;
-      }
 
       await user.save();
 
@@ -105,16 +99,33 @@ export default class CourseService {
     }
   }
 
-  async resetTodaysXp(userId: string) {
+  async updateStreak(userId: string) {
     try {
-      const user = await User.findById(userId);
-      if (!user) return null;
-
-      user.todaysXp = 0;
-
+      const today = new Date();
+      let user = await UserModel.findById(userId);
+    
+      if (!user) {
+        return false
+      }
+    
+      const lastActivityDate: Date = new Date(user.lastActivityDate);
+      let dayDifference = Math.floor((today.getTime() - lastActivityDate.getTime()) / (1000 * 60 * 60 * 24)); // Correct
+      
+      if (dayDifference === 0) {
+        return { message: 'Already updated today', streakCount: user.streak };
+      }
+    
+      if (dayDifference === 1) {
+        user.streak+= 1;
+      } else {
+        user.streak = 1;
+      }
+    
+      user.longestStreak = Math.max(user.longestStreak, user.streak);
+      user.lastActivityDate = today;
       await user.save();
-
-      return true; 
+    
+      return { message: 'Streak updated', streakCount: user.streak};
     } catch (error) {
       console.log("Error resetting todaysXp:", error);
       return false; 
@@ -131,7 +142,7 @@ export default class CourseService {
       return user; 
     } catch (error) {
       console.log("Error fetching user data:", error);
-      return null; // Indicate failure
+      return null; 
     }
   }
   async updateUser(userId: string, updatedUserData: Partial<UserType>) {
@@ -139,16 +150,14 @@ export default class CourseService {
       const user = await User.findById(userId);
       if (!user) return null;
 
-      // Update the user with the provided data
       Object.assign(user, updatedUserData);
 
-      // Save the updated user
       await user.save();
 
-      return user; // Return the updated user object
+      return user; 
     } catch (error) {
       console.log("Error updating user:", error);
-      return null; // Indicate failure
+      return null; 
     }
   }
 }

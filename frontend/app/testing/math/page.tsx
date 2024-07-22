@@ -1,18 +1,17 @@
 'use client'
-
 import FeedWrapper from "@/components/testing/Feed-sidebar"
 import StickySideBar from "../../../components/testing/Sticky-sidebar"
 import UserSideBar from "@/components/testing/XPgained"
 import UserProgress from "@/components/testing/UserProgress"
 import UnitButton from "@/components/testing/LessonButton"
-import Unit from "@/components/testing/Unit"
+import dynamic from "next/dynamic"
+const Loading = dynamic(() => import('@/components/Loading'), {ssr: false})
 import UnitSection from "@/components/testing/UnitSection"
 import { useRoadmapQuery } from "@/hooks/useRoadmap"
 import { useState } from "react"
 import {toast, ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import useCourseApi from "@/hooks/useCourse"
-import Loading from "@/components/Loading"
 import { RoadMap, RoadMapLesson} from "@/app/constants"
 import { useRouter } from "next/navigation"
 type Props = {}

@@ -50,6 +50,5 @@ export const useRoadmapQuery = () => {
     useGenerateCriticalRoadmap,
     useGenerateMathRoadmap,
     useGetMathRoadmap,
-    // Add other useQuery and useMutation hooks here
   };
 };

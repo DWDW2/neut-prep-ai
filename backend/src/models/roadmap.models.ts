@@ -12,7 +12,6 @@ interface Lesson {
 interface RoadMapType {
   roadmap: [
     {
-      id: string;
       section: string;
       unit: string;
       questionType: string;
@@ -28,7 +27,6 @@ interface RoadMapType {
 const RoadMapSchema = new mongoose.Schema<RoadMapType>({
   roadmap: [
     {
-      id: { type: String, required: true }, 
       section: { type: String, required: true },
       unit: { type: String, required: true },
       questionType: { type: String, required: true },
