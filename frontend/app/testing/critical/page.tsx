@@ -12,6 +12,7 @@ import {toast, ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import useCourseApi from "@/hooks/useCourse"
 import Loading from "@/components/Loading"
+import { useRouter } from "next/navigation"
 type Props = {}
 interface handleLesson {
   sectionIndex: number,
@@ -19,15 +20,14 @@ interface handleLesson {
   roadmapId: string
 }
 export default function CriticalDetailed({}: Props) {
+  const router = useRouter()
   const {useGenerateCriticalRoadmap} = useRoadmapQuery()
   const {useGenerateLessonCritical} = useCourseApi()
   const {mutate, isLoading:isLoadingCritical, isError: isErrorCritical, data:CriticalRoadmapLesson} = useGenerateLessonCritical()
   const [isLessonActive, setLessonActive] = useState(false)
   const {data: CriticalRoadmap, isLoading, isError} = useGenerateCriticalRoadmap()
   const handleLessonClick = ({ sectionIndex, lessonIndex, roadmapId}: handleLesson) => {
-    setLessonActive(!isLessonActive)
-    console.log()
-    mutate({sectionIndex, lessonIndex, roadmapId})
+    router.push(`/testing/critical/${roadmapId}/${sectionIndex}/${lessonIndex}`)
   }
   if(isLoading){
     return(

@@ -84,6 +84,28 @@ export default class CourseController {
       res.status(500).json({ error: 'Failed to reset today\'s XP' });
     }
   }
+
+  async fetchAllUserData(req:Request, res:Response) {
+    try {
+      const {userId} = req.body
+      const user = await this.courseService.fetchAllUserData(userId)
+      res.status(200).json(user)
+    } catch (error:any) {
+      console.log(error)
+      res.status(500).json({message: error.message})
+    }
+  }
+
+  async updateUser(req:Request, res:Response) {
+    try {
+      const {userId, tested} = req.body
+      await this.courseService.updateUser(userId, tested)
+    } catch (error:any) {
+      console.log(error)
+      res.status(500).json({message: error?.message})
+    }
+  }
 }
+
 
 

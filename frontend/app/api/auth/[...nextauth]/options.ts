@@ -34,10 +34,9 @@ export const authOptions: NextAuthOptions = {
           const user = await res.json();
           return {
             ...user,
-            provider: 'credentials', // Specify the provider type
+            provider: 'credentials',
           } as CustomUser;
         } catch (error:any) {
-          // Handle login errors
           console.error('Login failed:', error.message);
           return null;
         }
@@ -59,6 +58,16 @@ export const authOptions: NextAuthOptions = {
 
         if (account.provider === 'google') {
           try {
+            const register = await fetch('http://localhost:5000/user/register',{
+              method: 'POST',
+              body: JSON.stringify({
+                id_token: account.id_token
+              }),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            })
+
             const tokenAccess = await fetch('http://localhost:5000/user/login', {
               method: 'POST',
               headers: {

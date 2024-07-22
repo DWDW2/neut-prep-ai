@@ -8,25 +8,25 @@ export default class CourseService {
     try {
       const roadmap = await RoadMap.findById(roadmapId);
       if (!roadmap) return null;
-      const lesson = roadmap.roadmap[sectionIndex].lessons[lessonIndex]
+      const lesson = roadmap.roadmap[sectionIndex].lessons[lessonIndex];
       if (!lesson) return null;
-      console.log(roadmapId, lessonIndex, sectionIndex )
-      const parts = [
-          {text: `Prompt for LLM:  Please generate a JSON object for a lesson question based on the following structure:  json {   \"question\": \"string\",   \"answer\": \"string\",   \"questionVariants\": [\"string\", \"string\", \"string\", \"string\"],   \"explanation\": \"string\" } The generated question should be relevant to the given lesson details:  Theme: The overarching topic or subject of the lesson. Skills: Specific skills or subtopics that will be covered in the lesson. Points: A numerical value representing the points or weightage of the lesson. Example Input:  json Copy code {   \"theme\": \"Algebra\",   \"skills\": \"Solving linear equations\",   \"points\": 10 } Example Output:  json Copy code {   \"question\": \"Explain how to solve the linear equation 3x + 5 = 20.\",   \"answer\": \"Subtract 5 from both sides, then divide by 3: x = 5.\",   \"questionVariants\": [\"Add 5 to both sides, then divide by 3: x = 5.\", \"Subtract 5 from both sides, then divide by 3: x = 5.\", \"Divide by 3, then subtract 5: x = 5.\", \"Multiply by 3, then add 5: x = 5.\"],   \"explanation\": \"To solve 3x + 5 = 20, first subtract 5 from both sides to get 3x = 15. Then, divide both sides by 3 to isolate x, resulting in x = 5.\" } Here are the lesson details for which you need to generate the JSON object:  json Copy code {   \"theme\": \"[Insert Theme]\",   \"skills\": \"[Insert Skills]\",   \"points\": [Insert Points] } Use the following data for creating relevant questions:  Algebra:  Explain how to solve linear equations step-by-step. Simplify the expression <expression> and provide a detailed explanation of each step. Create a real-world problem involving a quadratic equation and demonstrate how to solve it. Explain the difference between a linear and a quadratic function using examples. Show how to factor the polynomial <polynomial> and check the solution. Describe the process of completing the square for the equation <equation> and solve it. Illustrate how to use the quadratic formula to solve <equation> and explain why it works. Provide a step-by-step guide on graphing the linear equation <equation>. Explain the concept of functions and give examples of linear and non-linear functions. Demonstrate how to solve a system of linear equations using the substitution method. Outline the steps to solve a system of equations using the elimination method and apply it to <system of equations>. Explain the significance of the discriminant in a quadratic equation and what it tells us about the nature of the roots. Show how to convert the standard form of a quadratic equation to vertex form and vice versa. Describe how to find the slope of a line given two points on the line and provide an example. Explain the concept of exponential growth and decay with a practical application example. Geometry:  Explain how to calculate the area of a regular pentagon given its side length. Describe the process for finding the volume of a right circular cone with a given radius and height. Outline the steps to prove that the sum of the interior angles of a triangle is 180 degrees. Provide a method to calculate the surface area of a sphere with a known radius. Demonstrate how to find the length of the hypotenuse of a right-angled triangle using Pythagoras' theorem. Explain the relationship between the radius, diameter, and circumference of a circle. Detail the process for finding the centroid of a given triangle with vertices at specific coordinates. Show how to calculate the area of a trapezoid given the lengths of its bases and height. Explain how to determine the equation of a circle given its center and a point on the circle. Provide a step-by-step guide to construct a perpendicular bisector of a given line segment without using a protractor. Describe the method to find the interior angles of a regular hexagon. Explain how to use the sine, cosine, and tangent functions to solve for unknown sides in right triangles. Detail the process for calculating the lateral surface area of a regular pyramid given its slant height and perimeter of the base. Describe how to prove that two triangles are similar using the AA (Angle-Angle) similarity postulate. Explain the method for finding the arc length of a sector in a circle with a known radius and central angle measure. here is data that you need to rely on when generating tasks : ${lesson}`},
-          {text: " "},
+
+        const parts =  [
+          {text: `Given the lesson structure ${lesson}, generate 5 questions based on the provided questions below. Ensure the questions cover various mathematical concepts and follow the structure exactly. Use  better-react-mathjax markdown for mathematical expressions to ensure proper rendering.\n\n### Example Questions:\n\n[\n  {\n    \"statement\": \"Evaluate the following argument:\",\n    \"question\": \"The symbol \\\\(\\\\geq\\\\) defines a mathematical binary operation such that \\\\(y \\\\geq x = \\\\frac{y}{x^x}\\\\) for all positive integers. What is the value of \\\\((2 \\\\geq 3) \\\\geq 2\\\\)?\",\n    \"variants\": [\n      \"0.074074\",\n      \"0.027778\",\n      \"0.148148\",\n      \"0.222222\"\n    ],\n    \"rightAnswer\": 0,\n    \"type\": \"Mathematics\",\n    \"explanation\": \"First, compute \\\\(2 \\\\geq 3\\\\): \\\\(2 \\\\geq 3 = \\\\frac{2}{3^3} = \\\\frac{2}{27} \\\\approx 0.074074\\\\). Then, compute \\\\(0.074074 \\\\geq 2\\\\): \\\\(0.074074 \\\\geq 2 = \\\\frac{0.074074}{2^2} = \\\\frac{0.074074}{4} \\\\approx 0.018518\\\\).\"\n  },\n  {\n    \"statement\": \"Solve the inequality:\",\n    \"question\": \"\\\\(x^2 \\\\geq 8 - 2x\\\\)\",\n    \"variants\": [\n      \"x \\\\leq -4 \\\\text{ or } x \\\\geq 2\",\n      \"x \\\\geq -4 \\\\text{ or } x \\\\leq 2\",\n      \"x \\\\leq -2 \\\\text{ or } x \\\\geq 4\",\n      \"x \\\\geq -2 \\\\text{ or } x \\\\leq 4\"\n    ],\n    \"rightAnswer\": 0,\n    \"type\": \"Mathematics\",\n    \"explanation\": \"Rearrange the inequality: \\\\(x^2 + 2x - 8 \\\\geq 0\\\\). Factorize: \\\\((x + 4)(x - 2) \\\\geq 0\\\\). The solution is \\\\(x \\\\leq -4\\\\) or \\\\(x \\\\geq 2\\\\).\"\n  },\n  {\n    \"statement\": \"Find the sum of the two values of x that satisfy the simultaneous equations:\",\n    \"question\": \"\\\\(x - 3y + 1 = 0\\\\) and \\\\(3x^2 - 7xy = 5\\\\)\",\n    \"variants\": [\n      \"7\",\n      \"5\",\n      \"9\",\n      \"11\"\n    ],\n    \"rightAnswer\": 0,\n    \"type\": \"Mathematics\",\n    \"explanation\": \"Solving the first equation for \\\\(x\\\\) gives \\\\(x = 3y - 1\\\\). Substitute into the second equation: \\\\(3(3y-1)^2 - 7(3y-1)y = 5\\\\). Simplify and solve for \\\\(y\\\\), then find \\\\(x\\\\) values and their sum.\"\n  },\n  {\n    \"statement\": \"Calculate the length of a line joining a vertex to the midpoint of one of the opposite faces of a cube with unit length sides.\",\n    \"question\": \"A cube has unit length sides. What is the length of a line joining a vertex to the midpoint of one of the opposite faces?\",\n    \"variants\": [\n      \"\\\\(\\\\frac{\\\\sqrt{3}}{2}\\\\)\",\n      \"\\\\(\\\\frac{\\\\sqrt{2}}{2}\\\\)\",\n      \"\\\\(\\\\frac{\\\\sqrt{3}}{4}\\\\)\",\n      \"\\\\(\\\\frac{\\\\sqrt{2}}{4}\\\\)\"\n    ],\n    \"rightAnswer\": 0,\n    \"type\": \"Mathematics\",\n    \"explanation\": \"The diagonal of a cube face is \\\\(\\\\sqrt{2}\\\\). The midpoint of the opposite face is at half this distance, so the line length is \\\\(\\\\frac{\\\\sqrt{3}}{2}\\\\).\"\n  },\n  {\n    \"statement\": \"Find the expression for the difference between the \\\\((n+1)\\\\)-th term and the \\\\(n\\\\)-th term of the sequence:\",\n    \"question\": \"The \\\\(n\\\\)-th term of a sequence is \\\\(\\\\frac{n}{n+1}\\\\). What is an expression for the difference between the \\\\((n+1)\\\\)-th term and the \\\\(n\\\\)-th term?\",\n    \"variants\": [\n      \"-\\\\frac{1}{(n+1)(n+2)}\",\n      \"\\\\frac{1}{(n+1)(n+2)}\",\n      \"-\\\\frac{n}{(n+1)(n+2)}\",\n      \"\\\\frac{n}{(n+1)(n+2)}\"\n    ],\n    \"rightAnswer\": 0,\n    \"type\": \"Mathematics\",\n    \"explanation\": \"The \\\\(n\\\\)-th term is \\\\(\\\\frac{n}{n+1}\\\\). The \\\\((n+1)\\\\)-th term is \\\\(\\\\frac{n+1}{n+2}\\\\). The difference is \\\\(\\\\frac{n+1}{n+2} - \\\\frac{n}{n+1} = -\\\\frac{1}{(n+1)(n+2)}\\\\).\"\n  }\n]`},
+          {text: "[ {    \"statement\": \"Evaluate the following argument:\",    \"question\": \"If all humans are mortal, and Socrates is a human, what can we conclude about Socrates?\",    \"variants\": [      \"Socrates is immortal.\",      \"Socrates is a god.\",      \"Socrates is mortal.\",      \"Socrates is an animal.\",      \"Socrates is an alien.\"    ],    \"rightAnswer\": 2,    \"type\": \"Critical Thinking\",    \"explanation\": \"Since the premises state that all humans are mortal and Socrates is a human, the conclusion logically follows that Socrates is mortal.\" } "},
         ];
-  
+
       const lessonContent = await model.generateContent({
           generationConfig: generationConfig,
           contents: [{role: "user", parts: parts}]
       })
-  
+
       const LessonJson = JSON.parse(lessonContent.response.text())
-      const lessonModelInstance = new LessonModel(LessonJson)
+      console.log(LessonJson)
+      const lessonModelInstance = new LessonModel({lessons: LessonJson})
       if(typeof lessonModelInstance.id === 'string'){
           roadmap.roadmap[sectionIndex].lessons[lessonIndex].lessonContent = lessonModelInstance.id
       }
-      console.log(lessonModelInstance.id)
       await lessonModelInstance.save()
       await roadmap.save()
       return LessonJson
@@ -38,15 +38,15 @@ export default class CourseService {
 
   async generateLessonCritical(roadmapId:string, sectionIndex: number, lessonIndex: number){
     try {
-      console.log(roadmapId, sectionIndex, lessonIndex)
       const roadmap = await RoadMap.findById(roadmapId);
-    if (!roadmap) return null;
-    const lesson = roadmap.roadmap[sectionIndex].lessons[lessonIndex]
-    if (!lesson) return null;
-
-    const parts = [
-        {text: `Prompt for LLM:  Please generate a JSON object for a lesson question based on the following structure:  json {   \"question\": \"string\",   \"answer\": \"string\",   \"questionVariants\": [\"string\", \"string\", \"string\", \"string\"],   \"explanation\": \"string\" } The generated question should be relevant to the given lesson details:  Theme: The overarching topic or subject of the lesson. Skills: Specific skills or subtopics that will be covered in the lesson. Points: A numerical value representing the points or weightage of the lesson. Example Input:  json Copy code {   \"theme\": \"Algebra\",   \"skills\": \"Solving linear equations\",   \"points\": 10 } Example Output:  json Copy code {   \"question\": \"Explain how to solve the linear equation 3x + 5 = 20.\",   \"answer\": \"Subtract 5 from both sides, then divide by 3: x = 5.\",   \"questionVariants\": [\"Add 5 to both sides, then divide by 3: x = 5.\", \"Subtract 5 from both sides, then divide by 3: x = 5.\", \"Divide by 3, then subtract 5: x = 5.\", \"Multiply by 3, then add 5: x = 5.\"],   \"explanation\": \"To solve 3x + 5 = 20, first subtract 5 from both sides to get 3x = 15. Then, divide both sides by 3 to isolate x, resulting in x = 5.\" } Here are the lesson details for which you need to generate the JSON object:  json Copy code {   \"theme\": \"[Insert Theme]\",   \"skills\": \"[Insert Skills]\",   \"points\": [Insert Points] } Use the following data for creating relevant questions:  Algebra:  Explain how to solve linear equations step-by-step. Simplify the expression <expression> and provide a detailed explanation of each step. Create a real-world problem involving a quadratic equation and demonstrate how to solve it. Explain the difference between a linear and a quadratic function using examples. Show how to factor the polynomial <polynomial> and check the solution. Describe the process of completing the square for the equation <equation> and solve it. Illustrate how to use the quadratic formula to solve <equation> and explain why it works. Provide a step-by-step guide on graphing the linear equation <equation>. Explain the concept of functions and give examples of linear and non-linear functions. Demonstrate how to solve a system of linear equations using the substitution method. Outline the steps to solve a system of equations using the elimination method and apply it to <system of equations>. Explain the significance of the discriminant in a quadratic equation and what it tells us about the nature of the roots. Show how to convert the standard form of a quadratic equation to vertex form and vice versa. Describe how to find the slope of a line given two points on the line and provide an example. Explain the concept of exponential growth and decay with a practical application example. Geometry:  Explain how to calculate the area of a regular pentagon given its side length. Describe the process for finding the volume of a right circular cone with a given radius and height. Outline the steps to prove that the sum of the interior angles of a triangle is 180 degrees. Provide a method to calculate the surface area of a sphere with a known radius. Demonstrate how to find the length of the hypotenuse of a right-angled triangle using Pythagoras' theorem. Explain the relationship between the radius, diameter, and circumference of a circle. Detail the process for finding the centroid of a given triangle with vertices at specific coordinates. Show how to calculate the area of a trapezoid given the lengths of its bases and height. Explain how to determine the equation of a circle given its center and a point on the circle. Provide a step-by-step guide to construct a perpendicular bisector of a given line segment without using a protractor. Describe the method to find the interior angles of a regular hexagon. Explain how to use the sine, cosine, and tangent functions to solve for unknown sides in right triangles. Detail the process for calculating the lateral surface area of a regular pyramid given its slant height and perimeter of the base. Describe how to prove that two triangles are similar using the AA (Angle-Angle) similarity postulate. Explain the method for finding the arc length of a sector in a circle with a known radius and central angle measure. here is data that you need to rely on when generating tasks : ${lesson}`},
-        {text: " "},
+      console.log(roadmap)
+      if (!roadmap) return null;
+      const lesson = roadmap.roadmap[sectionIndex].lessons[lessonIndex]
+      if (!lesson) return null;
+      console.log(lesson)
+      const parts = [
+        {text: `As the world's best lesson generator, your goal is to create five complex and thought-provoking questions based on the following lesson's description: ${lesson}. The questions should challenge their critical thinking skills and ability to analyze the lesson content deeply. Each generated statement you need to make 90 words long because it will test test takers critical thinking abilities \n\nSample Questions:\n\nWhich one of the following is an expression of the main conclusion of the above argument?\nWhich one of the following is the best statement of the flaw in the above argument?\nWhich one of the following is a conclusion that can reliably be drawn from the above passage?\nWhich one of the following is an underlying assumption of the above argument?\nWhich one of the following, if true, would most weaken the above argument?\nWhich one of the following best identifies the flaw in the above reasoning?\nWhich one of the following statements is not true?\nWhich one of the following conclusions can reliably be drawn from the above passage?\nWhich one of the following is an underlying assumption of the above argument?\nWhich one of the following, if true, would most weaken the above argument?\nWhich one of the following is the best expression of the flaw in the above argument?\nWhich one of the following most closely parallels the reasoning used in the above argument?\nWhich one of the following identifies the principle underlying the above argument?\nWhich one of the following conclusions can be drawn from the above passage?\nWhich one of the following is a conclusion that can be drawn from the above passage?`},
+        {text: "[ {    \"statement\": \"Evaluate the following argument:\",    \"question\": \"If all humans are mortal, and Socrates is a human, what can we conclude about Socrates?\",    \"variants\": [      \"Socrates is immortal.\",      \"Socrates is a god.\",      \"Socrates is mortal.\",      \"Socrates is an animal.\",      \"Socrates is an alien.\"    ],    \"rightAnswer\": 2,    \"type\": \"Critical Thinking\",    \"explanation\": \"Since the premises state that all humans are mortal and Socrates is a human, the conclusion logically follows that Socrates is mortal.\" } "},
       ];
 
     const lessonContent = await model.generateContent({
@@ -55,11 +55,10 @@ export default class CourseService {
     })
 
     const LessonJson = JSON.parse(lessonContent.response.text())
-    const lessonModelInstance = new LessonModel(LessonJson)
+    const lessonModelInstance = new LessonModel({lessons: LessonJson}) 
     if(typeof lessonModelInstance.id === 'string'){
         roadmap.roadmap[sectionIndex].lessons[lessonIndex].lessonContent = lessonModelInstance.id
     }
-    console.log(lessonModelInstance.id)
     await lessonModelInstance.save()
     await roadmap.save()
     return LessonJson
@@ -119,6 +118,37 @@ export default class CourseService {
     } catch (error) {
       console.log("Error resetting todaysXp:", error);
       return false; 
+    }
+  }
+  async fetchAllUserData(userId: string) {
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        console.log('dadadadada')
+        return null; 
+      }
+      console.log(user)
+      return user; 
+    } catch (error) {
+      console.log("Error fetching user data:", error);
+      return null; // Indicate failure
+    }
+  }
+  async updateUser(userId: string, updatedUserData: Partial<UserType>) {
+    try {
+      const user = await User.findById(userId);
+      if (!user) return null;
+
+      // Update the user with the provided data
+      Object.assign(user, updatedUserData);
+
+      // Save the updated user
+      await user.save();
+
+      return user; // Return the updated user object
+    } catch (error) {
+      console.log("Error updating user:", error);
+      return null; // Indicate failure
     }
   }
 }

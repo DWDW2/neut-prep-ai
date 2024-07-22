@@ -10,6 +10,7 @@ export default class RoadMapController {
   async getRoadMapCriticalByUserId(req: Request, res: Response) {
     try {
       const userId = req.body.userId;
+      console.log(userId)
       const roadmap = await this.roadMapService.getRoadMapCriticalByUserId(userId);
       if (roadmap) {
         res.status(200).json(roadmap);

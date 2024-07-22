@@ -17,4 +17,5 @@ router.post('/update-xp-and-streak', AuthMiddleware, (req, res) => courseControl
 
 router.post('/reset-todays-xp', AuthMiddleware, (req, res) => courseController.resetTodaysXp(req, res));
 
+router.get('/get-user', AuthMiddleware, (req,res) => courseController.fetchAllUserData(req,res))
 export default router;

@@ -13,17 +13,15 @@ const getAuthHeader = async () => {
 export const useRoadmapQuery = () => {
   const queryClient = useQueryClient();
 
-  // Function to fetch auth header
   const fetchAuthHeader = async () => {
     try {
-      return await getAuthHeader(); // Assuming getAuthHeader handles the async session retrieval
+      return await getAuthHeader();
     } catch (error) {
       console.error('Error fetching auth header:', error);
-      throw error; // Handle or rethrow the error as needed
+      throw error; 
     }
   };
 
-  // Queries
   const useGenerateCriticalRoadmap = () => 
     useQuery('criticalRoadmap', async () => {
       const authHeader = await fetchAuthHeader();
@@ -47,11 +45,6 @@ export const useRoadmapQuery = () => {
         headers: { Authorization: authHeader }
       }).then(res => res.data);
     });
-
-  // Mutations (example for useGenerateMathRoadmap)
-
-
-  // Other mutations and queries follow a similar pattern
 
   return {
     useGenerateCriticalRoadmap,

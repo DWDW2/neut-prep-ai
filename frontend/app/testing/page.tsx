@@ -9,12 +9,24 @@ import TestStatistics from '@/components/testing/dashboard/TestStatistics';
 import Themes from '@/components/testing/dashboard/Themes';
 import Calendar from '@/components/testing/dashboard/Calendar';
 import Loading from '@/components/Loading';
+import useCourseApi from '@/hooks/useCourse';
+import UserNotFound from '@/components/testing/UserNotFound';
+import { useRouter } from 'next/navigation';
 
 
 type Props = {}
 
 export default function Testing({}: Props) {
+  const router = useRouter()
+  const {useGetUser} = useCourseApi()
+  const {data:user, isLoading, isError} = useGetUser()
   const [visitDates, setVisitDates] = useState<Date[]>([]);
+  console.log(user)
+  // if(isLoading){
+  //   return(
+  //     <Loading />
+  //   )
+  // }
   const skills = [
     { name: 'Reading', points: 80 },
     { name: 'Writing', points: 70 },
@@ -42,15 +54,21 @@ export default function Testing({}: Props) {
   ];
  return (
   <div className="min-h-screen flex flex-col">
-  <div className="flex flex-col m-4">
-      <Themes performanceData={performanceData} />
-      <TestStatistics
-        points={85}
-        skills={skills}
-        bestSkills={bestSkills}
-        continueCourse={continueCourse}
-      />
-  </div>
+    {
+      user ? (
+        <div className="flex flex-col m-4">
+        <Themes performanceData={performanceData} />
+        <TestStatistics
+          points={85}
+          skills={skills}
+          bestSkills={bestSkills}
+          continueCourse={continueCourse}
+        />
+    </div>
+      ) : (
+        <UserNotFound />
+      )
+    }
 </div>
   )
 }

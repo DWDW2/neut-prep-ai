@@ -21,6 +21,7 @@ interface UserType {
   totalXp: number; 
   streak: number; 
   todaysXp: number; 
+  tested: boolean;
 }
 
 const UserSchema = new Schema<UserType>({
@@ -60,6 +61,10 @@ const UserSchema = new Schema<UserType>({
     type: Number,
     default: 0,
   },
+  tested: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 const UserModel = model('User', UserSchema);
