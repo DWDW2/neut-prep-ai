@@ -10,15 +10,25 @@ export interface ILesson extends Document {
   explanation: string;
 }
 
+export interface ILessonModel extends Document {
+  lessons: ILesson[]
+}
 
-const lessonSchema: Schema = new Schema({
-  statement: { type: String, required: true },
-  question: { type: String, required: true },
-  variants: { type: [String], required: true },
-  rightAnswer: { type: Number, required: true },
-  type: { type: String, required: true },
-  explanation: { type: String, required: true }
-});
+
+const lessonSchema: Schema = new Schema(
+  {
+    lessons:[
+      {
+        statement: { type: String, required: true },
+        question: { type: String, required: true },
+        variants: { type: [String], required: true },
+        rightAnswer: { type: Number, required: true },
+        type: { type: String, required: true },
+        explanation: { type: String, required: true }
+      }
+    ]
+  }
+);
 
 const LessonModel = mongoose.model<ILesson>('Lesson', lessonSchema);
 export default LessonModel;

@@ -1,13 +1,16 @@
 import mongoose from 'mongoose';
+import { ILesson } from './lessoncontent.models';
 
 interface Lesson {
   title: string;
   description: string;
   difficulty: string;
-  xp: number; 
+  xp: number;
+  lessonContent: string;
 }
+
 interface RoadMapType {
-  roadmap:[
+  roadmap: [
     {
       id: string;
       section: string;
@@ -22,20 +25,23 @@ interface RoadMapType {
   }
 }
 
-const RoadMapSchema = new mongoose.Schema({
+const RoadMapSchema = new mongoose.Schema<RoadMapType>({
   roadmap: [
     {
-      section: String,
-      unit: String,
+      id: { type: String, required: true }, 
+      section: { type: String, required: true },
+      unit: { type: String, required: true },
+      questionType: { type: String, required: true },
       lessons: [
         {
-          theme: String,
-          skills: String,
-          points: Number,
+          title: { type: String, required: true },
+          description: { type: String, required: true },
+          difficulty: { type: String, required: true },
+          xp: { type: Number, required: true },
           lessonContent: {
-            type:mongoose.Types.ObjectId,
-            ref: 'LessonContent',
-            default: null
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Lesson',
+            default: null,
           }
         }
       ]
@@ -44,9 +50,10 @@ const RoadMapSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    required: true, 
   }
-})
+});
 
 const RoadMap = mongoose.model<RoadMapType>('RoadMap', RoadMapSchema);
 
-export {RoadMap, RoadMapType}
+export {RoadMap, RoadMapType};
