@@ -20,7 +20,7 @@ const lessonSchema: Schema = new Schema(
     lessons:[
       {
         statement: { type: String, required: true },
-        question: { type: String, required: true },
+        question: { type: String, required: false },
         variants: { type: [String], required: true },
         rightAnswer: { type: Number, required: true },
         type: { type: String, required: true },

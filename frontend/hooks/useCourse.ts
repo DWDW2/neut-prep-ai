@@ -5,7 +5,14 @@ import { useSession } from 'next-auth/react';
 import {UserType} from '../types/User.types'
 import { PayloadCourse, UpdatePayloadCourse, Lesson } from '@/types/useCourse.types';
 
-type GenerateLessonMathResponse = Lesson[]
+type GenerateLessonMathResponse = {
+  statement: string;
+  question: string;
+  options: string[];
+  rightAnswer: number;
+  type: string;
+  explanation: string;
+}[]
 type GenerateLessonCriticalResponse = Lesson[]
 type HandleIncorrectThemesResponse = string[]
 type UpdateXpAndStreakResponse = any; 
