@@ -15,11 +15,11 @@ export default function SideBarItem({href, text, imageAlt, imageSrc}: Props) {
     const pathname = usePathname()
     const isActive = pathname === href
   return (
-      <Link href={href}>
-        <Button size={'lg'} variant={isActive ? 'sidebarOutline' : 'sidebar'} className='flex items-center gap-2 w-[248px] justify-start'>
+      <Link href={href} className={isActive ? 'font-bold text-black border-sky-500 border-2 bg-sky-100/90 flex flex-row justify-start gap-2 items-center w-[248px] h-[54px] pl-4 rounded-xl' : 'font-bold flex flex-row justify-start gap-2 items-center w-[248px] h-[54px] pl-4'}>
             <Image src={imageSrc} alt={imageAlt} width={32} height={32} /> 
-            {text}
-        </Button>
+            <div>
+              {text}
+            </div>
       </Link>
   )
 }

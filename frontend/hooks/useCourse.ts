@@ -5,14 +5,7 @@ import { useSession } from 'next-auth/react';
 import {UserType} from '../types/User.types'
 import { PayloadCourse, UpdatePayloadCourse, Lesson } from '@/types/useCourse.types';
 
-type GenerateLessonMathResponse = {
-  statement: string;
-  question: string;
-  options: string[];
-  rightAnswer: number;
-  type: string;
-  explanation: string;
-}[]
+type GenerateLessonMathResponse = Lesson[]
 type GenerateLessonCriticalResponse = Lesson[]
 type HandleIncorrectThemesResponse = string[]
 type UpdateXpAndStreakResponse = any; 
@@ -79,7 +72,7 @@ const useCourseApi = () => {
     );
   };
 
-  const useUpdateXpAndStreak = () => {
+  const useUpdateXp = () => {
     return useMutation<UpdateXpAndStreakResponse, Error, any>(
       async (payload) => {
         const { data } = await axiosInstance.post('/course/update-xp', payload, {
@@ -141,7 +134,7 @@ const useCourseApi = () => {
       },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries('getUser'); // Invalidate the user data query
+          queryClient.invalidateQueries('getUser'); 
         },
       }
     );
@@ -151,7 +144,7 @@ const useCourseApi = () => {
     useGenerateLessonMath,
     useGenerateLessonCritical,
     useHandleIncorrectThemes,
-    useUpdateXpAndStreak,
+    useUpdateXp,
     useResetTodaysXp,
     useGetUser,
     useUpdateUser,

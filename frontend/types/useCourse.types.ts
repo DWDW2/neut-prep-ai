@@ -12,7 +12,7 @@ interface UpdatePayloadCourse {
 interface Lesson {
   statement: string;
   question: string;
-  variants: string[];
+  options: string[];
   rightAnswer: number;
   type: string;
   explanation: string;

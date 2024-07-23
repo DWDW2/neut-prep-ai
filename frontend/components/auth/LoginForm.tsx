@@ -73,7 +73,7 @@ const LoginForm: React.FC = () => {
               </div>
               <div className="flex items-start">
                 <div className="flex items-center h-5 w-full">
-                  <Button variant={'sidebar'} className='w-full flex flex-row gap-3' onClick={ () => { const result = signIn('google', {callbackUrl: '/'}) }}>
+                  <Button variant={'sidebarOutline'} className='w-full flex flex-row gap-3 font-normal' onClick={ () => { const result = signIn('google', {callbackUrl: '/'}) }}>
                     <FaGoogle />Sign In with Google
                   </Button>
                 </div>

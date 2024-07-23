@@ -13,7 +13,7 @@ router.post('/generate-lesson-critical', AuthMiddleware, (req, res) => courseCon
 
 router.post('/handle-incorrect-themes', AuthMiddleware, (req, res) => courseController.handleIncorrectThemes(req, res));
 
-router.post('/update-xp', AuthMiddleware, (req, res) => courseController.updateXpAndStreak(req,res));
+router.post('/update-xp', AuthMiddleware, (req, res) => courseController.updateXp(req,res));
 
 router.post('/update-streak', AuthMiddleware, (req, res) => courseController.resetTodaysXp(req, res));
 

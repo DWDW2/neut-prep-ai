@@ -13,7 +13,7 @@ const buttonVariants = cva(
         primary:
           "bg-[#DCAF52] text-primary-foreground hover:bg-[#DCAF52]/90 border-[#C39840] border-b-4 active:border-b-0",
         primaryOutline:
-          "bg-white text-[#DCAF52] hover:bg-slate-100 border-[#DCAF52] border-2 border-b-4",
+          "bg-white border-4 font-bold text-black hover:border-[#DCAF52] hover:border-4",
         secondary:
           "bg-green-300 text-primary-foreground hover:bg-green-300/90 border-green-500 border-b-4 active:border-b-0",
         secondaryOutline: "bg-white text-green-500 hover:bg-slate-100",
@@ -24,8 +24,8 @@ const buttonVariants = cva(
           "bg-slate-500 text-primary-foreground hover:bg-slate-500/90 border-slate-600 border-b-4 active:border-b-0",
         superOutline: "bg-white text-slate-500 hover:bg-slate-100",
         sidebar:
-        "bg-sky-200 text-sky-500 hover:bg-sky-200/90 border-sky-500 border-2 border-b-4 active:border-b-2",
-        sidebarOutline: "bg-sky-400 text-white hover:bg-sky-200/90 border-sky-700 border-2 border-b-4 active:border-b-2",
+        "font-bold",
+        sidebarOutline: "font-bold text-black border-sky-500 border-2 bg-sky-100/90",
         lessonPrimary: 'bg-slate-300 text-black hover:bg-slate-300/90 border-slate-600 border-b-4 border-r-2 border-l-2 active:border-b-2'
       },
       size: {
