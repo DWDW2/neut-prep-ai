@@ -19,6 +19,8 @@ interface UserType {
   roadmapMathId?: mongoose.Types.ObjectId; 
   themesToImprove: string[]; 
   totalXp: number; 
+  lastActivityDate: Date;
+  longestStreak: number; 
   streak: number; 
   todaysXp: number; 
   tested: boolean;
@@ -57,10 +59,19 @@ const UserSchema = new Schema<UserType>({
     type: Number,
     default: 0,
   },
+  longestStreak: {
+    type: Number,
+    default: 0,
+  },
   todaysXp: { 
     type: Number,
     default: 0,
   },
+  lastActivityDate: {
+    type: Date,
+    default: Date.now,
+  },
+
   tested: {
     type: Boolean,
     default: false,

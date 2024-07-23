@@ -1,31 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import axiosInstance from '@/axiosInstance'; // Assuming axiosInstance is properly configured
+import axiosInstance from '@/axiosInstance'; 
 import { RoadmapPayload, Roadmap } from '@/types/useRoadmap.types';
 import { useSession } from 'next-auth/react';
-import { PayloadCourse } from '@/types/useCourse.types';
-// Define types for API responses
-type GenerateLessonMathResponse = {
-  statement: string;
-  question: string;
-  variants: string[];
-  rightAnswer: number;
-  type: string;
-  explanation: string;
-}; 
-type GenerateLessonCriticalResponse = {
-  statement: string;
-  question: string;
-  variants: string[];
-  rightAnswer: number;
-  type: string;
-  explanation: string;
-}
-type HandleIncorrectThemesResponse = any; 
+import {UserType} from '../types/User.types'
+import { PayloadCourse, UpdatePayloadCourse, Lesson } from '@/types/useCourse.types';
+
+type GenerateLessonMathResponse = Lesson[]
+type GenerateLessonCriticalResponse = Lesson[]
+type HandleIncorrectThemesResponse = string[]
 type UpdateXpAndStreakResponse = any; 
 type ResetTodaysXpResponse = any; 
-type GeTUserData = any; 
+type GeTUserData = UserType
 type UpdateUserResponse = any; 
-type UpdateUserPayload = any; 
 
 
 const useCourseApi = () => {
@@ -33,7 +19,7 @@ const useCourseApi = () => {
   const { data: session } = useSession();
 
   const useGenerateLessonMath = () => {
-    return useMutation<GenerateLessonMathResponse[], Error, any>(
+    return useMutation<GenerateLessonMathResponse, Error, any>(
       async (payload: PayloadCourse) => {
         const { data } = await axiosInstance.post('/course/generate-lesson-math', payload, {
           headers: {
@@ -71,7 +57,7 @@ const useCourseApi = () => {
   const useHandleIncorrectThemes = () => {
     return useMutation<HandleIncorrectThemesResponse, Error, any>(
       async (payload) => {
-        const { data } = await axiosInstance.post('/handle-incorrect-themes', payload, {
+        const { data } = await axiosInstance.post('/course/handle-incorrect-themes', payload, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },
@@ -86,11 +72,10 @@ const useCourseApi = () => {
     );
   };
 
-  // Update XP and streak
   const useUpdateXpAndStreak = () => {
     return useMutation<UpdateXpAndStreakResponse, Error, any>(
       async (payload) => {
-        const { data } = await axiosInstance.post('/update-xp-and-streak', payload, {
+        const { data } = await axiosInstance.post('/course/update-xp', payload, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },
@@ -105,11 +90,10 @@ const useCourseApi = () => {
     );
   };
 
-  // Reset today's XP
   const useResetTodaysXp = () => {
     return useMutation<ResetTodaysXpResponse, Error>(
       async () => {
-        const { data } = await axiosInstance.post('/reset-todays-xp', null, {
+        const { data } = await axiosInstance.post('/course/update-streak', null, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },
@@ -139,8 +123,8 @@ const useCourseApi = () => {
   };
 
   const useUpdateUser = () => {
-    return useMutation<UpdateUserResponse, Error, UpdateUserPayload>(
-      async (payload: UpdateUserPayload) => {
+    return useMutation<UpdateUserResponse, Error, UpdatePayloadCourse>(
+      async (payload: UpdatePayloadCourse) => {
         const { data } = await axiosInstance.put('/course/update-user', payload, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
@@ -163,6 +147,7 @@ const useCourseApi = () => {
     useUpdateXpAndStreak,
     useResetTodaysXp,
     useGetUser,
+    useUpdateUser,
   };
 };
 

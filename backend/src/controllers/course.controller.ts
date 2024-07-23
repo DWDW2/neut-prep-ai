@@ -5,12 +5,13 @@ export default class CourseController {
   private courseService: CourseService;
 
   constructor(courseService: CourseService) {
-    this.courseService = new CourseService();
+    this.courseService = courseService;
   }
 
   async generateLessonMath(req: Request, res: Response) {
     try {
-      const { roadmapId, lessonIndex, sectionIndex } = req.body
+      const { roadmapId, lessonIndex, sectionIndex } = req.body;
+      console.log(req.body)
       const lessonJson = await this.courseService.generateLessonMath(
         roadmapId,
         parseInt(lessonIndex),
@@ -26,6 +27,7 @@ export default class CourseController {
   async generateLessonCritical(req: Request, res: Response) {
     try {
       const { roadmapId, lessonIndex, sectionIndex } = req.body;
+      console.log(roadmapId, lessonIndex, sectionIndex)
       const lessonJson = await this.courseService.generateLessonCritical(
         roadmapId,
         parseInt(lessonIndex),
@@ -58,30 +60,30 @@ export default class CourseController {
     try {
       const { userId } = req.body.user; 
       const { points } = req.body;
-      const success = await this.courseService.updateXpAndStreak(userId, points);
+      const success = await this.courseService.updateXp(userId, points);
       if (success) {
-        res.status(200).json({ message: 'XP and streak updated successfully' });
+        res.status(200).json({ message: 'XP updated successfully' });
       } else {
-        res.status(500).json({ error: 'Failed to update XP and streak' });
+        res.status(500).json({ error: 'Failed to update XP' });
       }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Failed to update XP and streak' });
+      res.status(500).json({ error: 'Failed to update XP' });
     }
   }
 
   async resetTodaysXp(req: Request, res: Response) {
     try {
-      const { userId } = req.body.user; 
-      const success = await this.courseService.resetTodaysXp(userId);
+      const { userId } = req.body; 
+      const success = await this.courseService.updateStreak(userId);
       if (success) {
-        res.status(200).json({ message: 'Today\'s XP reset successfully' });
+        res.status(200).json({ message: 'Streak updated successfully' });
       } else {
-        res.status(500).json({ error: 'Failed to reset today\'s XP' });
+        res.status(500).json({ error: 'Failed to update streak' });
       }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Failed to reset today\'s XP' });
+      res.status(500).json({ error: 'Failed to update streak' });
     }
   }
 
@@ -106,6 +108,3 @@ export default class CourseController {
     }
   }
 }
-
-
-

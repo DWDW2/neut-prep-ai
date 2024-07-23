@@ -12,15 +12,18 @@ import Loading from '@/components/Loading';
 import useCourseApi from '@/hooks/useCourse';
 import UserNotFound from '@/components/testing/UserNotFound';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 
 type Props = {}
 
 export default function Testing({}: Props) {
   const router = useRouter()
-  const {useGetUser} = useCourseApi()
+  const {useGetUser, useResetTodaysXp} = useCourseApi()
   const {data:user, isLoading, isError} = useGetUser()
   const [visitDates, setVisitDates] = useState<Date[]>([]);
+  const {data:session} = useSession()
+  console.log(session?.accessToken)
   console.log(user)
   // if(isLoading){
   //   return(
@@ -52,11 +55,21 @@ export default function Testing({}: Props) {
     new Date(2024, 6, 18),
     new Date(2024, 6, 22)
   ];
+  const {mutate: updateStreak, isLoading: isUpdatingStreak} = useResetTodaysXp()
+  useEffect(() => {
+    if (user) {
+      updateStreak();
+    }
+  }, [user]);
+
  return (
   <div className="min-h-screen flex flex-col">
     {
       user ? (
         <div className="flex flex-col m-4">
+        <div> 
+          {user.streak}
+        </div>
         <Themes performanceData={performanceData} />
         <TestStatistics
           points={85}
