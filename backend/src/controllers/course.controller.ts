@@ -27,6 +27,7 @@ export default class CourseController {
   async generateLessonCritical(req: Request, res: Response) {
     try {
       const { roadmapId, lessonIndex, sectionIndex } = req.body;
+      console.log(roadmapId, lessonIndex, sectionIndex)
       const lessonJson = await this.courseService.generateLessonCritical(
         roadmapId,
         parseInt(lessonIndex),
