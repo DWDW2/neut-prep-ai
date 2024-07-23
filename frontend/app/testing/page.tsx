@@ -67,17 +67,10 @@ export default function Testing({}: Props) {
     {
       user ? (
         <div className="flex flex-col m-4">
-        <div> 
-          {user.streak}
+          <div> 
+            {user.streak}
+          </div>
         </div>
-        <Themes performanceData={performanceData} />
-        <TestStatistics
-          points={85}
-          skills={skills}
-          bestSkills={bestSkills}
-          continueCourse={continueCourse}
-        />
-    </div>
       ) : (
         <UserNotFound />
       )
