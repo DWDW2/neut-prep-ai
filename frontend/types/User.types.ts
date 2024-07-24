@@ -18,6 +18,8 @@ interface UserType{
   streak: number; 
   todaysXp: number; 
   tested: boolean;
+  bestThemes: string[];
+  visitedDays: string[];
 }
 
 export type {User, UserType}

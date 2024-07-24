@@ -140,11 +140,30 @@ const useCourseApi = () => {
     );
   };
 
+
+  const useHandleBestThemes = () => {
+    return useMutation<HandleIncorrectThemesResponse, Error, any>(
+      async (payload) => {
+        const { data } = await axiosInstance.post('/course/handle-best-themes', payload, {
+          headers: {
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+        });
+        return data;
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries('handleIncorrectThemes');
+        },
+      }
+    );
+  }
   return {
     useGenerateLessonMath,
     useGenerateLessonCritical,
     useHandleIncorrectThemes,
     useUpdateXp,
+    useHandleBestThemes,
     useResetTodaysXp,
     useGetUser,
     useUpdateUser,

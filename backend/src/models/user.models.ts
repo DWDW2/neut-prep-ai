@@ -24,6 +24,8 @@ interface UserType {
   streak: number; 
   todaysXp: number; 
   tested: boolean;
+  bestThemes: string[]
+  visitedDays: string[];
 }
 
 const UserSchema = new Schema<UserType>({
@@ -71,10 +73,17 @@ const UserSchema = new Schema<UserType>({
     type: Date,
     default: Date.now,
   },
-
   tested: {
     type: Boolean,
     default: false,
+  },
+  bestThemes: {
+    type: [String],
+    default: [],
+  },
+  visitedDays: {
+    type: [String],
+    default: [],
   }
 });
 

@@ -9,7 +9,7 @@ const PerformanceSummary = ({ themesToImprove } : Props) => {
   
 
   return (
-    <div className="p-6 bg-gray-100 rounded-lg shadow-md m-4">
+    <div className="p-6 bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-semibold text-center mb-4">Themes to Improve</h2>
       <ul className="list-none p-0">
         {themesToImprove.map((theme, index) => (

@@ -132,7 +132,9 @@ export default class CourseService {
       } else {
         user.streak = 1;
       }
-
+      if (!user.visitedDays.includes(today.toISOString().split('T')[0])) {
+        user.visitedDays.push(today.toISOString().split('T')[0]);
+      }
       user.longestStreak = Math.max(user.longestStreak, user.streak);
       user.lastActivityDate = today;
       await user.save();
@@ -162,6 +164,18 @@ export default class CourseService {
 
       await user.save();
       return user;
+    });
+  }
+
+  async updateBestThemes(userId: string, bestThemes: string[]){
+    return this.retryOperation(async () => {
+      const user = await User.findById(userId);
+      if (!user) return null;
+
+      user.bestThemes = [...new Set([...user.bestThemes, ...bestThemes])];
+
+      await user.save();
+      return true;
     });
   }
 }

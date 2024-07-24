@@ -32,10 +32,11 @@ export default function MathId({params}: Props) {
     const roadmapId = id[0]; 
     const xp = parseInt(id[3], 10); 
     const questionType = id[4]; 
-    const {useGenerateLessonMath, useHandleIncorrectThemes, useUpdateXp} = useCourseApi() 
+    const {useGenerateLessonMath, useHandleIncorrectThemes, useUpdateXp, useHandleBestThemes} = useCourseApi() 
     const {mutate, isLoading:isLoadingMath, isError: isErrorMath, data:MathRoadmapLesson} = useGenerateLessonMath() 
     const {mutate:mutateIncorrectTheme} = useHandleIncorrectThemes()
     const {mutate:mutateXP} = useUpdateXp()
+    const {mutate:mutateBestTheme} = useHandleBestThemes()
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
     const [showExplanation, setShowExplanation] = useState(false);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -81,6 +82,8 @@ export default function MathId({params}: Props) {
           try {
             if(performance <= 60){
               mutateIncorrectTheme({incorrectThemes: [questionType]})
+            }else{
+              mutateBestTheme({bestThemes: [questionType]})
             }
             mutateXP({points: xpEarned})
             console.log('XP and questionType sent successfully!');

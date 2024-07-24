@@ -108,4 +108,14 @@ export default class CourseController {
       res.status(500).json({message: error?.message})
     }
   }
+
+  async updateBestThemes(req:Request, res:Response){
+    try {
+      const {userId, bestThemes} = req.body
+      await this.courseService.updateBestThemes(userId, bestThemes)      
+    } catch (error:any) {
+      console.log(error)
+      res.status(500).json({message: error?.message})
+    }
+  }
 }

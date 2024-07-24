@@ -1,18 +1,15 @@
 'use client'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { FaRegDotCircle } from "react-icons/fa";
-import { FaRegArrowAltCircleLeft } from "react-icons/fa";
-import { FaRegCheckCircle } from "react-icons/fa";
-import Link from 'next/link'
-import Streak from '@/components/testing/dashboard/Streak';
-import TestStatistics from '@/components/testing/dashboard/TestStatistics';
-import Themes from '@/components/testing/dashboard/Themes';
-import Calendar from '@/components/testing/dashboard/Calendar';
+import StreakModal from '@/components/testing/dashboard/Streak';
 import Loading from '@/components/Loading';
 import useCourseApi from '@/hooks/useCourse';
-import UserNotFound from '@/components/testing/UserNotFound';
+import HeroTesting from '@/components/testing/UserNotFound';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import PerformanceSummary from '@/components/testing/dashboard/Themes';
+import Dashboard from '@/components/testing/dashboard/TestStatistics';
+import Calendar from '@/components/testing/dashboard/Calendar';
+import { Button } from '@/components/ui/button';
 
 
 type Props = {}
@@ -23,56 +20,64 @@ export default function Testing({}: Props) {
   const {data:user, isLoading, isError} = useGetUser()
   const [visitDates, setVisitDates] = useState<Date[]>([]);
   const {data:session} = useSession()
+  const {mutate: updateStreak, isLoading: isUpdatingStreak} = useResetTodaysXp()
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [streakCount, setStreakCount] = useState(5); 
   console.log(session?.accessToken)
   console.log(user)
-  // if(isLoading){
-  //   return(
-  //     <Loading />
-  //   )
-  // }
-  const skills = [
-    { name: 'Reading', points: 80 },
-    { name: 'Writing', points: 70 },
-    { name: 'Listening', points: 90 },
-    { name: 'Speaking', points: 60 },
-  ];
-    
-  const performanceData = [
-    { name: 'Critical Thinking', score: 45 },
-    { name: 'Math', score: 60 },
-    { name: 'Reading Comprehension', score: 35 },
-    { name: 'Writing', score: 75 }
-  ];
-  const bestSkills = skills.filter(skill => skill.points >= 70);
-  
-  const continueCourse = () => {
-    alert('Continuing course...');
+
+  useEffect(() => {
+    const currentDate = new Date().toISOString().split('T')[0];
+    const lastShownDate = user?.lastActivityDate.toISOString().split('T')[0]
+
+    if (lastShownDate !== currentDate) {
+      setIsModalOpen(true);
+    }
+  }, []);
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
-  const visits = [
-    new Date(2024, 6, 2),
-    new Date(2024, 6, 5),
-    new Date(2024, 6, 11),
-    new Date(2024, 6, 18),
-    new Date(2024, 6, 22)
-  ];
-  const {mutate: updateStreak, isLoading: isUpdatingStreak} = useResetTodaysXp()
+
   useEffect(() => {
     if (user) {
       updateStreak();
     }
   }, [user]);
 
+  if(isLoading){
+    return(
+      <Loading />
+    )
+  }
  return (
   <div className="min-h-screen flex flex-col">
     {
       user ? (
-        <div className="flex flex-col m-4">
-          <div> 
-            {user.streak}
+        <div className="flex flex-col m-4 justify-center">
+          <h1 className='text-2xl font-bold text-center p-4 mb-40'>Hello, {user.username}!</h1>
+          <div className='flex justify-start flex-col items-center'>
+            <HeroTesting />
+            <Button variant={'primary'} size={'lg'} className='text-xl font-bold w-6 h-10 mt-10'>
+              Try it
+            </Button>
           </div>
+          {user.bestThemes.length >= 3 && (
+            <div className='flex flex-row w-full p-4'>
+              <div className=''>
+                <PerformanceSummary themesToImprove={user.themesToImprove} />
+                <Calendar visitedDays={user.visitedDays} />
+              </div>
+              <div className='ml-4'>
+              <Dashboard points={0} skills={[]} bestSkills={[]} continueCourse={function (): void {
+                  throw new Error('Function not implemented.');
+                } } />
+              </div>
+            </div>
+          )}
         </div>
       ) : (
-        <UserNotFound />
+        <HeroTesting />
       )
     }
 </div>
