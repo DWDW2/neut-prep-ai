@@ -72,7 +72,7 @@ const useCourseApi = () => {
     );
   };
 
-  const useUpdateXpAndStreak = () => {
+  const useUpdateXp = () => {
     return useMutation<UpdateXpAndStreakResponse, Error, any>(
       async (payload) => {
         const { data } = await axiosInstance.post('/course/update-xp', payload, {
@@ -134,17 +134,36 @@ const useCourseApi = () => {
       },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries('getUser'); // Invalidate the user data query
+          queryClient.invalidateQueries('getUser'); 
         },
       }
     );
   };
 
+
+  const useHandleBestThemes = () => {
+    return useMutation<HandleIncorrectThemesResponse, Error, any>(
+      async (payload) => {
+        const { data } = await axiosInstance.post('/course/handle-best-themes', payload, {
+          headers: {
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+        });
+        return data;
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries('handleIncorrectThemes');
+        },
+      }
+    );
+  }
   return {
     useGenerateLessonMath,
     useGenerateLessonCritical,
     useHandleIncorrectThemes,
-    useUpdateXpAndStreak,
+    useUpdateXp,
+    useHandleBestThemes,
     useResetTodaysXp,
     useGetUser,
     useUpdateUser,

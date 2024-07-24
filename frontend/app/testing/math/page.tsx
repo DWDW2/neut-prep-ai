@@ -8,25 +8,29 @@ import dynamic from "next/dynamic"
 const Loading = dynamic(() => import('@/components/Loading'), {ssr: false})
 import UnitSection from "@/components/testing/UnitSection"
 import { useRoadmapQuery } from "@/hooks/useRoadmap"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {toast, ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import useCourseApi from "@/hooks/useCourse"
-import { RoadMap, RoadMapLesson} from "@/app/constants"
 import { useRouter } from "next/navigation"
 type Props = {}
 interface handleLesson {
   sectionIndex: number,
   lessonIndex: number,
-  roadmapId: string
+  roadmapId: string;
+  xp: number;
+  questionType: string;
 }
-export default function CriticalDetailed({}: Props) {
+export default function MathDetailed({}: Props) {
   const router = useRouter()
   const {useGenerateMathRoadmap} = useRoadmapQuery()
   const {useGenerateLessonMath} = useCourseApi()
   const {mutate, isLoading:isLoadingMath, isError: isErrorMath, data:MathRoadmapLesson} = useGenerateLessonMath()
   const [isLessonActive, setLessonActive] = useState(false)
   const {data: RoadMap, isLoading, isError} = useGenerateMathRoadmap()
+  const handleLessonClick = ({lessonIndex, sectionIndex, roadmapId, xp, questionType}:handleLesson) => {
+    router.push(`/testing/math/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}`)
+  }
   if(isLoading){
     return(
       <Loading />
@@ -40,9 +44,6 @@ export default function CriticalDetailed({}: Props) {
   console.log(MathRoadmapLesson)
   
   
-  const handleLessonClick = ({lessonIndex, sectionIndex, roadmapId}:handleLesson) => {
-    router.push(`/testing/math/${roadmapId}/${sectionIndex}/${lessonIndex}`)
-  }
   return (
     <div className="flex flex-row-reverse gap-[48px] px-6">
       <StickySideBar>
@@ -61,7 +62,7 @@ export default function CriticalDetailed({}: Props) {
                   {
                     section.lessons.map((lesson, lessonindex) => {
                       return(
-                        <UnitButton index={lessonindex} totalCount={section.lessons.length} onClick={() => handleLessonClick({roadmapId: RoadMap._id, sectionIndex: index, lessonIndex: lessonindex})}  key={lessonindex}/>
+                        <UnitButton index={lessonindex} totalCount={section.lessons.length} onClick={() => handleLessonClick({roadmapId: RoadMap._id, sectionIndex: index, lessonIndex: lessonindex, xp: lesson.xp, questionType: section.questionType})}  key={lessonindex}/>
                       )
                     })
                   }

@@ -1,22 +1,24 @@
 import { ArrowBigRight } from 'lucide-react'
 import React from 'react'
 import { Button } from '../ui/button'
-
-type Props = 
-{
-    option: string
+import { RoadMap } from '@/app/constants'
+import { Lesson, Roadmap } from '@/types/useRoadmap.types'
+import Link from 'next/link'
+type Props = {
+ questionType: string;
+ onClick: () => void; 
 }
 
 
-export default function TestButton({option}: Props) {
+export default function TestButton({questionType, onClick}: Props) {
   return (
-    <section className='bg-yellow-500 border-b-8 active:border-b-2 border-2 border-yellow-700 p-4 flex flex-col rounded-2xl w-64 justify-between text-wrap'>
-        <h1 className='font-bold text-2xl'>
-            {option}
-        </h1>
-        <Button variant={'sidebarOutline'} size={'lg'} >
-            Test skills
-        </Button>
+    <section className='bg-[#DCAF52] p-6 shadow-lg flex flex-col justify-between rounded-sm'>
+      <div className='font-bold text-xl text-black'>
+        {questionType}
+      </div>
+      <div className='bg-white font-bold text-black px-5 py-3 rounded-md w-fit hover:bg-slate-200' onClick={onClick}>
+        Practice
+      </div>
     </section>
   )
 }

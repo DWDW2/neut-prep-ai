@@ -3,13 +3,14 @@ import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 import SideBarItem from './SideBarItem'
+import { useSession } from 'next-auth/react'
+
 type Props = {
     className?: string
-    userProfImage?: string
-    userProfLink: string
 }
 
-export default function SideBar({className, userProfImage, userProfLink}: Props) {
+export default function SideBar({className}: Props) {
+    const session = useSession()
   return (
     <section className={cn('w-[256px] h-full bg-white lg:fixed left-0 top-0 border-r-2 border-slate-300 flex-col justify-between', className)}>
         <div>
@@ -29,9 +30,9 @@ export default function SideBar({className, userProfImage, userProfLink}: Props)
         </div>
         <div className='w-full pb-5 pl-5'>
             <div>
-                <Link href={userProfLink} className='flex flex-row items-center'>
-                    <Image src={userProfImage ? userProfImage : '/empt.png'} width={36} height={36} alt='user profile' className='rounded-full'/>
-                    <h1 className='text-black font-bold text-center ml-2'>PROFILE</h1>
+                <Link href={`users/profile/${session.data?.user?.name}`} className='flex flex-row items-center'>
+                    <Image src={session.data?.user?.image ? session.data.user.image: '/empt.png'} width={36} height={36} alt='user profile' className='rounded-full'/>
+                    <h1 className='text-black font-bold text-center ml-2'>{session.data?.user?.name ? session.data.user.name : 'PROFILE'}</h1>
                 </Link>
             </div>
         </div>

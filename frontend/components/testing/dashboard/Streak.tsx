@@ -1,40 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import Modal from 'react-modal';
+import Confetti from 'react-confetti';
 
-type Props = {
-  initialStreak: number;
-  lastLoginDate: string;
-};
+Modal.setAppElement('#__next'); // This sets the root element for accessibility reasons.
 
+interface StreakModalProps {
+  isOpen: boolean;
+  onRequestClose: () => void;
+  streakCount: number;
+}
 
-const Streak = ({ initialStreak, lastLoginDate } : Props) => {
-  const [streak, setStreak] = useState(initialStreak);
-  const [lastLogin, setLastLogin] = useState(new Date(lastLoginDate));
+const StreakModal: React.FC<StreakModalProps> = ({ isOpen, onRequestClose, streakCount }) => {
+  const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
-    const today = new Date();
-    const lastLoginDate = new Date(lastLogin);
-
-    const differenceInTime = today.getTime() - lastLoginDate.getTime();
-    const differenceInDays = differenceInTime / (1000 * 3600 * 24);
-
-    if (differenceInDays >= 1 && differenceInDays < 2) {
-      setStreak(streak + 1);
-    } else if (differenceInDays >= 2) {
-      setStreak(0);
+    if (isOpen) {
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 5000); 
     }
-
-    setLastLogin(today);
-  }, []);
+  }, [isOpen]);
 
   return (
-    <div className="flex flex-col items-center mt-6">
-      <div className="flex items-center bg-white border-2 border-gray-200 rounded-lg p-4 shadow-lg">
-        <div className="text-4xl text-red-500 mr-4">🔥</div>
-        <div className="text-4xl font-bold mr-4">{streak}</div>
-        <div className="text-lg text-gray-600">Day Streak</div>
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onRequestClose}
+      className="flex items-center justify-center h-screen bg-black bg-opacity-50"
+    >
+      <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+        <h2 className="text-2xl font-bold mb-4">Congratulations!</h2>
+        <p className="text-lg">You have achieved a {streakCount}-day streak!</p>
+        <button onClick={onRequestClose} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded">
+          Close
+        </button>
       </div>
-    </div>
+      {showConfetti && <Confetti />}
+    </Modal>
   );
 };
 
-export default Streak;
+export default StreakModal;

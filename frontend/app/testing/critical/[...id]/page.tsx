@@ -1,14 +1,27 @@
 'use client'
 import useCourseApi from '@/hooks/useCourse'
-import React, { useState } from 'react'
-import { RoadMapLesson } from '@/app/constants'
-const Loading = dynamic(() => import('@/components/Loading'), {ssr: false})
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
+import { useRouter } from 'next/navigation'
+import { MathJax, MathJaxContext } from 'better-react-mathjax'
+import axios from 'axios'; // Import axios
+
+interface Question {
+  statement: string
+  question: string
+  options: string[]
+  rightAnswer: number
+  explanation: string
+}
+
+type MathRoadmapLessonType = Question[]
+
+const Loading = dynamic(() => import('@/components/Loading'), { ssr: false })
+
 type Props = {
-    params:{
-        id: string,
-    },
+  params: {
+    id: string[]
+  },
 }
 
 export default function CriticalThinkingId({params}: Props) {
@@ -17,11 +30,17 @@ export default function CriticalThinkingId({params}: Props) {
     const lessonIndex = parseInt(id[2], 10); 
     const sectionIndex = parseInt(id[1], 10); 
     const roadmapId = id[0]; 
-    const {useGenerateLessonCritical} = useCourseApi() 
+    const xp = parseInt(id[3], 10); 
+    const questionType = id[4]; 
+    const {useGenerateLessonCritical, useHandleIncorrectThemes, useUpdateXp, useHandleBestThemes} = useCourseApi() 
     const {mutate, isLoading:isLoadingCriticalThinking, isError: isErrorCriticalThinking, data:CriticalThinkingRoadmapLesson} = useGenerateLessonCritical() 
+    const {mutate:mutateIncorrectTheme} = useHandleIncorrectThemes()
+    const {mutate:mutateXP} = useUpdateXp()
+    const {mutate:mutateBestTheme} = useHandleBestThemes()
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
     const [showExplanation, setShowExplanation] = useState(false);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [correctAnswers, setCorrectAnswers] = useState(0); 
 
     React.useEffect(() => {
         mutate({lessonIndex, sectionIndex, roadmapId})
@@ -32,23 +51,60 @@ export default function CriticalThinkingId({params}: Props) {
             <Loading/>
         )
     }
-
+    console.log(xp, questionType)
     if (CriticalThinkingRoadmapLesson) { 
         const currentQuestion = CriticalThinkingRoadmapLesson[currentQuestionIndex];
 
+        const handleCheckAnswer = () => {
+          setShowExplanation(true);
+          if (selectedAnswer === currentQuestion.rightAnswer) {
+            setCorrectAnswers(correctAnswers + 1);
+          }
+        };
+
+        const handleNextQuestion = () => {
+          setCurrentQuestionIndex(currentQuestionIndex + 1);
+          setSelectedAnswer(null);
+          setShowExplanation(false);
+        };
+
+        const handleNextLesson = () => {
+          router.push('/testing/critical'); 
+        };
+
+        const calculatePerformance = () => {
+          return (correctAnswers / CriticalThinkingRoadmapLesson.length) * 100;
+        };
+
+        const sendXPAndQuestionType = async () => {
+          const performance = calculatePerformance();
+          const xpEarned = (performance / 100) * xp; 
+          try {
+            if(performance <= 60){
+              mutateIncorrectTheme({incorrectThemes: [questionType]})
+            }else{
+              mutateBestTheme({bestThemes: [questionType]})
+            }
+            mutateXP({points: xpEarned})
+            console.log('XP and questionType sent successfully!');
+          } catch (error) {
+            console.error('Error sending XP and questionType:', error);
+          }
+        };
+
         return (
-          <section className='flex flex-col h-screen justify-between'>
-            <section className='h-[30%]'>
-                <div className='text-xl font-bold'>{currentQuestion.statement}</div>
-                <div className='text-gray-600'>{currentQuestion.question}</div>
+          <section className='flex flex-col h-screen justify-between p-10 max-[800px]:p-4'>
+            <section className='px-5'>
+                <div className='text-2xl font-bold pb-4'>{currentQuestion.statement}</div>
+                <div className='text-black text-xl pb-4'>{currentQuestion.question}</div>
             </section>
-            <section className='h-[30%]'>
-              {
-                currentQuestion.variants.map((variant, index) => {
+            <section className='flex flex-col gap-1 px-5'>
+              {   
+                currentQuestion.options.map((variant, index) => {
                   return (
                     <div 
                       key={index} 
-                      className={`flex flex-row gap-4 items-center cursor-pointer rounded-md p-2 ${selectedAnswer === index ? 'bg-blue-500 text-white' : 'bg-gray-100'}`}
+                      className={`flex flex-row gap-4 items-center cursor-pointer border-2 border-slate-200 rounded-lg p-2 ${selectedAnswer === index ? 'bg-slate-300 text-black' : 'bg-gray-100'}`}
                       onClick={() => setSelectedAnswer(index)}
                     >
                       <div className='text-lg font-bold'>{variant}</div>
@@ -57,11 +113,11 @@ export default function CriticalThinkingId({params}: Props) {
                 })
               }
             </section>
-            <section className='h-[30%]'>
+            <section className='h-[30%] px-5 mt-5'>
               {selectedAnswer !== null && (
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  onClick={() => setShowExplanation(true)}
+                  onClick={handleCheckAnswer}
                 >
                   Check Answer
                 </button>
@@ -82,11 +138,7 @@ export default function CriticalThinkingId({params}: Props) {
                   {currentQuestionIndex < CriticalThinkingRoadmapLesson.length - 1 && (
                     <button
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2"
-                      onClick={() => {
-                        setCurrentQuestionIndex(currentQuestionIndex + 1);
-                        setSelectedAnswer(null);
-                        setShowExplanation(false);
-                      }}
+                      onClick={handleNextQuestion}
                     >
                       Next Question
                     </button>
@@ -95,12 +147,11 @@ export default function CriticalThinkingId({params}: Props) {
                     <button
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2"
                       onClick={() => {
-                        const nextLessonIndex = lessonIndex + 1;
-                        const nextId = `${roadmapId}/${sectionIndex}/${nextLessonIndex}`;
-                        router.push(`/testing/critical/${nextId}`);
+                        sendXPAndQuestionType(); 
+                        handleNextLesson();
                       }}
                     >
-                      Next Lesson
+                      Main Page
                     </button>
                   )}
                 </div>

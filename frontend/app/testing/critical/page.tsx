@@ -17,7 +17,9 @@ type Props = {}
 interface handleLesson {
   sectionIndex: number,
   lessonIndex: number,
-  roadmapId: string
+  roadmapId: string;
+  xp: number;
+  questionType: string;
 }
 export default function CriticalDetailed({}: Props) {
   const router = useRouter()
@@ -26,8 +28,8 @@ export default function CriticalDetailed({}: Props) {
   const {mutate, isLoading:isLoadingCritical, isError: isErrorCritical, data:CriticalRoadmapLesson} = useGenerateLessonCritical()
   const [isLessonActive, setLessonActive] = useState(false)
   const {data: CriticalRoadmap, isLoading, isError} = useGenerateCriticalRoadmap()
-  const handleLessonClick = ({ sectionIndex, lessonIndex, roadmapId}: handleLesson) => {
-    router.push(`/testing/critical/${roadmapId}/${sectionIndex}/${lessonIndex}`)
+  const handleLessonClick = ({ sectionIndex, lessonIndex, roadmapId, xp, questionType}: handleLesson) => {
+    router.push(`/testing/critical/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}`)
   }
   if(isLoading){
     return(
@@ -59,7 +61,7 @@ export default function CriticalDetailed({}: Props) {
                   {
                     section.lessons.map((lesson, lessonindex) => {
                       return(
-                        <UnitButton index={lessonindex} totalCount={section.lessons.length} onClick={() => handleLessonClick({sectionIndex: index, lessonIndex: lessonindex, roadmapId: CriticalRoadmap._id})} key={lessonindex}/>
+                        <UnitButton index={lessonindex} totalCount={section.lessons.length} onClick={() => handleLessonClick({sectionIndex: index, lessonIndex: lessonindex, roadmapId: CriticalRoadmap._id, xp: lesson.xp, questionType: section.questionType})} key={lessonindex}/>
                       )
                     })
                   }

@@ -42,11 +42,12 @@ export default class CourseController {
 
   async handleIncorrectThemes(req: Request, res: Response) {
     try {
-      const { userId } = req.body.user; 
+      const { userId } = req.body; 
       const { incorrectThemes } = req.body;
+      console.log(req.body)
       const success = await this.courseService.handleIncorrectThemes(userId, incorrectThemes);
       if (success) {
-        res.status(200).json({ message: 'Incorrect themes updated successfully' });
+        res.status(200).json({ message: incorrectThemes });
       } else {
         res.status(500).json({ error: 'Failed to update incorrect themes' });
       }
@@ -56,9 +57,9 @@ export default class CourseController {
     }
   }
 
-  async updateXpAndStreak(req: Request, res: Response) {
+  async updateXp(req: Request, res: Response) {
     try {
-      const { userId } = req.body.user; 
+      const { userId } = req.body; 
       const { points } = req.body;
       const success = await this.courseService.updateXp(userId, points);
       if (success) {
@@ -102,6 +103,16 @@ export default class CourseController {
     try {
       const {userId, tested} = req.body
       await this.courseService.updateUser(userId, tested)
+    } catch (error:any) {
+      console.log(error)
+      res.status(500).json({message: error?.message})
+    }
+  }
+
+  async updateBestThemes(req:Request, res:Response){
+    try {
+      const {userId, bestThemes} = req.body
+      await this.courseService.updateBestThemes(userId, bestThemes)      
     } catch (error:any) {
       console.log(error)
       res.status(500).json({message: error?.message})

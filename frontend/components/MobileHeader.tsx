@@ -1,5 +1,6 @@
 import React from 'react'
 import MobileSideBar from './testing/MobileSideBar'
+import FooterNav from './testing/FooterNav'
 
 type Props = {}
 

@@ -31,7 +31,6 @@ export default class UserService {
         throw new Error('Password is required');
       }
       
-      // Generate salt before hashing
       console.log('Generating salt...');
       const salt = await bcrypt.genSalt(10); 
       console.log('Salt generated:', salt);

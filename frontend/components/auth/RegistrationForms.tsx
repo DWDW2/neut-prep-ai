@@ -102,7 +102,7 @@ const RegistrationForm: React.FC = () => {
               </div>
               <div className="flex items-start">
                 <div className="flex items-center h-5 w-full">
-                  <Button variant={'sidebar'} className='w-full flex flex-row gap-3 ' onClick={handleGoogleRegistration}>
+                  <Button variant={'sidebarOutline'} className='w-full flex flex-row gap-3 font-normal' onClick={handleGoogleRegistration}>
                     <FaGoogle />Sign Up with Google
                   </Button>
                 </div>

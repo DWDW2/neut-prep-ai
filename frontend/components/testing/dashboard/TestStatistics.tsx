@@ -49,7 +49,7 @@ const Dashboard = ({ points, skills, bestSkills, continueCourse } : Props) => {
       </div>
       <div className="w-full h-1/3 mt-4 flex flex-col items-center">
         <h2 className="text-xl font-bold mb-2">Points Received in Last Test: {points}</h2>
-        <h3 className="text-lg font-semibold mb-1">Best Skills:</h3>
+        <h3 className="text-lg font-semibold mb-1">Best Themes:</h3>
         <ul className="list-disc list-inside mb-4">
           {bestSkills.map(skill => (
             <li key={skill.name} className="text-base">{skill.name} - {skill.points} points</li>
