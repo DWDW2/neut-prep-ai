@@ -32,10 +32,10 @@ export default function CriticalThinkingId({params}: Props) {
     const roadmapId = id[0]; 
     const xp = parseInt(id[3], 10); 
     const questionType = id[4]; 
-    const {useGenerateLessonCritical, useHandleIncorrectThemes, useUpdateXp, useHandleBestThemes} = useCourseApi() 
+    const {useGenerateLessonCritical, useHandleIncorrectThemes, useUpdateXpByLesson, useHandleBestThemes} = useCourseApi() 
     const {mutate, isLoading:isLoadingCriticalThinking, isError: isErrorCriticalThinking, data:CriticalThinkingRoadmapLesson} = useGenerateLessonCritical() 
     const {mutate:mutateIncorrectTheme} = useHandleIncorrectThemes()
-    const {mutate:mutateXP} = useUpdateXp()
+    const {mutate:mutateXP} = useUpdateXpByLesson()
     const {mutate:mutateBestTheme} = useHandleBestThemes()
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
     const [showExplanation, setShowExplanation] = useState(false);

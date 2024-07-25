@@ -32,10 +32,10 @@ export default function MathId({params}: Props) {
     const roadmapId = id[0]; 
     const xp = parseInt(id[3], 10); 
     const questionType = id[4]; 
-    const {useGenerateLessonMath, useHandleIncorrectThemes, useUpdateXp, useHandleBestThemes} = useCourseApi() 
-    const {mutate, isLoading:isLoadingMath, isError: isErrorMath, data:MathRoadmapLesson} = useGenerateLessonMath() 
+    const {useGenerateLessonMath, useHandleIncorrectThemes, useUpdateXpByLesson, useHandleBestThemes} = useCourseApi() 
+    const {mutate, isLoading:isLoadingMath, isError: isErrorMath, data:MathRoadmapLesson, error: fetchError} = useGenerateLessonMath() 
     const {mutate:mutateIncorrectTheme} = useHandleIncorrectThemes()
-    const {mutate:mutateXP} = useUpdateXp()
+    const {mutate:mutateXP} = useUpdateXpByLesson()
     const {mutate:mutateBestTheme} = useHandleBestThemes()
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
     const [showExplanation, setShowExplanation] = useState(false);
@@ -50,6 +50,11 @@ export default function MathId({params}: Props) {
         return(
             <Loading/>
         )
+    }
+
+    if (fetchError) {
+      router.back();
+      return null; 
     }
 
     if (MathRoadmapLesson) { 
