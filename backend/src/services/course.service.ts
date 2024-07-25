@@ -108,7 +108,6 @@ export default class CourseService {
     return this.retryOperation(async () => {
       const user = await User.findById(userId);
       if (!user) return null;
-
       user.todaysXp += points;
       user.totalXp += points;
 
@@ -120,35 +119,40 @@ export default class CourseService {
   async updateStreak(userId: string) {
     return this.retryOperation(async () => {
       const today = new Date();
+      const todayDateString = today.toISOString().split('T')[0];
+  
       let user = await UserModel.findById(userId);
-
       if (!user) {
         return false;
       }
-
-      const lastActivityDate: Date = new Date(user.lastActivityDate);
-      let dayDifference = Math.floor((today.getTime() - lastActivityDate.getTime()) / (1000 * 60 * 60 * 24)); 
-
-      if (dayDifference === 0) {
+  
+      const lastActivityDate = new Date(user.lastActivityDate);
+      const lastActivityDateString = lastActivityDate.toISOString().split('T')[0];
+      console.log(lastActivityDate, lastActivityDateString, today, todayDateString)
+      if (lastActivityDateString === todayDateString) {
         return { message: 'Already updated today', streakCount: user.streak };
       }
-
+  
+      const dayDifference = Math.floor((today.getTime() - lastActivityDate.getTime()) / (1000 * 60 * 60 * 24));
+  
       if (dayDifference === 1) {
         user.streak += 1;
       } else {
         user.streak = 1;
       }
-      if (!user.visitedDays.includes(today.toISOString().split('T')[0])) {
-        user.visitedDays.push(today.toISOString().split('T')[0]);
+  
+      if (!user.visitedDays.includes(todayDateString)) {
+        user.visitedDays.push(todayDateString);
       }
+
       user.longestStreak = Math.max(user.longestStreak, user.streak);
       user.lastActivityDate = today;
       await user.save();
-
+  
       return { message: 'Streak updated', streakCount: user.streak };
     });
   }
-
+  
   async fetchAllUserData(userId: string) {
     return this.retryOperation(async () => {
       const user = await User.findById(userId);
@@ -156,9 +160,32 @@ export default class CourseService {
         console.log('User not found');
         return null;
       }
+      const today = new Date().toISOString().split('T')[0];
+      if(user.lastActivityDate.toISOString().split('T')[0] === today){
+        user.todaysXp = 0;
+        await user.save()
+      }
       console.log(user);
       return user;
     });
+  }
+
+  async refreshTodaysXp(userId: string) {
+    try {
+      return this.retryOperation(async () => {
+        const user = await UserModel.findById(userId)
+        if (!user) {
+          console.log('User not found');
+          return null;
+        }
+        user.todaysXp = 0;
+        await user.save();
+        return true;
+      } )
+    } catch (error) {
+      console.log(error)
+      return false
+    }
   }
 
   async updateUser(userId: string, updatedUserData: Partial<UserType>) {
@@ -184,4 +211,16 @@ export default class CourseService {
       return true;
     });
   }
+
+
+  async getAllUsers(){
+    try {
+      const users = await User.find();
+      return users;
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
 }
+

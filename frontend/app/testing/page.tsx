@@ -16,28 +16,40 @@ type Props = {}
 
 export default function Testing({}: Props) {
   const router = useRouter()
-  const {useGetUser, useResetTodaysXp} = useCourseApi()
+  const {useGetUser, useUpdateStreak, useUpdateXp} = useCourseApi()
   const {data:user, isLoading, isError} = useGetUser()
   const [visitDates, setVisitDates] = useState<Date[]>([]);
   const {data:session} = useSession()
-  const {mutate: updateStreak, isLoading: isUpdatingStreak} = useResetTodaysXp()
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [streakCount, setStreakCount] = useState(5); 
+  const {mutate: updateStreak, isLoading: isUpdatingStreak} = useUpdateStreak()
   console.log(session?.accessToken)
   console.log(user)
 
+  const { refetch: updateXp } = useUpdateXp(); 
+
+  
   useEffect(() => {
-    const currentDate = new Date().toISOString().split('T')[0];
-    const lastShownDate = user?.lastActivityDate.toISOString().split('T')[0]
+    const checkAndUpdateXp = () => {
+      const lastUpdatedDate = localStorage.getItem('lastXpUpdateDate');
+      const today = new Date().toISOString().split('T')[0];
 
-    if (lastShownDate !== currentDate) {
-      setIsModalOpen(true);
-    }
+      if (lastUpdatedDate !== today) {
+        updateXp();
+        localStorage.setItem('lastXpUpdateDate', today);
+      }
+    };
+
+    checkAndUpdateXp();
+
+    const intervalId = setInterval(checkAndUpdateXp, 24 * 60 * 60 * 1000); 
+    return () => clearInterval(intervalId);
+  }, [updateXp]);
+  
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      updateXp();
+    }, 24 * 60 * 60 * 1000); 
+    return () => clearInterval(intervalId);
   }, []);
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
 
   useEffect(() => {
     if (user) {
@@ -55,12 +67,14 @@ export default function Testing({}: Props) {
     {
       user ? (
         <div className="flex flex-col m-4 justify-center">
-          <h1 className='text-2xl font-bold text-center p-4 mb-40'>Hello, {user.username}!</h1>
-          <div className='flex justify-start flex-col items-center'>
-            <HeroTesting />
-            <Button variant={'primary'} size={'lg'} className='text-xl font-bold w-6 h-10 mt-10'>
-              Try it
+          <div className='flex flex-col items-center justify-center h-screen'>
+            <HeroTesting username={user.username}/>
+            {/* <Button variant={'primary'} size={'lg'} className='text-xl font-bold w-6 h-10 mt-10'>
+              Try math practice
             </Button>
+            <Button variant={'primary'} size={'lg'} className='text-xl font-bold w-6 h-10 mt-10'>
+              Try critical thinking practice
+            </Button> */}
           </div>
           {user.bestThemes.length >= 3 && (
             <div className='flex flex-row w-full p-4'>
@@ -77,7 +91,7 @@ export default function Testing({}: Props) {
           )}
         </div>
       ) : (
-        <HeroTesting />
+        <HeroTesting username="use" />
       )
     }
 </div>

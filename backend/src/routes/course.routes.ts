@@ -23,4 +23,7 @@ router.get('/get-user', AuthMiddleware, (req,res) => courseController.fetchAllUs
 
 router.put('/update-user', AuthMiddleware, (req, res) => courseController.updateUser(req, res));
 
+router.get('/update-xp', AuthMiddleware, (req, res) => courseController.refreshTodaysXp(req, res))
+
+router.get('/get-all-users', AuthMiddleware, (req, res) => courseController.getAllUsers(req, res))
 export default router;

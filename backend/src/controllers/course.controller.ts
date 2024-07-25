@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import CourseService from '../services/course.service';
+import { request } from 'http';
 
 export default class CourseController {
   private courseService: CourseService;
@@ -88,6 +89,21 @@ export default class CourseController {
     }
   }
 
+  async refreshTodaysXp(req:Request, res:Response){
+    try {
+      const { userId } = req.body; 
+      const success = await this.courseService.refreshTodaysXp(userId)
+      if (success) {
+        res.status(200).json({ message: 'XP updated successfully' });
+      } else {
+        res.status(500).json({ error: 'Failed to update XP' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to update XP' });
+    }
+  }
+
   async fetchAllUserData(req:Request, res:Response) {
     try {
       const {userId} = req.body
@@ -118,4 +134,15 @@ export default class CourseController {
       res.status(500).json({message: error?.message})
     }
   }
+
+  async getAllUsers(req:Request, res:Response){
+    try {
+      const users = await this.courseService.getAllUsers()
+      res.status(200).json(users)
+    }catch(err:any){
+      console.log(err)
+      res.status(500).json({message: err?.message})
+    }
+  }
+
 }

@@ -24,8 +24,9 @@ interface handleLesson {
 export default function MathDetailed({}: Props) {
   const router = useRouter()
   const {useGenerateMathRoadmap} = useRoadmapQuery()
-  const {useGenerateLessonMath} = useCourseApi()
+  const {useGenerateLessonMath, useGetUser} = useCourseApi()
   const {mutate, isLoading:isLoadingMath, isError: isErrorMath, data:MathRoadmapLesson} = useGenerateLessonMath()
+  const {data:user} = useGetUser()
   const [isLessonActive, setLessonActive] = useState(false)
   const {data: RoadMap, isLoading, isError} = useGenerateMathRoadmap()
   const handleLessonClick = ({lessonIndex, sectionIndex, roadmapId, xp, questionType}:handleLesson) => {
@@ -48,8 +49,8 @@ export default function MathDetailed({}: Props) {
     <div className="flex flex-row-reverse gap-[48px] px-6">
       <StickySideBar>
         <section className="flex flex-col gap-y-4 p-4">
-          <UserSideBar title="Daily quest" dailyGoal={100} xp={10}/>
-          <UserProgress dailyGoal={100} xp={20}/>
+          <UserSideBar title="Daily quest" dailyGoal={20} xp={user?.todaysXp ? user.todaysXp : 0}/>
+          <UserProgress dailyGoal={20} xp={user?.todaysXp ? user.todaysXp : 0}/>
         </section>
       </StickySideBar>
       <FeedWrapper>
