@@ -37,8 +37,9 @@ export default function CriticalDetailed({}: Props) {
   }
 
   if(isError){
-    toast('error')
+    toast.error('An error occurred while loading the lesson. Please try again.');
   }
+
   console.log(CriticalRoadmap)
 
   return (

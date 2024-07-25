@@ -32,11 +32,12 @@ export default function MathId({params}: Props) {
     const roadmapId = id[0]; 
     const xp = parseInt(id[3], 10); 
     const questionType = id[4]; 
-    const {useGenerateLessonMath, useHandleIncorrectThemes, useUpdateXpByLesson, useHandleBestThemes} = useCourseApi() 
+    const {useGenerateLessonMath, useHandleIncorrectThemes, useUpdateXpByLesson, useHandleBestThemes, useGetUser} = useCourseApi() 
     const {mutate, isLoading:isLoadingMath, isError: isErrorMath, data:MathRoadmapLesson, error: fetchError} = useGenerateLessonMath() 
     const {mutate:mutateIncorrectTheme} = useHandleIncorrectThemes()
     const {mutate:mutateXP} = useUpdateXpByLesson()
     const {mutate:mutateBestTheme} = useHandleBestThemes()
+    const {refetch:refetchUser} = useGetUser()
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
     const [showExplanation, setShowExplanation] = useState(false);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -53,7 +54,7 @@ export default function MathId({params}: Props) {
     }
 
     if (fetchError) {
-      router.back();
+      router.push('/testing/math')
       return null; 
     }
 
@@ -120,8 +121,8 @@ export default function MathId({params}: Props) {
                     return (
                       <div 
                         key={index} 
-                        className={`flex flex-row gap-4 items-center cursor-pointer border-2 border-slate-200 rounded-lg p-2 ${selectedAnswer === index ? 'bg-slate-300 text-black' : 'bg-gray-100'}`}
-                        onClick={() => setSelectedAnswer(index)}
+                        className={`flex flex-row gap-4 items-center cursor-pointer border-2 border-slate-200 rounded-lg p-2 ${selectedAnswer === index + 1 ? 'bg-slate-300 text-black' : 'bg-gray-100'}`}
+                        onClick={() => setSelectedAnswer(index + 1)}
                       >
                         <div className='text-lg font-bold'>
                           <MathJax inline>{variant}</MathJax>
@@ -131,15 +132,27 @@ export default function MathId({params}: Props) {
                   })
                 }
               </section>
-              <section className='h-[30%] px-5 mt-5'>
+              <section className='px-5 mt-5 flex flex-row gap-4'>
                 {selectedAnswer !== null && (
-                  <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    onClick={handleCheckAnswer}
-                  >
-                    Check Answer
-                  </button>
+                  <>
+                    <button
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                      onClick={handleCheckAnswer}
+                    >
+                      Check Answer
+                    </button>
+                    {currentQuestionIndex < MathRoadmapLesson.length - 1 && (
+                      <button
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        onClick={handleNextQuestion}
+                      >
+                        Next Question
+                      </button>
+                    )}
+                  </>
                 )}
+              </section>
+              <section className='px-5 mt-5'>
                 {showExplanation && (
                   <div className="mt-4">
                     {selectedAnswer === currentQuestion.rightAnswer ? (
@@ -157,26 +170,19 @@ export default function MathId({params}: Props) {
                         </span>
                       </div>
                     )}
-                    {currentQuestionIndex < MathRoadmapLesson.length - 1 && (
-                      <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2"
-                        onClick={handleNextQuestion}
-                      >
-                        Next Question
-                      </button>
-                    )}
-                    {currentQuestionIndex === MathRoadmapLesson.length - 1 && (
-                      <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2"
-                        onClick={() => {
-                          sendXPAndQuestionType(); 
-                          handleNextLesson();
-                        }}
-                      >
-                        Main Page
-                      </button>
-                    )}
                   </div>
+                )}
+                {currentQuestionIndex === MathRoadmapLesson.length - 1 && (
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2"
+                    onClick={() => {
+                      sendXPAndQuestionType(); 
+                      handleNextLesson();
+                      refetchUser()
+                    }}
+                  >
+                    Main Page
+                  </button>
                 )}
               </section>
             </section>

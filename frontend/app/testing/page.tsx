@@ -10,6 +10,7 @@ import PerformanceSummary from '@/components/testing/dashboard/Themes';
 import Dashboard from '@/components/testing/dashboard/TestStatistics';
 import Calendar from '@/components/testing/dashboard/Calendar';
 import { Button } from '@/components/ui/button';
+import FooterNav from '@/components/testing/FooterNav';
 
 
 type Props = {}
@@ -76,6 +77,7 @@ export default function Testing({}: Props) {
               Try critical thinking practice
             </Button> */}
           </div>
+          
           {user.bestThemes.length >= 3 && (
             <div className='flex flex-row w-full p-4'>
               <div className=''>
@@ -94,6 +96,7 @@ export default function Testing({}: Props) {
         <HeroTesting username="use" />
       )
     }
+    <FooterNav />
 </div>
   )
 }
