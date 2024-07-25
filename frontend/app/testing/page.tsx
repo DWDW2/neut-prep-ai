@@ -22,9 +22,6 @@ export default function Testing({}: Props) {
   const [visitDates, setVisitDates] = useState<Date[]>([]);
   const {data:session} = useSession()
   const {mutate: updateStreak, isLoading: isUpdatingStreak} = useUpdateStreak()
-  console.log(session?.accessToken)
-  console.log(user)
-
   const { refetch: updateXp } = useUpdateXp(); 
 
   

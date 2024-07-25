@@ -97,7 +97,6 @@ export default function CriticalThinkingId({params}: Props) {
             console.error('Error sending XP and questionType:', error);
           }
         };
-        console.log(CriticalThinkingRoadmapLesson)
         return (
           <section className='flex flex-col h-screen justify-between p-10 max-[800px]:p-4'>
             <section className='px-5'>

@@ -41,11 +41,6 @@ export default function MathDetailed({}: Props) {
   if(isError){
     toast.error('An error occurred while loading the lesson. Please try again.');
   }
-
-  console.log(RoadMap)
-  console.log(MathRoadmapLesson)
-  
-  
   return (
     <div className="flex flex-row-reverse gap-[48px] px-6">
       <StickySideBar>

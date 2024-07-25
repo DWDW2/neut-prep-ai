@@ -1,5 +1,6 @@
 'use client'
 import { Nunito } from "next/font/google";
+import { Analytics } from '@vercel/analytics/react';
 import "./globals.css";
 import {QueryClientProvider, QueryClient} from 'react-query'
 import { SessionProvider } from "next-auth/react";
@@ -28,6 +29,7 @@ export default function RootLayout({
             </head>
             <body className={nunito.className}>
                 {children}
+                <Analytics />
             </body>
           </html>
         </SessionProvider>
