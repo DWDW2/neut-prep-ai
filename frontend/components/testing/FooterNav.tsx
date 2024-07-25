@@ -6,7 +6,7 @@ type Props = {}
 
 export default function FooterNav({}: Props) {
   return (
-    <section className='lg:hidden fixed bottom-0 w-full z-50 bg-white h-[50px] border-t-2 border-slate-200'>
+    <section className='lg:hidden fixed bottom-0 w-full z-50 bg-white h-[50px] border-t-2 border-slate-200 mt-10'>
       <main className='flex flex-row justify-around space-x-2'>
         <div className='m-1'>
           <Link href={'/testing'} >
@@ -29,7 +29,7 @@ export default function FooterNav({}: Props) {
           </Link>
         </div>
         <div className='m-1'>
-          <Link href={'/leaderboard'} >
+          <Link href={'/testing/leaderboard'} >
             <Image src={'/testing/crown-svgrepo-com.svg'} alt='image' className='' width={35} height={35}/>
           </Link>
         </div>

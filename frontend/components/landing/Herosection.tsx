@@ -56,13 +56,14 @@ const ParallaxBackground = () => {
         <main className="container py-16 flex items-center justify-center mx-20 max-[800px]:block max-[800px]:px-0 max-[800px]: max-[800px]:py-8 max-[800px]:text-center bg-white">
           <div className="w-1/2 pr-8 max-[800px]:w-fit max-[800px]:px-5 float-left max-[800px]:text-center">
             <h1 className="text-5xl font-bold mb-4 max-[800px]:text-3xl text-black">Achieve best scores on <span className="text-[#DCAF52]">NUET exam</span> with us!</h1>
-            <p className="text-black mb-8">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati itaque voluptatibus harum debitis quia reprehenderit expedita deserunt provident dolores. Consectetur ipsam eos molestias distinctio quam at aliquam expedita veniam aspernatur?</p>
+            <p className="text-black mb-8">Our comprehensive study platform is designed to help you excel in the NUET.
+            Gain access to tailored lessons, practice tests, all in one place.</p>
             <Button variant={'primary'} size={'lg'} onClick={() => router.push('/testing')}>Get Started</Button>
           </div>
           <div className='ml-14 max-[800px]:hidden'>
             <Image src={'/Graduate-person.svg'} width={300} height={700} alt='persom'/> 
           </div>
-        </main>
+        </main> 
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { MathJax, MathJaxContext } from 'better-react-mathjax'
-import axios from 'axios'; // Import axios
+import axios from 'axios'; 
 
 interface Question {
   statement: string
@@ -32,11 +32,12 @@ export default function CriticalThinkingId({params}: Props) {
     const roadmapId = id[0]; 
     const xp = parseInt(id[3], 10); 
     const questionType = id[4]; 
-    const {useGenerateLessonCritical, useHandleIncorrectThemes, useUpdateXp, useHandleBestThemes} = useCourseApi() 
+    const {useGenerateLessonCritical, useHandleIncorrectThemes, useUpdateXpByLesson, useHandleBestThemes,useGetUser} = useCourseApi() 
     const {mutate, isLoading:isLoadingCriticalThinking, isError: isErrorCriticalThinking, data:CriticalThinkingRoadmapLesson} = useGenerateLessonCritical() 
     const {mutate:mutateIncorrectTheme} = useHandleIncorrectThemes()
-    const {mutate:mutateXP} = useUpdateXp()
+    const {mutate:mutateXP} = useUpdateXpByLesson()
     const {mutate:mutateBestTheme} = useHandleBestThemes()
+    const {refetch:refetchUser} = useGetUser()
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
     const [showExplanation, setShowExplanation] = useState(false);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -50,6 +51,11 @@ export default function CriticalThinkingId({params}: Props) {
         return(
             <Loading/>
         )
+    }
+
+    if(isErrorCriticalThinking){
+      router.push('/testing/critical')
+      return null
     }
     console.log(xp, questionType)
     if (CriticalThinkingRoadmapLesson) { 
@@ -104,8 +110,8 @@ export default function CriticalThinkingId({params}: Props) {
                   return (
                     <div 
                       key={index} 
-                      className={`flex flex-row gap-4 items-center cursor-pointer border-2 border-slate-200 rounded-lg p-2 ${selectedAnswer === index ? 'bg-slate-300 text-black' : 'bg-gray-100'}`}
-                      onClick={() => setSelectedAnswer(index)}
+                      className={`flex flex-row gap-4 items-center cursor-pointer border-2 border-slate-200 rounded-lg p-2 ${selectedAnswer === index + 1 ? 'bg-slate-300 text-black' : 'bg-gray-100'}`}
+                      onClick={() => setSelectedAnswer(index + 1)}
                     >
                       <div className='text-lg font-bold'>{variant}</div>
                     </div>
@@ -113,15 +119,27 @@ export default function CriticalThinkingId({params}: Props) {
                 })
               }
             </section>
-            <section className='h-[30%] px-5 mt-5'>
+            <section className='px-5 mt-5 flex flex-row gap-4'>
               {selectedAnswer !== null && (
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  onClick={handleCheckAnswer}
-                >
-                  Check Answer
-                </button>
+                <>
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    onClick={handleCheckAnswer}
+                  >
+                    Check Answer
+                  </button>
+                  {currentQuestionIndex < CriticalThinkingRoadmapLesson.length - 1 && (
+                    <button
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                      onClick={handleNextQuestion}
+                    >
+                      Next Question
+                    </button>
+                  )}
+                </>
               )}
+            </section>
+            <section className='px-5 mt-5'>
               {showExplanation && (
                 <div className="mt-4">
                   {selectedAnswer === currentQuestion.rightAnswer ? (
@@ -149,6 +167,7 @@ export default function CriticalThinkingId({params}: Props) {
                       onClick={() => {
                         sendXPAndQuestionType(); 
                         handleNextLesson();
+                        refetchUser()
                       }}
                     >
                       Main Page

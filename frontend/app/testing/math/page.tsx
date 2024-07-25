@@ -39,8 +39,9 @@ export default function MathDetailed({}: Props) {
   }
 
   if(isError){
-    toast('error')
+    toast.error('An error occurred while loading the lesson. Please try again.');
   }
+
   console.log(RoadMap)
   console.log(MathRoadmapLesson)
   

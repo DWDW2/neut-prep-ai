@@ -19,14 +19,14 @@ const FeatureCard = ({ icon: Icon, title, description }: Popa) => (
 const FeaturesSection = () => (
   <section className="py-12 sm:py-16 bg-white" id='features'>
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-8 sm:mb-12 text-slate-500">
+      <h2 className="text-2xl sm:text-3xl text-center mb-8 sm:mb-12 text-slate-500">
         A brief description of how this AI application works
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
         <FeatureCard 
           icon={PenTool}
-          title="Generating your own way" 
-          description="Create personalized practice questions tailored to your learning style and needs." 
+          title="Unlimited task generation" 
+          description="  Master the NUET with our unlimited practice feature! Access a vast library of practice questions and mock exams anytime, anywhere. Continuously refine your skills and build confidence with endless opportunities to test your knowledge and track your progress." 
         />
         <FeatureCard 
           icon={Book}

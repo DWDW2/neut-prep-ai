@@ -2,10 +2,7 @@
 import MobileHeader from '@/components/MobileHeader'
 import SideBar from '@/components/testing/SideBar'
 import React, { Suspense } from 'react'
-import loading from './loading'
-import Loading from '@/components/Loading'
-import FooterNav from '@/components/testing/FooterNav'
-import { useSession } from 'next-auth/react'
+
 type Props = {
     children: React.ReactNode
 }
@@ -21,7 +18,6 @@ export default function layout({children}: Props) {
                 {children}
             </div>
         </div>
-        <FooterNav />
     </>
   )
 }

@@ -15,7 +15,7 @@ router.post('/handle-incorrect-themes', AuthMiddleware, (req, res) => courseCont
 
 router.post('/handle-best-themes', AuthMiddleware, (req, res) => courseController.updateBestThemes(req, res));
 
-router.post('/update-xp', AuthMiddleware, (req, res) => courseController.updateXp(req,res));
+router.post('/update-xp-lesson', AuthMiddleware, (req, res) => courseController.updateXp(req,res));
 
 router.post('/update-streak', AuthMiddleware, (req, res) => courseController.resetTodaysXp(req, res));
 

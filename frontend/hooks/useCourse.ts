@@ -9,6 +9,9 @@ type GenerateLessonMathResponse = Lesson[]
 type GenerateLessonCriticalResponse = Lesson[]
 type HandleIncorrectThemesResponse = string[]
 type UpdateXpAndStreakResponse = any; 
+type useUpdateXpByLessonResponse = {
+  points: number
+}; 
 type ResetTodaysXpResponse = any; 
 type GeTUserData = UserType
 type UpdateUserResponse = any; 
@@ -142,6 +145,18 @@ const useCourseApi = () => {
     );
   };
 
+  const useUpdateXpByLesson = () => {
+    return useMutation(
+      async (payload: useUpdateXpByLessonResponse) => {
+        const { data } = await axiosInstance.post('/course/update-xp-lesson', payload, {
+          headers: {
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+        });
+        return data;
+      }
+    )
+  }
 
   const useUpdateUser = () => {
     return useMutation<UpdateUserResponse, Error, UpdatePayloadCourse>(
@@ -187,6 +202,7 @@ const useCourseApi = () => {
     useHandleBestThemes,
     useUpdateStreak,
     useGetUser,
+    useUpdateXpByLesson,
     useUpdateUser,
     useGetAllUsers
   };

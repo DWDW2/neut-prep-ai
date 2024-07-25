@@ -3,7 +3,7 @@ import { getSession, signOut, useSession } from 'next-auth/react';
 
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:5000',
-  timeout: 20000,
+  timeout: 50000,
 });
 
 axiosInstance.interceptors.request.use(async (config) => {
