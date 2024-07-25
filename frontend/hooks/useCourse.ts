@@ -73,24 +73,40 @@ const useCourseApi = () => {
   };
 
   const useUpdateXp = () => {
-    return useMutation<UpdateXpAndStreakResponse, Error, any>(
-      async (payload) => {
-        const { data } = await axiosInstance.post('/course/update-xp', payload, {
+    return useQuery(
+      "update-xp",
+      async () => {
+        const { data } = await axiosInstance.get('/course/update-xp', {
           headers: {
-            Authorization: `Bearer ${session?.accessToken}`,
-          },
+            'Authorization': `Bearer ${session?.accessToken}`
+          }
         });
         return data;
       },
       {
-        onSuccess: () => {
-          queryClient.invalidateQueries('updateXpAndStreak');
-        },
+        refetchInterval: 24 * 60 * 60 * 1000,
+        cacheTime: 24 * 60 * 60 * 1000,
+        staleTime: Infinity,
       }
-    );
+    )
   };
 
-  const useResetTodaysXp = () => {
+  const useGetAllUsers = () => {
+    return useQuery(
+      "allusers",
+      async () => {
+        const { data } = await axiosInstance.get('/course/get-all-users', {
+          headers: {
+            'Authorization': `Bearer ${session?.accessToken}`
+          }
+        });
+
+        return data
+      }
+    )
+  }
+
+  const useUpdateStreak = () => {
     return useMutation<ResetTodaysXpResponse, Error>(
       async () => {
         const { data } = await axiosInstance.post('/course/update-streak', null, {
@@ -118,9 +134,14 @@ const useCourseApi = () => {
           }
         });
         return data;
+      },
+      {
+        refetchInterval: 300000,
+        staleTime: Infinity,
       }
     );
   };
+
 
   const useUpdateUser = () => {
     return useMutation<UpdateUserResponse, Error, UpdatePayloadCourse>(
@@ -164,9 +185,10 @@ const useCourseApi = () => {
     useHandleIncorrectThemes,
     useUpdateXp,
     useHandleBestThemes,
-    useResetTodaysXp,
+    useUpdateStreak,
     useGetUser,
     useUpdateUser,
+    useGetAllUsers
   };
 };
 

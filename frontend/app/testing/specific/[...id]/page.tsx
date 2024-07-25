@@ -5,13 +5,12 @@ import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { MathJax, MathJaxContext } from 'better-react-mathjax'
 
-// Define types for questions and options
 interface Question {
-  statement: string
-  question: string
-  options: string[]
-  rightAnswer: number // 1-based index for the correct answer
-  explanation: string
+  statement: string;
+  question: string;
+  options: string[];
+  rightAnswer: number;
+  explanation: string;
 }
 
 type MathRoadmapLessonType = Question[]
@@ -43,7 +42,7 @@ export default function MathId({ params }: Props) {
     const matches = text.match(regex)
     return matches ? matches.map(match => match.replace(/\\\(|\\\)/g, '')) : []
   }
-
+  
   useEffect(() => {
     if (type === 'math') {
       mutateMath({ lessonIndex, sectionIndex, roadmapId })

@@ -51,7 +51,7 @@ export default function MathId({params}: Props) {
             <Loading/>
         )
     }
-    console.log(xp, questionType)
+
     if (MathRoadmapLesson) { 
         const currentQuestion = MathRoadmapLesson[currentQuestionIndex];
 
@@ -96,14 +96,15 @@ export default function MathId({params}: Props) {
           <MathJaxContext>
             <section className='flex flex-col h-screen justify-between p-10 max-[800px]:p-4'>
               <section className='px-5'>
-                  <div className='text-2xl font-bold pb-4'>{currentQuestion.statement}</div>
+                  <div className='text-2xl font-bold pb-4'>
+                    <MathJax inline>{currentQuestion.statement}</MathJax>
+                  </div>
                   <div className='text-black text-xl pb-4'>
                     {
                       currentQuestion.question.split('\n').map((line, index) => (
-                        <span key={index}>
-                          {line}
-                          <br />
-                        </span>
+                        <div key={index}>
+                          <MathJax>{line}</MathJax>
+                        </div>
                       ))
                     }
                   </div>
@@ -117,7 +118,9 @@ export default function MathId({params}: Props) {
                         className={`flex flex-row gap-4 items-center cursor-pointer border-2 border-slate-200 rounded-lg p-2 ${selectedAnswer === index ? 'bg-slate-300 text-black' : 'bg-gray-100'}`}
                         onClick={() => setSelectedAnswer(index)}
                       >
-                        <div className='text-lg font-bold'>{variant}</div>
+                        <div className='text-lg font-bold'>
+                          <MathJax inline>{variant}</MathJax>
+                        </div>
                       </div>
                     )
                   })
@@ -137,12 +140,16 @@ export default function MathId({params}: Props) {
                     {selectedAnswer === currentQuestion.rightAnswer ? (
                       <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
                         <strong className="font-bold">Correct!</strong>
-                        <span className="block sm:inline">{currentQuestion.explanation}</span>
+                        <span className="block sm:inline">
+                          <MathJax>{currentQuestion.explanation}</MathJax>
+                        </span>
                       </div>
                     ) : (
                       <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                         <strong className="font-bold">Incorrect.</strong>
-                        <span className="block sm:inline">{currentQuestion.explanation}</span>
+                        <span className="block sm:inline">
+                          <MathJax>{currentQuestion.explanation}</MathJax>
+                        </span>
                       </div>
                     )}
                     {currentQuestionIndex < MathRoadmapLesson.length - 1 && (

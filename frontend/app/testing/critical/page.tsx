@@ -24,14 +24,13 @@ interface handleLesson {
 export default function CriticalDetailed({}: Props) {
   const router = useRouter()
   const {useGenerateCriticalRoadmap} = useRoadmapQuery()
-  const {useGenerateLessonCritical} = useCourseApi()
-  const {mutate, isLoading:isLoadingCritical, isError: isErrorCritical, data:CriticalRoadmapLesson} = useGenerateLessonCritical()
-  const [isLessonActive, setLessonActive] = useState(false)
+  const {useGenerateLessonCritical, useGetUser} = useCourseApi()
+  const {data: user, isLoading: isLoadingUser, isError: isErrorUser} = useGetUser()
   const {data: CriticalRoadmap, isLoading, isError} = useGenerateCriticalRoadmap()
   const handleLessonClick = ({ sectionIndex, lessonIndex, roadmapId, xp, questionType}: handleLesson) => {
     router.push(`/testing/critical/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}`)
   }
-  if(isLoading){
+  if(isLoading ){
     return(
       <Loading />
     )
@@ -41,13 +40,13 @@ export default function CriticalDetailed({}: Props) {
     toast('error')
   }
   console.log(CriticalRoadmap)
-  console.log(CriticalRoadmapLesson)
+
   return (
     <div className="flex flex-row-reverse gap-[48px] px-6">
       <StickySideBar>
         <section className="flex flex-col gap-y-4 p-4">
-          <UserSideBar title="Daily quest" dailyGoal={100} xp={10}/>
-          <UserProgress dailyGoal={100} xp={20}/>
+          <UserSideBar title="Daily quest" dailyGoal={10} xp={user?.todaysXp ? user.todaysXp : 0}/>
+          <UserProgress dailyGoal={20} xp={user?.todaysXp ? user.todaysXp : 0}/>
         </section>
       </StickySideBar>
       <FeedWrapper>
@@ -61,7 +60,7 @@ export default function CriticalDetailed({}: Props) {
                   {
                     section.lessons.map((lesson, lessonindex) => {
                       return(
-                        <UnitButton index={lessonindex} totalCount={section.lessons.length} onClick={() => handleLessonClick({sectionIndex: index, lessonIndex: lessonindex, roadmapId: CriticalRoadmap._id, xp: lesson.xp, questionType: section.questionType})} key={lessonindex}/>
+                        <UnitButton index={lessonindex}  totalCount={section.lessons.length} onClick={() => handleLessonClick({sectionIndex: index, lessonIndex: lessonindex, roadmapId: CriticalRoadmap._id, xp: lesson.xp, questionType: section.questionType})} key={lessonindex}/>
                       )
                     })
                   }

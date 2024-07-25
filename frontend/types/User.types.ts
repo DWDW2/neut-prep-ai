@@ -6,6 +6,7 @@ interface User {
 }
 
 interface UserType{
+  avatarUrl: string | undefined;
   email: string;
   username: string;
   password?: string;
