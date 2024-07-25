@@ -29,7 +29,7 @@ export default function FooterNav({}: Props) {
           </Link>
         </div>
         <div className='m-1'>
-          <Link href={'/leaderboard'} >
+          <Link href={'/testing/leaderboard'} >
             <Image src={'/testing/crown-svgrepo-com.svg'} alt='image' className='' width={35} height={35}/>
           </Link>
         </div>
