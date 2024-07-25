@@ -19,6 +19,13 @@ export default function RootLayout({
       <QueryClientProvider client={queryClient}>  
         <SessionProvider >
           <html lang="en">
+            <head>
+            <script
+              id="MathJax-script"
+              async
+              src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+            ></script>
+            </head>
             <body className={nunito.className}>
                 {children}
             </body>

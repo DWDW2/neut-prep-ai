@@ -120,9 +120,7 @@ const useCourseApi = () => {
         return data;
       },
       {
-        // Refetch data only once every 5 minutes (300000 milliseconds)
         refetchInterval: 300000,
-        // Use cached data after the refetch interval
         staleTime: Infinity,
       }
     );

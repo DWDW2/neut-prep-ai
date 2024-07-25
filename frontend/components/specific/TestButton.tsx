@@ -12,8 +12,8 @@ type Props = {
 
 export default function TestButton({questionType, onClick}: Props) {
   return (
-    <section className='bg-[#DCAF52] p-6 shadow-lg flex flex-col justify-between rounded-sm'>
-      <div className='font-bold text-xl text-black'>
+    <section className='bg-white  p-6 shadow-lg flex flex-col justify-between rounded-sm'>
+      <div className='font-bold text-normal text-black'>
         {questionType}
       </div>
       <div className='bg-white font-bold text-black px-5 py-3 rounded-md w-fit hover:bg-slate-200' onClick={onClick}>
