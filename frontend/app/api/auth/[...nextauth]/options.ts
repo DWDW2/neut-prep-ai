@@ -22,7 +22,7 @@ export const authOptions: NextAuthOptions = {
       },
       authorize: async (credentials) => {
         try {
-          const res = await fetch('https://neut-prep-ai-production.up.railway.app/user/login', {
+          const res = await fetch('http://localhost:5000/user/login', {
             method: 'POST',
             body: JSON.stringify(credentials),
             headers: { "Content-Type": "application/json" },
@@ -58,7 +58,7 @@ export const authOptions: NextAuthOptions = {
 
         if (account.provider === 'google') {
           try {
-            const register = await fetch('https://neut-prep-ai-production.up.railway.app/user/register',{
+            const register = await fetch('http://localhost:5000/user/register',{
               method: 'POST',
               body: JSON.stringify({
                 id_token: account.id_token
@@ -68,7 +68,7 @@ export const authOptions: NextAuthOptions = {
               }
             })
 
-            const tokenAccess = await fetch('https://neut-prep-ai-production.up.railway.app/user/login', {
+            const tokenAccess = await fetch('http://localhost:5000/user/login', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

@@ -7,9 +7,7 @@ const router = Router();
 const courseService = new CourseService()
 const courseController = new CourseController(courseService)
 
-router.post('/generate-lesson-math', AuthMiddleware, (req, res) => courseController.generateLessonMath(req, res));
-
-router.post('/generate-lesson-critical', AuthMiddleware, (req, res) => courseController.generateLessonCritical(req, res));
+router.post('/generate-lesson', AuthMiddleware, (req, res) => courseController.generateLessonByUserId(req, res))
 
 router.post('/handle-incorrect-themes', AuthMiddleware, (req, res) => courseController.handleIncorrectThemes(req, res));
 

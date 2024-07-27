@@ -14,7 +14,7 @@ const RegistrationForm: React.FC = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const handleRegistration = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const res = await fetch('https://neut-prep-ai-production.up.railway.app/user/register', {
+    const res = await fetch('http://localhost:5000/user/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

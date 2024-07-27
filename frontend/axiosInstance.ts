@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getSession, signOut, useSession } from 'next-auth/react';
 
 const axiosInstance = axios.create({
-  baseURL: "https://neut-prep-ai-production.up.railway.app",
+  baseURL: "http://localhost:5000",
   timeout: 50000,
 });
 

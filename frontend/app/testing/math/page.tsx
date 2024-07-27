@@ -23,12 +23,11 @@ interface handleLesson {
 }
 export default function MathDetailed({}: Props) {
   const router = useRouter()
-  const {useGenerateMathRoadmap} = useRoadmapQuery()
-  const {useGenerateLessonMath, useGetUser} = useCourseApi()
-  const {mutate, isLoading:isLoadingMath, isError: isErrorMath, data:MathRoadmapLesson} = useGenerateLessonMath()
+  const {useGenerateRoadmap} = useRoadmapQuery()
+  const {useGetUser} = useCourseApi()
   const {data:user} = useGetUser()
   const [isLessonActive, setLessonActive] = useState(false)
-  const {data: RoadMap, isLoading, isError} = useGenerateMathRoadmap()
+  const {data: RoadMap, isLoading, isError, mutate:mutateRoadmap} = useGenerateRoadmap()
   const handleLessonClick = ({lessonIndex, sectionIndex, roadmapId, xp, questionType}:handleLesson) => {
     router.push(`/testing/math/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}`)
   }

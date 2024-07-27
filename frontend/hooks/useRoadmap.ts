@@ -22,60 +22,24 @@ export const useRoadmapQuery = () => {
     }
   };
 
-  const useGenerateCriticalRoadmap = () =>
-    useQuery(
-      'criticalRoadmap',
-      async () => {
+  const useGenerateRoadmap = () =>
+    useMutation<Roadmap, Error, RoadmapPayload>(
+      async (payload: RoadmapPayload) => {
         const authHeader = await fetchAuthHeader();
         return axiosInstance
-          .get<Roadmap>('/roadmap/critical/generate-and-get-roadmapCritical', {
+          .post<Roadmap>('/roadmap/generate-roadmap', payload, {
             headers: { Authorization: authHeader },
           })
           .then((res) => res.data);
       },
       {
-        staleTime: 120000, 
-        cacheTime: 300000, 
-      }
-    );
-
-  const useGenerateMathRoadmap = () =>
-    useQuery(
-      'mathRoadmap',
-      async () => {
-        const authHeader = await fetchAuthHeader();
-        return axiosInstance
-          .get<Roadmap>('/roadmap/math/generate-and-get-roadmapMath', {
-            headers: { Authorization: authHeader },
-          })
-          .then((res) => res.data);
-      },
-      {
-        staleTime: 120000, 
-        cacheTime: 300000, 
-      }
-    );
-
-  const useGetMathRoadmap = (userId: string) =>
-    useQuery(
-      ['mathRoadmap', userId],
-      async () => {
-        const authHeader = await fetchAuthHeader();
-        return axiosInstance
-          .get<Roadmap>(`/roadmap/math/${userId}`, {
-            headers: { Authorization: authHeader },
-          })
-          .then((res) => res.data);
-      },
-      {
-        staleTime: 120000, 
-        cacheTime: 300000, 
+        onSuccess: () => {
+          queryClient.invalidateQueries('generateRoadmap');
+        },
       }
     );
 
   return {
-    useGenerateCriticalRoadmap,
-    useGenerateMathRoadmap,
-    useGetMathRoadmap,
+    useGenerateRoadmap,
   };
 };

@@ -9,35 +9,33 @@ export default class CourseController {
     this.courseService = courseService;
   }
 
-  async generateLessonMath(req: Request, res: Response) {
+  async generateLessonByUserId(req:Request, res:Response){
     try {
-      const { roadmapId, lessonIndex, sectionIndex } = req.body;
-      console.log(req.body)
-      const lessonJson = await this.courseService.generateLessonMath(
-        roadmapId,
-        parseInt(lessonIndex),
-        parseInt(sectionIndex)
-      );
-      res.status(200).json(lessonJson);
+      const {userId, lessonIndex, sectionIndex, roadmapType} = req.body
+      const lesson = await this.courseService.generateLessonByUserId(lessonIndex, sectionIndex, roadmapType, userId)
+      if(lesson.success){
+        res.status(200).json(lesson.lessons)
+      }else{
+        res.status(500).json({message: lesson.message})
+      }
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to generate math lesson' });
+      console.log(error)
+      res.status(500).json({message: error})
     }
   }
 
-  async generateLessonCritical(req: Request, res: Response) {
+  async getLessonById(req:Request, res:Response){
     try {
-      const { roadmapId, lessonIndex, sectionIndex } = req.body;
-      console.log(roadmapId, lessonIndex, sectionIndex)
-      const lessonJson = await this.courseService.generateLessonCritical(
-        roadmapId,
-        parseInt(lessonIndex),
-        parseInt(sectionIndex)
-      );
-      res.status(200).json(lessonJson);
+      const {lessonIndex, sectionIndex, roadmapId} = req.body
+      const lesson = await this.courseService.getLessonById(lessonIndex, sectionIndex, roadmapId)
+      if(lesson.success){
+        res.status(200).json(lesson.lesson)
+      }else{
+        res.status(500).json({message: lesson.message})
+      }
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to generate critical thinking lesson' });
+      console.log(error)
+      res.status(500).json({message: error})  
     }
   }
 

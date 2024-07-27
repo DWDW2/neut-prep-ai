@@ -44,10 +44,12 @@ const UserSchema = new Schema<UserType>({
   roadmapCriticalId: { 
     type: mongoose.Schema.Types.ObjectId,
     ref: 'RoadMap',
+    default: null
   },
   roadmapMathId: { 
     type: mongoose.Schema.Types.ObjectId,
     ref: 'RoadMap',
+    default: null
   },
   themesToImprove: {
     type: [String],

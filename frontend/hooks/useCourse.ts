@@ -15,16 +15,16 @@ type useUpdateXpByLessonResponse = {
 type ResetTodaysXpResponse = any; 
 type GeTUserData = UserType
 type UpdateUserResponse = any; 
-
+type GetAllUsersResponse = UserType[]
 
 const useCourseApi = () => {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
 
   const useGenerateLessonMath = () => {
-    return useMutation<GenerateLessonMathResponse, Error, any>(
+    return useMutation<GenerateLessonMathResponse, Error, PayloadCourse>(
       async (payload: PayloadCourse) => {
-        const { data } = await axiosInstance.post('/course/generate-lesson-math', payload, {
+        const { data } = await axiosInstance.post('/course/generate-lesson', payload, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },
@@ -40,9 +40,9 @@ const useCourseApi = () => {
   };
 
   const useGenerateLessonCritical = () => {
-    return useMutation<GenerateLessonCriticalResponse, Error, any>(
+    return useMutation<GenerateLessonCriticalResponse, Error, PayloadCourse>(
       async (payload:PayloadCourse) => {
-        const { data } = await axiosInstance.post('/course/generate-lesson-critical', payload, {
+        const { data } = await axiosInstance.post('/course/generate-lesson', payload, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },
@@ -75,36 +75,33 @@ const useCourseApi = () => {
     );
   };
 
-  const useUpdateXp = () => {
-    return useQuery(
-      "update-xp",
-      async () => {
-        const { data } = await axiosInstance.get('/course/update-xp', {
+  const useHandleBestThemes = () => {
+    return useMutation<HandleIncorrectThemesResponse, Error, any>(
+      async (payload) => {
+        const { data } = await axiosInstance.post('/course/handle-best-themes', payload, {
           headers: {
-            'Authorization': `Bearer ${session?.accessToken}`
-          }
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
         });
         return data;
       },
       {
-        refetchInterval: 24 * 60 * 60 * 1000,
-        cacheTime: 24 * 60 * 60 * 1000,
-        staleTime: Infinity,
+        onSuccess: () => {
+          queryClient.invalidateQueries('handleIncorrectThemes');
+        },
       }
-    )
-  };
+    );
+  }
 
-  const useGetAllUsers = () => {
-    return useQuery(
-      "allusers",
-      async () => {
-        const { data } = await axiosInstance.get('/course/get-all-users', {
+  const useUpdateXpByLesson = () => {
+    return useMutation(
+      async (payload: useUpdateXpByLessonResponse) => {
+        const { data } = await axiosInstance.post('/course/update-xp-lesson', payload, {
           headers: {
-            'Authorization': `Bearer ${session?.accessToken}`
-          }
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
         });
-
-        return data
+        return data;
       }
     )
   }
@@ -145,19 +142,6 @@ const useCourseApi = () => {
     );
   };
 
-  const useUpdateXpByLesson = () => {
-    return useMutation(
-      async (payload: useUpdateXpByLessonResponse) => {
-        const { data } = await axiosInstance.post('/course/update-xp-lesson', payload, {
-          headers: {
-            Authorization: `Bearer ${session?.accessToken}`,
-          },
-        });
-        return data;
-      }
-    )
-  }
-
   const useUpdateUser = () => {
     return useMutation<UpdateUserResponse, Error, UpdatePayloadCourse>(
       async (payload: UpdatePayloadCourse) => {
@@ -176,24 +160,40 @@ const useCourseApi = () => {
     );
   };
 
-
-  const useHandleBestThemes = () => {
-    return useMutation<HandleIncorrectThemesResponse, Error, any>(
-      async (payload) => {
-        const { data } = await axiosInstance.post('/course/handle-best-themes', payload, {
+  const useUpdateXp = () => {
+    return useQuery(
+      "update-xp",
+      async () => {
+        const { data } = await axiosInstance.get('/course/update-xp', {
           headers: {
-            Authorization: `Bearer ${session?.accessToken}`,
-          },
+            'Authorization': `Bearer ${session?.accessToken}`
+          }
         });
         return data;
       },
       {
-        onSuccess: () => {
-          queryClient.invalidateQueries('handleIncorrectThemes');
-        },
+        refetchInterval: 24 * 60 * 60 * 1000,
+        cacheTime: 24 * 60 * 60 * 1000,
+        staleTime: Infinity,
       }
-    );
+    )
+  };
+
+  const useGetAllUsers = () => {
+    return useQuery<GetAllUsersResponse, Error>(
+      "allusers",
+      async () => {
+        const { data } = await axiosInstance.get('/course/get-all-users', {
+          headers: {
+            'Authorization': `Bearer ${session?.accessToken}`
+          }
+        });
+
+        return data
+      }
+    )
   }
+
   return {
     useGenerateLessonMath,
     useGenerateLessonCritical,
