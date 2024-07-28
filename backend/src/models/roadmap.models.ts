@@ -6,6 +6,9 @@ interface Lesson {
   description: string;
   difficulty: string;
   xp: number;
+  finished: boolean;
+  first: boolean;
+  xpGained: number;
   lessonContent: string; 
 }
 
@@ -37,6 +40,9 @@ const RoadMapSchema = new mongoose.Schema<RoadMapType>({
             description: { type: String, required: true },
             difficulty: { type: String, required: true },
             xp: { type: Number, required: true },
+            finished: {type: Boolean, default: false},
+            first: {type: Boolean, default: false},
+            xpGained: {type: Number, default: 0},
             lessonContent: { 
               type: mongoose.Schema.Types.ObjectId, 
               ref: 'Lesson', 

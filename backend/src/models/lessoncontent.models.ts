@@ -8,6 +8,7 @@ export interface ILesson extends Document {
   rightAnswer: number;
   type: string;
   explanation: string;
+  answer: number;
 }
 
 export interface ILessonModel extends Document {
@@ -24,7 +25,8 @@ const lessonSchema: Schema = new Schema(
         options: { type: [String], required: true },
         rightAnswer: { type: Number, required: true },
         type: { type: String, required: true },
-        explanation: { type: String, required: true }
+        explanation: { type: String, required: true },
+        answer: { type: Number, default: null}
       }
     ]
   }

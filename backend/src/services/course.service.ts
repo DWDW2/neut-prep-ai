@@ -101,10 +101,43 @@ export default class CourseService {
       if(!roadmap){
         return {message: 'Roadmap not found', success: false}
       }
-      
+      const prevLessonFinished = roadmap.roadmap[sectionIndex].lessons[lessonIndex - 1].finished === true
       const lesson = roadmap.roadmap[sectionIndex].lessons[lessonIndex].lessonContent
+      if(prevLessonFinished){
+        return {message: 'Lesson found', lesson: LessonModel.findById(lesson) , success: true}
+      }else{
+        return {message: 'You have to finish previous lesson', success: false}
+      }      
+    } catch (error) {
+      console.log(error)
+      return {message: error, success: false}
+    }
+  }
 
-      return {message: 'Lesson found', lesson: LessonModel.findById(lesson) , success: true}
+  async setFinished(lessonIndex: number, sectionIndex: number, roadmapId: string){
+    try {
+      const roadmap = await RoadMap.findById(roadmapId)
+      if(!roadmap){
+        return {message: 'Roadmap not found', success: false}
+      }
+      roadmap.roadmap[sectionIndex].lessons[lessonIndex].finished = true
+      await roadmap.save()
+      return {message: 'Lesson finished', success: true}
+    } catch (error) {
+      console.log(error)
+      return {message: error, success: false}
+    }
+  }
+
+  async setXpGained(lessonIndex: number, sectionIndex: number, roadmapId: string, xp: number){
+    try {
+      const roadmap = await RoadMap.findById(roadmapId)
+      if(!roadmap){
+        return {message: 'Roadmap not found', success: false}
+      }
+      roadmap.roadmap[sectionIndex].lessons[lessonIndex].xpGained = xp
+      await roadmap.save()
+      return {message: 'Lesson finished', success: true}
     } catch (error) {
       console.log(error)
       return {message: error, success: false}

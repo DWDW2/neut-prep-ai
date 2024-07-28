@@ -24,4 +24,11 @@ router.put('/update-user', AuthMiddleware, (req, res) => courseController.update
 router.get('/update-xp', AuthMiddleware, (req, res) => courseController.refreshTodaysXp(req, res))
 
 router.get('/get-all-users', AuthMiddleware, (req, res) => courseController.getAllUsers(req, res))
+
+router.post('/get-lesson', AuthMiddleware, (req, res) => courseController.getLessonById(req, res))
+
+router.post('/set-finished', AuthMiddleware, (req, res) => courseController.setFinished(req, res))
+
+router.post('/set-xp-gained', AuthMiddleware, (req, res) => courseController.setXpGained(req, res))
+
 export default router;

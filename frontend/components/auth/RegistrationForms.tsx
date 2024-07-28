@@ -6,7 +6,7 @@ import { signIn, useSession } from 'next-auth/react';
 import { Button } from '../ui/button';
 import { FaGoogle } from 'react-icons/fa';
 import { getServerSession } from 'next-auth';
-
+import BASE_URL from '@/lib/env';
 const RegistrationForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,7 +14,7 @@ const RegistrationForm: React.FC = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const handleRegistration = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const res = await fetch('http://localhost:5000/user/register', {
+    const res = await fetch(`${BASE_URL}/user/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ const RegistrationForm: React.FC = () => {
         email,
         password,
         redirect: true,
-        callbackUrl: '/'
+        callbackUrl: '/testing'
       });
     }
   }

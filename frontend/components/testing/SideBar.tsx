@@ -11,6 +11,7 @@ type Props = {
 
 export default function SideBar({className}: Props) {
     const session = useSession()
+    console.log(session)
   return (
     <section className={cn('w-[256px] h-full bg-white lg:fixed left-0 top-0 border-r-2 border-slate-300 flex-col justify-between', className)}>
         <div>

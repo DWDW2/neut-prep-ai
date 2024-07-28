@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import CourseService from '../services/course.service';
-import { request } from 'http';
+
 
 export default class CourseController {
   private courseService: CourseService;
@@ -143,4 +143,33 @@ export default class CourseController {
     }
   }
 
+  async setFinished(req:Request, res:Response){
+    try {
+      const {lessonIndex, sectionIndex, roadmapId} = req.body
+      const lesson = await this.courseService.setFinished(lessonIndex, sectionIndex, roadmapId)
+      if(lesson.success){
+        res.status(200).json(lesson)
+      }else{
+        res.status(500).json({message: lesson.message})
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({message: error})  
+    }
+  }
+
+  async setXpGained(req:Request, res:Response){
+    try {
+      const {lessonIndex, sectionIndex, roadmapId, xp} = req.body
+      const lesson = await this.courseService.setXpGained(lessonIndex, sectionIndex, roadmapId, xp)
+      if(lesson.success){
+        res.status(200).json(lesson)
+      }else{
+        res.status(500).json({message: lesson.message})
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({message: error})  
+    }
+  }
 }

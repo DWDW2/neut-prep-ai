@@ -3,6 +3,7 @@ import { RoadMap, RoadMapType } from "../models/roadmap.models";
 import NuetDocument from "../models/nuetexampaper.models";
 import { UserModel as User, UserType } from "../models/user.models";
 import { questionTypesCritical, questionTypesMath } from "../core/promts/prompts";
+import redis from "../core/config/redis";
 
 type LessonPlan = {
   section: string;
@@ -19,14 +20,13 @@ export default class RoadMapService {
       if (!userId) {
         return { message: 'UserId required', success: false };
       }
-      const user = await User.findById(userId);
 
+      const user = await User.findById(userId);
       if (!user) {
         return { message: 'User not found', success: false };
       }
 
       let questionTypes: string[] = [];
-
       if (questionType === 'critical') {
         questionTypes = questionTypesCritical;
       } else if (questionType === 'math') {
@@ -38,22 +38,30 @@ export default class RoadMapService {
       const roadmapPromises = questionTypes.map(type => this.generateRoadmapForQuestionType(type));
       const roadmaps: any = await Promise.all(roadmapPromises);
 
-      if(roadmaps){
+      if (roadmaps) {
         try {
           const roadmap = new RoadMap({
             userId: userId,
             roadmap: roadmaps
-          })
-          roadmap.save()
-          questionType === 'math' ? user.roadmapMathId = roadmap.id : user.roadmapCriticalId = roadmap.id
-          await user.save()
-          return {message: 'Roadmap generated successfully', success: true, roadmap: roadmap}
+          });
+
+          await roadmap.save();
+          if (questionType === 'math') {
+            user.roadmapMathId = roadmap.id;
+          } else {
+            user.roadmapCriticalId = roadmap.id;
+          }
+
+          await user.save();
+          await redis.set(`roadmap:${userId}:${questionType}`, JSON.stringify(roadmap));
+
+          return { message: 'Roadmap generated successfully', success: true, roadmap: roadmap };
         } catch (error) {
-          console.log(error)
-          return {message: error, success: false}
+          console.log(error);
+          return { message: error, success: false };
         }
       }
-      
+
     } catch (err) {
       console.log(err);
       return { message: 'Error generating roadmap', success: false };
@@ -153,18 +161,23 @@ For the {{questionType}} "Main Conclusion", the roadmap could be structured as f
     return jsonString.replace(/\\n/g, '\n').replace(/\\"/g, '"').replace(/\\t/g, '\t');
   }
 
-
-  async getRoadmapById(roadmapId: string){
+  async getRoadmapById(roadmapId: string) {
     try {
-      const roadmap = await RoadMap.findById(roadmapId)
-      if(!roadmap){
-        return {message: 'roadmap not found', success: false}
+      const cachedRoadmap = await redis.get(`roadmap:${roadmapId}`);
+      if (cachedRoadmap) {
+        return { message: 'Roadmap found (from cache)', roadmap: JSON.parse(cachedRoadmap), success: true };
       }
 
-      return {message: 'Roadmap found', roadmap: roadmap, success: true}
+      const roadmap = await RoadMap.findById(roadmapId);
+      if (!roadmap) {
+        return { message: 'Roadmap not found', success: false };
+      }
+
+      await redis.set(`roadmap:${roadmapId}`, JSON.stringify(roadmap));
+      return { message: 'Roadmap found', roadmap: roadmap, success: true };
     } catch (error) {
-      console.log(error)
-      return {message: error, success: false}
+      console.log(error);
+      return { message: error, success: false };
     }
   }
 }

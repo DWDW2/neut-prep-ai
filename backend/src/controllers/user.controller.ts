@@ -28,7 +28,7 @@ export default class UserController {
       const { email, password, id_token } = req.body;
       const loginResult = await this.userService.loginUser({ email, password, id_token });
       if (loginResult.success) {
-        res.status(200).json({ accessToken: loginResult.accessToken, refreshToken: loginResult.refreshToken }); 
+        res.status(200).json({ accessToken: loginResult.accessToken, refreshToken: loginResult.refreshToken, user: loginResult.user }); 
       } else {
         res.status(401).json({ message: loginResult.message });
       }

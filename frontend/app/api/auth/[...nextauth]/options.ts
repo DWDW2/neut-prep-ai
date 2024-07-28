@@ -1,6 +1,7 @@
 import type { NextAuthOptions, User } from "next-auth";
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from "next-auth/providers/credentials";
+import BASE_URL from "@/lib/env";
 
 interface CustomUser extends User {
   accessToken: string; // Make accessToken optional
@@ -22,7 +23,7 @@ export const authOptions: NextAuthOptions = {
       },
       authorize: async (credentials) => {
         try {
-          const res = await fetch('http://localhost:5000/user/login', {
+          const res = await fetch(`${BASE_URL}/user/login`, {
             method: 'POST',
             body: JSON.stringify(credentials),
             headers: { "Content-Type": "application/json" },
@@ -58,7 +59,7 @@ export const authOptions: NextAuthOptions = {
 
         if (account.provider === 'google') {
           try {
-            const register = await fetch('http://localhost:5000/user/register',{
+            const register = await fetch(`${BASE_URL}/user/register`,{
               method: 'POST',
               body: JSON.stringify({
                 id_token: account.id_token
@@ -68,7 +69,7 @@ export const authOptions: NextAuthOptions = {
               }
             })
 
-            const tokenAccess = await fetch('http://localhost:5000/user/login', {
+            const tokenAccess = await fetch(`${BASE_URL}/user/login`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

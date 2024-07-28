@@ -8,5 +8,7 @@ export const envs = {
  MONGO_URI: get('MONGO_URI').required().asString(),
  GEMINI_API: get('GEMINI_API').required().asString(),
  JWT_SECRET: get('JWT_SECRET').required().asString(),
- 
+ REDIS_HOST: get('REDISHOST').required().asString(),
+ REDIS_PORT: get('REDISPORT').required().asPortNumber(),
+ REDIS_PASSWORD: get('REDIS_PASSWORD').required().asString()
 };

@@ -18,7 +18,7 @@ const LoginForm: React.FC = () => {
       email,
       password,
       redirect: true,
-      callbackUrl: '/'
+      callbackUrl: '/testing'
     });
     if (result?.error) {
       console.error('Authentication failed:', result.error);

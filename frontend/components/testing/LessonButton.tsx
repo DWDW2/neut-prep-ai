@@ -42,7 +42,7 @@ export default function LessonButton({ onClick, index, totalCount }: Props) {
         <Image
           src={'/testing/critical/star-rings-svgrepo-com.svg'}
           width={60}
-          height={60}
+          height={55}
           alt="star"
         />
       </div>

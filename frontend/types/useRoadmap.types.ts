@@ -13,17 +13,18 @@ interface Roadmap {
 }
 
 interface RoadmapPayload {
-  roadmapId:string;
-  unitIndex: number;
-  sectionIndex: number;
+  questionType: string;
 }
 
 interface Lesson {
   _id: string;
   title: string;
   description: string;
-  xp: number;
   difficulty: string;
-  lessonContent: string;
+  xp: number;
+  finished: boolean;
+  first: boolean;
+  xpGained: number;
+  lessonContent: string; 
 }
 export type {Roadmap, RoadmapPayload, Lesson}

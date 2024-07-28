@@ -87,7 +87,7 @@ export default class UserService {
   
       const accessToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
       const refreshToken = jwt.sign({ userId: user._id }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
-      return { success: true, accessToken, refreshToken };
+      return { success: true, accessToken, refreshToken, user };
     } catch (error) {
       console.error('Error logging in user:', error);
       return { success: false, message: 'Login failed' };
