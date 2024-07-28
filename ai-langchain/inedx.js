@@ -5,7 +5,7 @@ import path from 'path'
 import { GoogleGenerativeAI } from "@google/generative-ai";
 // mongoose.connect(process.env.MONGO_URI).then(console.log('Connected to MongoDB'))
 
-const model = new GoogleGenerativeAI('AIzaSyAdWOGDciVuizVZVrnZjBcv8CsTG1cvv60')
+const model = new GoogleGenerativeAI(' ')
 
 const genAi = model.getGenerativeModel({model: "gemini-1.5-pro"})
 

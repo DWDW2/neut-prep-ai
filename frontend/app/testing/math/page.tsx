@@ -23,15 +23,21 @@ interface handleLesson {
 }
 export default function MathDetailed({}: Props) {
   const router = useRouter()
-  const {useGenerateRoadmap} = useRoadmapQuery()
+  const {useGenerateRoadmap, useGetRoadmap} = useRoadmapQuery()
   const {useGetUser} = useCourseApi()
   const {data:user} = useGetUser()
   const [isLessonActive, setLessonActive] = useState(false)
-  const {data: RoadMap, isLoading, isError, mutate:mutateRoadmap} = useGenerateRoadmap()
+  const {isLoading, isError, mutate:mutateRoadmap} = useGenerateRoadmap()
+  const {data:RoadMapMath, isLoading: isLoadingMath, isError: isErrorMath } = useGetRoadmap()
   const handleLessonClick = ({lessonIndex, sectionIndex, roadmapId, xp, questionType}:handleLesson) => {
     router.push(`/testing/math/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}`)
   }
-  if(isLoading){
+  useEffect(() => {
+    if(user?.roadmapMathId){
+      mutateRoadmap({questionType: 'math'})
+    }
+  })
+  if(isLoading || isLoadingMath){
     return(
       <Loading />
     )
@@ -51,14 +57,14 @@ export default function MathDetailed({}: Props) {
       <FeedWrapper>
         <section className="pt-6 gap-y-4 flex flex-col">
           {
-            RoadMap?.roadmap.map((section, index) => {
+            RoadMapMath?.roadmap.map((section, index) => {
               return(
                 <div key={index}>
                   <UnitSection Unit={section.unit} UnitName={section.section}/>
                   {
                     section.lessons.map((lesson, lessonindex) => {
                       return(
-                        <UnitButton index={lessonindex} totalCount={section.lessons.length} onClick={() => handleLessonClick({roadmapId: RoadMap._id, sectionIndex: index, lessonIndex: lessonindex, xp: lesson.xp, questionType: section.questionType})}  key={lessonindex}/>
+                        <UnitButton index={lessonindex} totalCount={section.lessons.length} onClick={() => handleLessonClick({roadmapId: RoadMapMath._id, sectionIndex: index, lessonIndex: lessonindex, xp: lesson.xp, questionType: section.questionType})}  key={lessonindex}/>
                       )
                     })
                   }

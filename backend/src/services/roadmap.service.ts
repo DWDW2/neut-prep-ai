@@ -1,7 +1,7 @@
 import { model, generationConfig, safetySetting } from "../core/config/gemini";
 import { RoadMap, RoadMapType } from "../models/roadmap.models";
 import NuetDocument from "../models/nuetexampaper.models";
-import { UserModel as User, UserType } from "../models/user.models";
+import { UserModel as User, UserModel, UserType } from "../models/user.models";
 import { questionTypesCritical, questionTypesMath } from "../core/promts/prompts";
 import redis from "../core/config/redis";
 
@@ -15,7 +15,7 @@ type LessonPlan = {
 type LessonPlans = LessonPlan[][];
 
 export default class RoadMapService {
-  async generateRoadmapByUserId(userId: string, questionType: string) {
+  async generateRoadmapByUserId(userId: string) {
     try {
       if (!userId) {
         return { message: 'UserId required', success: false };
@@ -26,36 +26,34 @@ export default class RoadMapService {
         return { message: 'User not found', success: false };
       }
 
-      let questionTypes: string[] = [];
-      if (questionType === 'critical') {
-        questionTypes = questionTypesCritical;
-      } else if (questionType === 'math') {
-        questionTypes = questionTypesMath;
-      } else {
-        return { message: 'Invalid question type', success: false };
-      }
+      const [mathRoadmap, criticalRoadmap] = await Promise.all([
+        this.generateRoadmapForQuestionType('math'),
+        this.generateRoadmapForQuestionType('critical'),
+      ]);
 
-      const roadmapPromises = questionTypes.map(type => this.generateRoadmapForQuestionType(type));
-      const roadmaps: any = await Promise.all(roadmapPromises);
-
-      if (roadmaps) {
+      if (mathRoadmap && criticalRoadmap) {
         try {
-          const roadmap = new RoadMap({
+          const mathRoadmapModel = new RoadMap({
             userId: userId,
-            roadmap: roadmaps
+            roadmap: mathRoadmap
           });
 
-          await roadmap.save();
-          if (questionType === 'math') {
-            user.roadmapMathId = roadmap.id;
-          } else {
-            user.roadmapCriticalId = roadmap.id;
-          }
+          const criticalRoadmapModel = new RoadMap({
+            userId: userId,
+            roadmap: criticalRoadmap
+          });
+
+          await mathRoadmapModel.save();
+          await criticalRoadmapModel.save();
+
+          user.roadmapMathId = mathRoadmapModel.id;
+          user.roadmapCriticalId = criticalRoadmapModel.id;
 
           await user.save();
-          await redis.set(`roadmap:${userId}:${questionType}`, JSON.stringify(roadmap));
+          await redis.set(`roadmap:${userId}:math`, JSON.stringify(mathRoadmapModel));
+          await redis.set(`roadmap:${userId}:critical`, JSON.stringify(criticalRoadmapModel));
 
-          return { message: 'Roadmap generated successfully', success: true, roadmap: roadmap };
+          return { message: 'Roadmaps generated successfully', success: true, mathRoadmap: mathRoadmapModel, criticalRoadmap: criticalRoadmapModel };
         } catch (error) {
           console.log(error);
           return { message: error, success: false };
@@ -64,7 +62,7 @@ export default class RoadMapService {
 
     } catch (err) {
       console.log(err);
-      return { message: 'Error generating roadmap', success: false };
+      return { message: 'Error generating roadmaps', success: false };
     }
   }
 
@@ -161,20 +159,30 @@ For the {{questionType}} "Main Conclusion", the roadmap could be structured as f
     return jsonString.replace(/\\n/g, '\n').replace(/\\"/g, '"').replace(/\\t/g, '\t');
   }
 
-  async getRoadmapById(roadmapId: string) {
+  async getRoadmapById(userId: string) {
     try {
-      const cachedRoadmap = await redis.get(`roadmap:${roadmapId}`);
-      if (cachedRoadmap) {
-        return { message: 'Roadmap found (from cache)', roadmap: JSON.parse(cachedRoadmap), success: true };
+      const mathRoadmap = await redis.get(`roadmap:${userId}:math`);
+      const criticalRoadmap = await redis.get(`roadmap:${userId}:critical`);
+
+      if (mathRoadmap && criticalRoadmap) {
+        return { message: 'Roadmaps found (from cache)', mathRoadmap: JSON.parse(mathRoadmap), criticalRoadmap: JSON.parse(criticalRoadmap), success: true };
       }
 
-      const roadmap = await RoadMap.findById(roadmapId);
-      if (!roadmap) {
-        return { message: 'Roadmap not found', success: false };
+      const user = await UserModel.findById(userId);
+      if (!user) {
+        return { message: 'User not found', success: false };
       }
 
-      await redis.set(`roadmap:${roadmapId}`, JSON.stringify(roadmap));
-      return { message: 'Roadmap found', roadmap: roadmap, success: true };
+      const mathRoadmapModel = await RoadMap.findById(user.roadmapMathId);
+      const criticalRoadmapModel = await RoadMap.findById(user.roadmapCriticalId);
+
+      if (mathRoadmapModel && criticalRoadmapModel) {
+        await redis.set(`roadmap:${userId}:math`, JSON.stringify(mathRoadmapModel));
+        await redis.set(`roadmap:${userId}:critical`, JSON.stringify(criticalRoadmapModel));
+        return { message: 'Roadmaps found', mathRoadmap: mathRoadmapModel, criticalRoadmap: criticalRoadmapModel, success: true };
+      } else {
+        return { message: 'Roadmaps not found', success: false };
+      }
     } catch (error) {
       console.log(error);
       return { message: error, success: false };

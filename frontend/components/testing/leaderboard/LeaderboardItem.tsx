@@ -21,7 +21,7 @@ export default function LeaderboardItem({ rank, user, first, second, third}: Pro
       </div>
       <Image src={'/testing/medal-gold-svgrepo-com.svg'} alt='crown' width={35} height={35} className={first ? 'float-right' : 'hidden'}/>
       <Image src={'/testing/silver-medal-svgrepo-com.svg'} alt='crown' width={35} height={35} className={second ? 'float-right' : 'hidden'}/>
-      <Image src={'/testing/crown-svgrepo-com.bronze-medal-svgrepo-com.svg'} alt='crown' width={35} height={35} className={third ? 'float-right' : 'hidden'}/>
+      <Image src={'/testing/bronze-medal-svgrepo-com.svg'} alt='crown' width={35} height={35} className={third ? 'float-right' : 'hidden'}/>
     </li>
   );
 }
