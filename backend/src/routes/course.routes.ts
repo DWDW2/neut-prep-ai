@@ -31,4 +31,6 @@ router.post('/set-finished', AuthMiddleware, (req, res) => courseController.setF
 
 router.post('/set-xp-gained', AuthMiddleware, (req, res) => courseController.setXpGained(req, res))
 
+router.post('/handle-next-lesson', AuthMiddleware, (req, res) => courseController.handleNextLesson(req, res))
+
 export default router;

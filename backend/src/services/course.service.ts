@@ -129,6 +129,22 @@ export default class CourseService {
     }
   }
 
+  async handleNextLesson(lessonIndex:number, sectionIndex: number, roadmapId: string){
+    try {
+      const roadmap = await RoadMap.findById(roadmapId)
+      if(!roadmap){
+        return {message: 'Roadmap not found', success: false}
+      }
+      const lesson = roadmap.roadmap[sectionIndex].lessons[lessonIndex+1]
+      lesson.locked = false
+      await roadmap.save()
+      return {message: 'Lesson unlocked', success: true}
+    } catch (error) {
+      console.log(error)
+      return {message: error, success: false}
+    }
+  }
+
   async setXpGained(lessonIndex: number, sectionIndex: number, roadmapId: string, xp: number){
     try {
       const roadmap = await RoadMap.findById(roadmapId)

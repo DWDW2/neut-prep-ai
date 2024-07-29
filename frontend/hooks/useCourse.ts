@@ -23,7 +23,7 @@ const useCourseApi = () => {
   const useGenerateLesson = () => {
     return useMutation<GenerateLessonResponse, Error, PayloadCourse>(
       async (payload: PayloadCourse) => {
-        const { data } = await axiosInstance.post('/generate-lesson', payload, {
+        const { data } = await axiosInstance.post('/course/generate-lesson', payload, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },
@@ -41,7 +41,7 @@ const useCourseApi = () => {
   const useHandleIncorrectThemes = () => {
     return useMutation<HandleThemesResponse, Error, any>(
       async (payload) => {
-        const { data } = await axiosInstance.post('/handle-incorrect-themes', payload, {
+        const { data } = await axiosInstance.post('/course/handle-incorrect-themes', payload, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },
@@ -59,7 +59,7 @@ const useCourseApi = () => {
   const useHandleBestThemes = () => {
     return useMutation<HandleThemesResponse, Error, any>(
       async (payload) => {
-        const { data } = await axiosInstance.post('/handle-best-themes', payload, {
+        const { data } = await axiosInstance.post('/course/handle-best-themes', payload, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },
@@ -77,7 +77,7 @@ const useCourseApi = () => {
   const useUpdateXpByLesson = () => {
     return useMutation<UpdateXpAndStreakResponse, Error, useUpdateXpByLessonResponse>(
       async (payload: useUpdateXpByLessonResponse) => {
-        const { data } = await axiosInstance.post('/update-xp-lesson', payload, {
+        const { data } = await axiosInstance.post('/course/update-xp-lesson', payload, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },
@@ -90,7 +90,7 @@ const useCourseApi = () => {
   const useUpdateStreak = () => {
     return useMutation<ResetTodaysXpResponse, Error>(
       async () => {
-        const { data } = await axiosInstance.post('/update-streak', null, {
+        const { data } = await axiosInstance.post('/course/update-streak', null, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },
@@ -109,7 +109,7 @@ const useCourseApi = () => {
     return useQuery<GetUserData, Error>(
       'getUser',
       async () => {
-        const { data } = await axiosInstance.get('/get-user', {
+        const { data } = await axiosInstance.get('/course/get-user', {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`
           }
@@ -126,7 +126,7 @@ const useCourseApi = () => {
   const useUpdateUser = () => {
     return useMutation<UpdateUserResponse, Error, UpdatePayloadCourse>(
       async (payload: UpdatePayloadCourse) => {
-        const { data } = await axiosInstance.put('/update-user', payload, {
+        const { data } = await axiosInstance.put('/course/update-user', payload, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },
@@ -145,7 +145,7 @@ const useCourseApi = () => {
     return useQuery(
       "updateXp",
       async () => {
-        const { data } = await axiosInstance.get('/update-xp', {
+        const { data } = await axiosInstance.get('/course/update-xp', {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`
           }
@@ -164,7 +164,7 @@ const useCourseApi = () => {
     return useQuery<GetAllUsersResponse, Error>(
       "getAllUsers",
       async () => {
-        const { data } = await axiosInstance.get('/get-all-users', {
+        const { data } = await axiosInstance.get('/course/get-all-users', {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`
           }
@@ -177,7 +177,7 @@ const useCourseApi = () => {
   const useGetLesson = () => {
     return useMutation<Lesson, Error, { lessonId: string }>(
       async (payload) => {
-        const { data } = await axiosInstance.post('/get-lesson', payload, {
+        const { data } = await axiosInstance.post('/course/get-lesson', payload, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },
@@ -190,7 +190,7 @@ const useCourseApi = () => {
   const useSetFinished = () => {
     return useMutation<any, Error, { lessonId: string }>(
       async (payload) => {
-        const { data } = await axiosInstance.post('/set-finished', payload, {
+        const { data } = await axiosInstance.post('/course/set-finished', payload, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },
@@ -203,7 +203,7 @@ const useCourseApi = () => {
   const useSetXpGained = () => {
     return useMutation<any, Error, { lessonId: string; xp: number }>(
       async (payload) => {
-        const { data } = await axiosInstance.post('/set-xp-gained', payload, {
+        const { data } = await axiosInstance.post('/course/set-xp-gained', payload, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },

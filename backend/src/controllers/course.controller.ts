@@ -172,4 +172,19 @@ export default class CourseController {
       res.status(500).json({message: error})  
     }
   }
+
+  async handleNextLesson(req:Request, res:Response){
+    try {
+      const  {lessonIndex, roadmapId, sectionIndex} = req.body
+      const lesson = await this.courseService.handleNextLesson(lessonIndex, roadmapId, sectionIndex)
+      if(lesson.success){
+        res.status(200).json(lesson)
+      }else{
+        res.status(500).json({message: lesson.message})
+      }
+    } catch (error) {
+      console.log(error)
+      return {message: error, success: false}
+    }
+  }
 }

@@ -23,7 +23,8 @@ interface Lesson {
   difficulty: string;
   xp: number;
   finished: boolean;
-  first: boolean;
+  locked: boolean;
+  isCurrent: boolean;
   xpGained: number;
   lessonContent: string; 
 }

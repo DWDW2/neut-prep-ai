@@ -35,7 +35,7 @@ const RegistrationForm: React.FC = () => {
     }
   }
   const handleGoogleRegistration = async () => {
-    await signIn('google', { callbackUrl: '/' }); 
+    await signIn('google', { callbackUrl: '/testing' }); 
   };
 
   const { data: session } = useSession();

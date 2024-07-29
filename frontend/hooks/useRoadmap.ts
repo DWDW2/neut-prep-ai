@@ -30,7 +30,7 @@ export const useRoadmapQuery = () => {
       async (payload: RoadmapPayload) => {
         const authHeader = await fetchAuthHeader();
         return axiosInstance
-          .post<Roadmap>('/generate-roadmap', payload, {
+          .post<Roadmap>('/roadmap/generate-roadmap', payload, {
             headers: { Authorization: authHeader },
           })
           .then((res) => res.data);
@@ -43,12 +43,12 @@ export const useRoadmapQuery = () => {
     );
 
   const useGetRoadmap = () =>
-    useQuery<Roadmap, Error>(
+    useQuery<getRoadmapResponse, Error>(
       'getRoadmap',
       async () => {
         const authHeader = await fetchAuthHeader();
         return axiosInstance
-          .get<Roadmap>('/get-roadmap', {
+          .get<getRoadmapResponse>('/roadmap/get-roadmap', {
             headers: { Authorization: authHeader },
           })
           .then((res) => res.data);

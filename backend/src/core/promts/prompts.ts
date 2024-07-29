@@ -7,14 +7,12 @@ export const questionTypesCritical = [
     "Which one of the following best identifies the flaw in the above reasoning?",
     "Which one of the following statements is not true?",
     "Which one of the following conclusions can reliably be drawn from the above passage?",
-    "Which one of the following is an underlying assumption of the above argument?",
-    "Which one of the following, if true, would most weaken the above argument?",
     "Which one of the following is the best expression of the flaw in the above argument?",
     "Which one of the following most closely parallels the reasoning used in the above argument?",
     "Which one of the following identifies the principle underlying the above argument?",
     "Which one of the following conclusions can be drawn from the above passage?",
     "Which one of the following is a conclusion that can be drawn from the above passage?",
-    "Which one of the following conclusions is best supported by the data given above?"
+    "Which one of the following conclusions is bst supported by the data given above?"
 ]
 //question types
 export const questionTypesMath = [

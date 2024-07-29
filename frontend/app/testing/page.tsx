@@ -23,7 +23,7 @@ export default function Testing({}: Props) {
   const {data:session} = useSession()
   const {mutate: updateStreak, isLoading: isUpdatingStreak} = useUpdateStreak()
   const { refetch: updateXp } = useUpdateXp(); 
-
+  console.log(session)
   
   useEffect(() => {
     const checkAndUpdateXp = () => {
