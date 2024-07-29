@@ -1,4 +1,3 @@
-// pages/testing/index.tsx
 'use client'
 import React, { useEffect } from 'react';
 import StudyPathPrompt from '@/components/testing/StudyGoalPrompt';

@@ -26,8 +26,8 @@ export const useRoadmapQuery = () => {
   };
 
   const useGenerateRoadmap = () =>
-    useMutation<Roadmap, Error, RoadmapPayload>(
-      async (payload: RoadmapPayload) => {
+    useMutation<Roadmap, Error>(
+      async (payload) => {
         const authHeader = await fetchAuthHeader();
         return axiosInstance
           .post<Roadmap>('/roadmap/generate-roadmap', payload, {
