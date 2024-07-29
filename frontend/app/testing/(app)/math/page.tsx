@@ -6,7 +6,7 @@ import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
 import FeedWrapper from "@/components/testing/Feed-sidebar"
-import StickySideBar from "../../../components/testing/Sticky-sidebar"
+import StickySideBar from "@/components/testing/Sticky-sidebar"
 import UserSideBar from "@/components/testing/XPgained"
 import UserProgress from "@/components/testing/UserProgress"
 import UnitButton from "@/components/testing/LessonButton"
