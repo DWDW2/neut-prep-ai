@@ -5,8 +5,8 @@ import React, { useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { Button } from '../ui/button';
 import { FaGoogle } from 'react-icons/fa';
-import { toast, ToastContainer } from 'react-toastify'; // Import toast and ToastContainer
-import 'react-toastify/dist/ReactToastify.css'; // Import toast CSS
+import { toast, ToastContainer } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css'; 
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -20,16 +20,16 @@ const LoginForm: React.FC = () => {
     const result = await signIn('credentials', {
       email,
       password,
-      redirect: false, // Set redirect to false for manual handling
-      callbackUrl: '/testing'
+      redirect: false, 
+      callbackUrl: '/testing/app/'
     });
     if (result?.error) {
       console.error('Authentication failed:', result.error);
-      toast.error('User not found'); // Show toast notification
+      toast.error('User not found'); 
     } else {
       console.log('Authentication successful:', result);
       if (result?.url) {
-        window.location.href = result.url; // Redirect manually if needed
+        window.location.href = result.url;  
       }
     }
   };

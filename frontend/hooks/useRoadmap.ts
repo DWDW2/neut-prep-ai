@@ -37,7 +37,7 @@ export const useRoadmapQuery = () => {
       },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries('generateRoadmap');
+          queryClient.invalidateQueries('getRoadmap');
         },
       }
     );
@@ -54,8 +54,10 @@ export const useRoadmapQuery = () => {
           .then((res) => res.data);
       },
       {
-        staleTime: Infinity,
-        cacheTime: 300000,
+        staleTime: 0, 
+        cacheTime: 300000, 
+        refetchOnWindowFocus: true, 
+        refetchInterval: 60000, 
       }
     );
 

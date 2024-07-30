@@ -3,7 +3,7 @@ import axiosInstance from '@/axiosInstance';
 import { RoadmapPayload, Roadmap } from '@/types/useRoadmap.types';
 import { useSession } from 'next-auth/react';
 import { UserType } from '../types/User.types';
-import { PayloadCourse, UpdatePayloadCourse, Lesson } from '@/types/useCourse.types';
+import { PayloadCourse, UpdatePayloadCourse, Lesson, SetFinishedPayload, SetXpGainedPayload, HandleNextLessonPayload, UseGetLessonPayload, useSetUserAnswers } from '@/types/useCourse.types';
 
 type GenerateLessonResponse = Lesson[];
 type HandleThemesResponse = string[];
@@ -117,8 +117,10 @@ const useCourseApi = () => {
         return data;
       },
       {
-        refetchInterval: 300000,
-        staleTime: Infinity,
+        staleTime: 0, 
+        cacheTime: 300000, 
+        refetchOnWindowFocus: true, 
+        refetchInterval: 60000, 
       }
     );
   };
@@ -145,7 +147,7 @@ const useCourseApi = () => {
     return useQuery(
       "updateXp",
       async () => {
-        const { data } = await axiosInstance.get('/course/update-xp', {
+        const { data } = await axiosInstance.get('/course/refresh-todays-xp', {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`
           }
@@ -175,7 +177,7 @@ const useCourseApi = () => {
   };
 
   const useGetLesson = () => {
-    return useMutation<Lesson, Error, { lessonId: string }>(
+    return useMutation<Lesson[], Error, UseGetLessonPayload>(
       async (payload) => {
         const { data } = await axiosInstance.post('/course/get-lesson', payload, {
           headers: {
@@ -188,9 +190,37 @@ const useCourseApi = () => {
   };
 
   const useSetFinished = () => {
-    return useMutation<any, Error, { lessonId: string }>(
+    return useMutation<any, Error, SetFinishedPayload>(
       async (payload) => {
         const { data } = await axiosInstance.post('/course/set-finished', payload, {
+          headers: {
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+        });
+        return data;
+        queryClient.invalidateQueries('getRoadmap')
+      }
+    );
+  };
+
+  const useSetXpGained = () => {
+    return useMutation<any, Error, SetXpGainedPayload>(
+      async (payload) => {
+        const { data } = await axiosInstance.post('/course/set-xp-gained', payload, {
+          headers: {
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+        });
+        queryClient.invalidateQueries('getRoadmap')
+        return data;
+      }
+    );
+  };
+
+  const useHandleNextLesson = () => {
+    return useMutation<any, Error, HandleNextLessonPayload>(
+      async (payload) => {
+        const { data } = await axiosInstance.post('/course/handle-next-lesson', payload, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },
@@ -200,10 +230,10 @@ const useCourseApi = () => {
     );
   };
 
-  const useSetXpGained = () => {
-    return useMutation<any, Error, { lessonId: string; xp: number }>(
+  const useSetUserAnswers = () => {
+    return useMutation<any, Error, useSetUserAnswers>(
       async (payload) => {
-        const { data } = await axiosInstance.post('/course/set-xp-gained', payload, {
+        const { data } = await axiosInstance.post('/course/set-user-answers', payload, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },
@@ -211,7 +241,8 @@ const useCourseApi = () => {
         return data;
       }
     );
-  };
+  }
+
 
   return {
     useGenerateLesson,
@@ -226,6 +257,8 @@ const useCourseApi = () => {
     useGetLesson,
     useSetFinished,
     useSetXpGained,
+    useHandleNextLesson,
+    useSetUserAnswers
   };
 };
 

@@ -66,7 +66,7 @@ const RegistrationForm = ({ onSuccess }: RegistrationProps) => {
 
   const handleGoogleRegistration = async () => {
     try {
-      await signIn('google', { callbackUrl: '/testing' });
+      await signIn('google', { callbackUrl: '/testing/app/' });
       if (onSuccess) {
         await onSuccess();
       }

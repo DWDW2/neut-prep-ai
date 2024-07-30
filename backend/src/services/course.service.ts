@@ -12,7 +12,6 @@ export default class CourseService {
           contents: [{ role: "user", parts: prompt }],
           generationConfig,
         });
-        // const cleanedResponse = this.cleanJsonString(result.response.text());
         const resJson = JSON.parse(result.response.text());
         return resJson;
       } catch (error) {
@@ -29,48 +28,47 @@ export default class CourseService {
 
   async generateLessonByUserId(lessonIndex: number, sectionIndex: number, roadmapType: string, userId: string) {
     try {
-      console.log('iam here')
-
-      const user = await UserModel.findById(userId)
-      if(!user){
-        return {message: 'User not found', success: false}
+      console.log('I am here');
+  
+      const user = await UserModel.findById(userId);
+      if (!user) {
+        return { message: 'User not found', success: false };
       }
-      const id = roadmapType === 'math' ? user.roadmapMathId : user.roadmapCriticalId
-      if(!id){
-        return {message: 'Roadmap not found', success: false}
+      const id = roadmapType === 'math' ? user.roadmapMathId : user.roadmapCriticalId;
+      if (!id) {
+        return { message: 'Roadmap not found', success: false };
       }
-      const roadmap = await RoadMap.findById(id)
+      const roadmap = await RoadMap.findById(id);
       if (!roadmap) {
-        return {message: 'Roadmap not found', success: false};
+        return { message: 'Roadmap not found', success: false };
       }
-
+  
       const lesson = roadmap.roadmap[sectionIndex].lessons[lessonIndex];
       if (!lesson) {
-        return {message: 'Lesson not found', success: false};
+        return { message: 'Lesson not found', success: false };
       }
-      if(lesson.lessonContent){
-        return {message: 'Lesson already generated', success: false, lessons: LessonModel.findById(lesson.lessonContent)}
-      }
+      
       const lessons = [];
       for (let i = 0; i < 5; i++) {
         const lessonDescription = lesson.title;
         lessons.push(this.generateLessonByRoadmapType(roadmapType, lessonDescription));
       }
-      
+  
       const results = await Promise.all(lessons);
-      const lessonModel = new LessonModel({lessons: results})
+      const lessonModel = new LessonModel({ lessons: results });
       if (typeof lessonModel.id === 'string') {
         roadmap.roadmap[sectionIndex].lessons[lessonIndex].lessonContent = lessonModel.id;
       }
       await lessonModel.save();
       await roadmap.save();
-      console.log(results)
-      return {message: 'Lessons generated successfully', success: true, lessons: results};
+      console.log(results);
+      return { message: 'Lessons generated successfully', success: true, lessons: results };
     } catch (error: any) {
       console.log(error);
-      return {message: error.message, success: false};
+      return { message: error.message, success: false };
     }
   }
+  
   
   async generateLessonByRoadmapType(roadmapType: string, lesson: string) {
     try {
@@ -95,24 +93,34 @@ export default class CourseService {
     }
   }
   
-  async getLessonById(lessonIndex: number, sectionIndex: number, roadmapId: string){
+  async getLessonById(lessonIndex: number, sectionIndex: number, roadmapId: string) {
     try {
-      const roadmap = await RoadMap.findById(roadmapId)
-      if(!roadmap){
-        return {message: 'Roadmap not found', success: false}
+      const roadmap = await RoadMap.findById(roadmapId);
+      
+      if (!roadmap) {
+        return { message: 'Roadmap not found', success: false };
       }
-      const prevLessonFinished = roadmap.roadmap[sectionIndex].lessons[lessonIndex - 1].finished === true
-      const lesson = roadmap.roadmap[sectionIndex].lessons[lessonIndex].lessonContent
-      if(prevLessonFinished){
-        return {message: 'Lesson found', lesson: LessonModel.findById(lesson) , success: true}
-      }else{
-        return {message: 'You have to finish previous lesson', success: false}
-      }      
+  
+      const section = roadmap.roadmap[sectionIndex];
+      if (!section) {
+        return { message: 'Section not found', success: false };
+      }
+  
+      const lessonId = section.lessons[lessonIndex].lessonContent;
+      const lesson = await LessonModel.findById(lessonId);
+      if (!lesson) {
+        return { message: 'Lesson not found', success: false };
+      }
+  
+      const incorrectQuestions = lesson.lessons.filter(question => question.answer !== question.rightAnswer);
+  
+      return { lessons: incorrectQuestions, success: true };
     } catch (error) {
-      console.log(error)
-      return {message: error, success: false}
+      console.log(error);
+      return { message: error, success: false };
     }
   }
+  
 
   async setFinished(lessonIndex: number, sectionIndex: number, roadmapId: string){
     try {
@@ -121,8 +129,32 @@ export default class CourseService {
         return {message: 'Roadmap not found', success: false}
       }
       roadmap.roadmap[sectionIndex].lessons[lessonIndex].finished = true
+      roadmap.roadmap[sectionIndex].lessons[lessonIndex].locked = true
+      roadmap.roadmap[sectionIndex].lessons[lessonIndex].isCurrent = false
+      roadmap.roadmap[sectionIndex].lessons[lessonIndex+1].isCurrent = true
+      roadmap.roadmap[sectionIndex].lessons[lessonIndex+1].locked = false
       await roadmap.save()
       return {message: 'Lesson finished', success: true}
+    } catch (error) {
+      console.log(error)
+      return {message: error, success: false}
+    }
+  }
+
+  async setUserAnswers(answers: number[], lessonIndex: number, sectionIndex: number, roadmapId:string){
+    try {
+      const roadmap = await RoadMap.findById(roadmapId)
+      if(!roadmap){
+        return {message: 'Roadmapid is requrired', success: false}
+      }
+      const lesson = await LessonModel.findById(roadmap.roadmap[sectionIndex].lessons[lessonIndex].lessonContent)
+      if(!lesson){
+        return {message: 'Lesson not found', success: false}
+      }
+      lesson.lessons.map((les, index) => les.answer = answers[index])
+      await lesson.save()
+      await roadmap.save()
+      return {message: 'Answers saved', success: true}
     } catch (error) {
       console.log(error)
       return {message: error, success: false}
@@ -296,7 +328,6 @@ export default class CourseService {
       return false
     }
   }
-
 
   async getAllUsers(){
     try {

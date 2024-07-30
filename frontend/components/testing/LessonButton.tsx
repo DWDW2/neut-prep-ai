@@ -2,6 +2,7 @@ import Image from 'next/image'
 import React from 'react'
 import 'react-circular-progressbar/dist/styles.css'
 import {Button} from '../ui/button'
+import { IoMdCheckmark } from "react-icons/io";
 import { FaStar } from "react-icons/fa6";
 import {CircularProgressbar, CircularProgressbarWithChildren} from 'react-circular-progressbar'
 import { cn } from '@/lib/utils';
@@ -10,11 +11,13 @@ type Props = {
   index: number;
   locked: boolean;
   xp:number;
+  finished: boolean;
+  maxValue: number;
   isCurrent: boolean;
   onClick: () => void;
 }
 
-export default function LessonButton({ onClick, index, totalCount, isCurrent, xp, locked }: Props) {
+export default function LessonButton({ onClick, index, totalCount, isCurrent, xp, locked, maxValue, finished }: Props) {
   const cycleLength = 8
   const cycleIndex = index % cycleLength
 
@@ -53,6 +56,7 @@ export default function LessonButton({ onClick, index, totalCount, isCurrent, xp
             </div>
             <CircularProgressbarWithChildren
               value={xp}
+              maxValue={maxValue}
               styles={{
                 path: {
                   stroke: "#DCAF52",
@@ -74,14 +78,25 @@ export default function LessonButton({ onClick, index, totalCount, isCurrent, xp
             </CircularProgressbarWithChildren>
           </div>
         ) : (
-          <div className='h-[102px] w-[102px] relative'> 
+          <div className='h-[102px] w-[102px] relative'>
+          {
+            finished ? (
             <Button 
-                className="h-[70px] w-[70px] border-b-8"
-                size={'rounded'}
-                variant={locked ? 'locked' : 'lesson'}
-              >
-                <FaStar className={cn("h10 w-10", locked ? "fill-neutral-400 text-neutral-400 stroke-neutral-400" : "fill-white text-white stroke-white h-10 w-10")}/>
-              </Button>
+            className="h-[70px] w-[70px] border-b-8"
+            size={'rounded'}
+            variant={'lesson'}
+          >
+            <IoMdCheckmark className='h-10 w-10 text-white'/>
+          </Button>) : (
+            <Button 
+            className="h-[70px] w-[70px] border-b-8"
+            size={'rounded'}
+            variant={locked ? 'locked' : 'lesson'}
+          >
+            <FaStar className={cn("h10 w-10", locked ? "h-10 w-10 fill-neutral-400 text-neutral-400 stroke-neutral-400" : "fill-white text-white stroke-white h-10 w-10")}/>
+          </Button>            
+          )
+          }
           </div>
         )
       }

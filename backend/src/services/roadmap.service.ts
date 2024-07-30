@@ -3,8 +3,6 @@ import { RoadMap, RoadMapType } from "../models/roadmap.models";
 import NuetDocument from "../models/nuetexampaper.models";
 import { UserModel as User, UserModel, UserType } from "../models/user.models";
 import { questionTypesCritical, questionTypesMath } from "../core/promts/prompts";
-import redis from "../core/config/redis";
-import { Document } from 'mongoose';
 
 type LessonPlan = {
   section: string;
@@ -51,11 +49,6 @@ export default class RoadMapService {
           user.roadmapCriticalId = criticalRoadmapModel.id;
 
           await user.save();
-
-          await Promise.all([
-            redis.set(`roadmap:${userId}:math`, JSON.stringify(mathRoadmapModel)),
-            redis.set(`roadmap:${userId}:critical`, JSON.stringify(criticalRoadmapModel))
-          ]);
 
           return { message: 'Roadmaps generated successfully', success: true, mathRoadmap: mathRoadmapModel, criticalRoadmap: criticalRoadmapModel };
         } catch (error) {
@@ -165,15 +158,6 @@ For the {{questionType}} "Main Conclusion", the roadmap could be structured as f
 
   async getRoadmapById(userId: string) {
     try {
-      const [mathRoadmap, criticalRoadmap] = await Promise.all([
-        redis.get(`roadmap:${userId}:math`),
-        redis.get(`roadmap:${userId}:critical`)
-      ]);
-
-      if (mathRoadmap && criticalRoadmap) {
-        return { message: 'Roadmaps found (from cache)', mathRoadmap: JSON.parse(mathRoadmap), criticalRoadmap: JSON.parse(criticalRoadmap), success: true };
-      }
-
       const user = await UserModel.findById(userId).lean();
       if (!user) {
         return { message: 'User not found', success: false };
@@ -185,11 +169,6 @@ For the {{questionType}} "Main Conclusion", the roadmap could be structured as f
       ]);
 
       if (mathRoadmapModel && criticalRoadmapModel) {
-        await Promise.all([
-          redis.set(`roadmap:${userId}:math`, JSON.stringify(mathRoadmapModel)),
-          redis.set(`roadmap:${userId}:critical`, JSON.stringify(criticalRoadmapModel))
-        ]);
-
         return { message: 'Roadmaps found', mathRoadmap: mathRoadmapModel, criticalRoadmap: criticalRoadmapModel, success: true };
       } else {
         return { message: 'Roadmaps not found', success: false };

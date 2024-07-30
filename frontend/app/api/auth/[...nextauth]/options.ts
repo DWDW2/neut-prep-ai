@@ -4,8 +4,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import BASE_URL from "@/lib/env";
 
 interface CustomUser extends User {
-  accessToken: string; // Make accessToken optional
-  refreshToken: string; // Add refreshToken field
+  accessToken: string; 
+  refreshToken: string; 
   provider: string;
 }
 

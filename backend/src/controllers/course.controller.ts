@@ -29,7 +29,7 @@ export default class CourseController {
       const {lessonIndex, sectionIndex, roadmapId} = req.body
       const lesson = await this.courseService.getLessonById(lessonIndex, sectionIndex, roadmapId)
       if(lesson.success){
-        res.status(200).json(lesson.lesson)
+        res.status(200).json(lesson.lessons)
       }else{
         res.status(500).json({message: lesson.message})
       }
@@ -72,7 +72,7 @@ export default class CourseController {
     }
   }
 
-  async resetTodaysXp(req: Request, res: Response) {
+  async updateStreak(req: Request, res: Response) {
     try {
       const { userId } = req.body; 
       const success = await this.courseService.updateStreak(userId);
@@ -160,8 +160,8 @@ export default class CourseController {
 
   async setXpGained(req:Request, res:Response){
     try {
-      const {lessonIndex, sectionIndex, roadmapId, xp} = req.body
-      const lesson = await this.courseService.setXpGained(lessonIndex, sectionIndex, roadmapId, xp)
+      const {lessonIndex, sectionIndex, roadmapId, xpGained} = req.body
+      const lesson = await this.courseService.setXpGained(lessonIndex, sectionIndex, roadmapId, xpGained)
       if(lesson.success){
         res.status(200).json(lesson)
       }else{
@@ -177,6 +177,21 @@ export default class CourseController {
     try {
       const  {lessonIndex, roadmapId, sectionIndex} = req.body
       const lesson = await this.courseService.handleNextLesson(lessonIndex, roadmapId, sectionIndex)
+      if(lesson.success){
+        res.status(200).json(lesson)
+      }else{
+        res.status(500).json({message: lesson.message})
+      }
+    } catch (error) {
+      console.log(error)
+      return {message: error, success: false}
+    }
+  }
+
+  async setUserAnswers(req:Request, res:Response){
+    try {
+      const {lessonIndex, sectionIndex, roadmapId, answers} = req.body
+      const lesson = await this.courseService.setUserAnswers(answers, lessonIndex, sectionIndex, roadmapId)
       if(lesson.success){
         res.status(200).json(lesson)
       }else{

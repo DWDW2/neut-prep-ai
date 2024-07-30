@@ -23,7 +23,9 @@ interface handleLesson {
   lessonIndex: number,
   roadmapId: string;
   xp: number;
-  questionType: string;
+  questionType: string
+  locked: boolean;
+  lessonContent: string;
 }
 
 export default function MathDetailed({ }: Props) {
@@ -34,8 +36,12 @@ export default function MathDetailed({ }: Props) {
   const [isLessonActive, setLessonActive] = useState(false)
   const { data: RoadMapMath, isLoading: isLoadingMath, isError: isErrorMath, refetch: refetchRoadmap } = useGetRoadmap()
 
-  const handleLessonClick = ({ lessonIndex, sectionIndex, roadmapId, xp, questionType }: handleLesson) => {
-    router.push(`/testing/app/math/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}`)
+  const handleLessonClick = ({ lessonIndex, sectionIndex, roadmapId, xp, questionType, locked, lessonContent }: handleLesson) => {
+    if(!locked){
+      router.push(`/testing/app/math/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}/${lessonContent ? lessonContent : ''}`)
+    }else{
+      toast.info('Complete previous lessons to unlock this one')
+    }
   }
 
   useEffect(() => {
@@ -48,7 +54,7 @@ export default function MathDetailed({ }: Props) {
     const intervalId = setInterval(refetchRoadmap, 10000);
     return () => clearInterval(intervalId);
   }, []);
-
+  console.log(RoadMapMath?.mathRoadmap.roadmap[0])
   const roadmapContent = useMemo(() => {
     if (!RoadMapMath?.mathRoadmap?.roadmap) return null;
     return RoadMapMath.mathRoadmap.roadmap.map((section, index) => (
@@ -58,11 +64,13 @@ export default function MathDetailed({ }: Props) {
           <UnitButton 
             locked={lesson.locked}
             isCurrent={lesson.isCurrent}
+            maxValue={lesson.xp}
+            finished={lesson.finished}
             xp={lesson.xpGained}
             key={lessonIndex} 
             index={lessonIndex} 
             totalCount={section.lessons.length} 
-            onClick={() => handleLessonClick({ roadmapId: RoadMapMath.mathRoadmap._id, sectionIndex: index, lessonIndex, xp: lesson.xp, questionType: section.questionType })} 
+            onClick={() => handleLessonClick({ roadmapId: RoadMapMath.mathRoadmap._id, sectionIndex: index, lessonIndex, xp: lesson.xp, questionType: section.questionType, locked: lesson.locked, lessonContent: lesson.lessonContent})} 
           />
         ))}
       </div>
