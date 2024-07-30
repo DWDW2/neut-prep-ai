@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import BASE_URL from '@/lib/env';
 
 type RegistrationProps = {
-  onSuccess: () => Promise<void>
+  onSuccess?: () => Promise<void>
 }
 
 const RegistrationForm = ({ onSuccess }: RegistrationProps) => {
@@ -46,7 +46,9 @@ const RegistrationForm = ({ onSuccess }: RegistrationProps) => {
         });
 
         if (signInResult?.ok) {
-          await onSuccess();
+          if (onSuccess) {
+            await onSuccess();
+          }
         } else {
           toast.error('Sign-in failed after registration');
         }
@@ -65,7 +67,9 @@ const RegistrationForm = ({ onSuccess }: RegistrationProps) => {
   const handleGoogleRegistration = async () => {
     try {
       await signIn('google', { callbackUrl: '/testing' });
-      await onSuccess();
+      if (onSuccess) {
+        await onSuccess();
+      }
     } catch (error) {
       console.error('Error during Google registration:', error);
       toast.error('An error occurred during Google registration');

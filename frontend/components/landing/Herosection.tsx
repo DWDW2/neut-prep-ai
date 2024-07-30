@@ -1,24 +1,48 @@
 'use client'
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Modal from '../testing/Modal';
+import RegistrationForm from '../auth/RegistrationForms';
+import { toast } from 'react-toastify';
 
 const ParallaxBackground = () => {
   const [offsetY, setOffsetY] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
   const router = useRouter();
+
   const handleScroll = () => {
     setOffsetY(window.scrollY);
   };
 
+  const handleGetStartedClick = () => {
+    setIsQuestionModalOpen(true);
+  };
+
+  const handleRegistrationSuccess = async () => {
+    setIsModalOpen(false);
+    setIsRegistering(true);
+    toast.success('Registered successfully');
+  };
+
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
-
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  const handleOptionClick = (option:any) => {
+    if (option === 'yes') {
+      router.push('/login');
+    } else {
+      router.push('/testing')
+    }
+    setIsQuestionModalOpen(false);
+  };
 
   return (
     <div className="relative h-screen overflow-hidden">
@@ -58,13 +82,27 @@ const ParallaxBackground = () => {
             <h1 className="text-5xl font-bold mb-4 max-[800px]:text-3xl text-black">Achieve best scores on <span className="text-[#DCAF52]">NUET exam</span> with us!</h1>
             <p className="text-black mb-8">Our comprehensive study platform is designed to help you excel in the NUET.
             Gain access to tailored lessons, practice tests, all in one place.</p>
-            <Button variant={'primary'} size={'lg'} onClick={() => router.push('/testing')}>Get Started</Button>
+            <Button variant={'primary'} size={'lg'} onClick={handleGetStartedClick}>Get Started</Button>
           </div>
           <div className='ml-14 max-[800px]:hidden'>
-            <Image src={'/Graduate-person.svg'} width={300} height={700} alt='persom'/> 
+            <Image src={'/Graduate-person.svg'} width={300} height={700} alt='person'/> 
           </div>
         </main> 
       </div>
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <RegistrationForm onSuccess={handleRegistrationSuccess} />
+      </Modal>
+
+      <Modal isOpen={isQuestionModalOpen} onClose={() => setIsQuestionModalOpen(false)}>
+        <div className="p-6">
+          <h2 className="text-2xl font-bold mb-4">Do you already have an account?</h2>
+          <div className="flex space-x-4">
+            <Button variant={'primary'} onClick={() => handleOptionClick('yes')}>Yes</Button>
+            <Button variant={'primaryOutline'} onClick={() => handleOptionClick('no')}>No</Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

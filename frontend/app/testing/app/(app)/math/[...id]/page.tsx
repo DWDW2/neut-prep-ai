@@ -29,11 +29,11 @@ export default function MathId({params}: Props) {
     const {id} = params
     const lessonIndex = parseInt(id[2], 10); 
     const sectionIndex = parseInt(id[1], 10); 
-    const roadmapId = id[0]; 
+    const roadmapType = 'math'
     const xp = parseInt(id[3], 10); 
     const questionType = id[4]; 
-    const {useGenerateLessonMath, useHandleIncorrectThemes, useUpdateXpByLesson, useHandleBestThemes, useGetUser} = useCourseApi() 
-    const {mutate, isLoading:isLoadingMath, isError: isErrorMath, data:MathRoadmapLesson, error: fetchError} = useGenerateLessonMath() 
+    const {useGenerateLesson, useHandleIncorrectThemes, useUpdateXpByLesson, useHandleBestThemes, useGetUser} = useCourseApi() 
+    const {mutate, isLoading:isLoadingMath, isError: isErrorMath, data:MathRoadmapLesson, error: fetchError} = useGenerateLesson() 
     const {mutate:mutateIncorrectTheme} = useHandleIncorrectThemes()
     const {mutate:mutateXP} = useUpdateXpByLesson()
     const {mutate:mutateBestTheme} = useHandleBestThemes()
@@ -44,7 +44,7 @@ export default function MathId({params}: Props) {
     const [correctAnswers, setCorrectAnswers] = useState(0); 
 
     React.useEffect(() => {
-        mutate({lessonIndex, sectionIndex, roadmapId})
+        mutate({lessonIndex, sectionIndex, roadmapType})
     }, [])
 
     if(isLoadingMath){ 

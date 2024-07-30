@@ -28,27 +28,20 @@ interface handleLesson {
 
 export default function MathDetailed({ }: Props) {
   const router = useRouter()
-  const { useGenerateRoadmap, useGetRoadmap } = useRoadmapQuery()
+  const { useGetRoadmap } = useRoadmapQuery()
   const { useGetUser } = useCourseApi()
   const { data: user } = useGetUser()
   const [isLessonActive, setLessonActive] = useState(false)
-  const { isLoading, isError, mutate: mutateRoadmap } = useGenerateRoadmap()
   const { data: RoadMapMath, isLoading: isLoadingMath, isError: isErrorMath, refetch: refetchRoadmap } = useGetRoadmap()
 
   const handleLessonClick = ({ lessonIndex, sectionIndex, roadmapId, xp, questionType }: handleLesson) => {
     router.push(`/testing/math/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}`)
   }
 
-  const refetchIfNeeded = () => {
-    if (user?.roadmapMathId === null) {
-      mutateRoadmap({ questionType: 'math' })
-    } else {
+  useEffect(() => {
+    if (user?.roadmapMathId !== null) {
       refetchRoadmap();
     }
-  }
-
-  useEffect(() => {
-    refetchIfNeeded();
   }, [user]);
 
   useEffect(() => {
@@ -76,9 +69,9 @@ export default function MathDetailed({ }: Props) {
     ));
   }, [RoadMapMath]);
 
-  if (isLoading || isLoadingMath) return <Loading />
+  if (isLoadingMath) return <Loading />
 
-  if (isError || isErrorMath) {
+  if (isErrorMath) {
     toast.error('An error occurred while loading the lesson. Please try again.');
   }
 

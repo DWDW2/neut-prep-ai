@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/navigation"
 import { toast, ToastContainer } from 'react-toastify'
@@ -19,7 +19,6 @@ const Loading = dynamic(() => import('@/components/Loading'), { ssr: false })
 
 type Props = {}
 
-// Define the structure for handleLesson function arguments
 interface HandleLesson {
   sectionIndex: number,
   lessonIndex: number,
@@ -28,34 +27,29 @@ interface HandleLesson {
   questionType: string,
 }
 
-export default function CriticalDetailed({}: Props) {
+export default function CriticalDetailed({ }: Props) {
   const router = useRouter()
-  const { useGenerateRoadmap, useGetRoadmap} = useRoadmapQuery()
+  const { useGetRoadmap } = useRoadmapQuery()
   const { useGetUser } = useCourseApi()
-
-  const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useGetUser()
-  const { isLoading, isError, mutate: mutateRoadmap } = useGenerateRoadmap()
-  const { data: CriticalRoadmap, isLoading: isLoadingMath, isError: isErrorMath, refetch: refetchRoadmap } = useGetRoadmap()
+  
+  const { data: user } = useGetUser()
+  const { data: CriticalRoadmap, isLoading: isLoadingCritical, isError: isErrorCritical, refetch: refetchRoadmap } = useGetRoadmap()
 
   const handleLessonClick = ({ sectionIndex, lessonIndex, roadmapId, xp, questionType }: HandleLesson) => {
     router.push(`/testing/critical/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}`)
   }
-  const refetchIfNeeded = () => {
-    if (user?.roadmapMathId === null) {
-      mutateRoadmap({ questionType: 'math' })
-    } else {
-      refetchRoadmap();
-    }
-  }
 
   useEffect(() => {
-    refetchIfNeeded();
+    if (user?.roadmapMathId !== null) {
+      refetchRoadmap();
+    }
   }, [user]);
 
   useEffect(() => {
     const intervalId = setInterval(refetchRoadmap, 10000);
     return () => clearInterval(intervalId);
   }, []);
+
   const roadmapContent = useMemo(() => {
     if (!CriticalRoadmap?.criticalRoadmap?.roadmap) return null
     return CriticalRoadmap.criticalRoadmap.roadmap.map((section, index) => (
@@ -63,7 +57,10 @@ export default function CriticalDetailed({}: Props) {
         <UnitSection Unit={section.unit} UnitName={section.section} />
         {section.lessons.map((lesson, lessonIndex) => (
           <UnitButton 
-            key={lessonIndex} 
+            key={lessonIndex}
+            locked={lesson.locked}
+            isCurrent={lesson.isCurrent}
+            xp={lesson.xpGained} 
             index={lessonIndex} 
             totalCount={section.lessons.length} 
             onClick={() => handleLessonClick({ 
@@ -79,9 +76,9 @@ export default function CriticalDetailed({}: Props) {
     ))
   }, [CriticalRoadmap])
 
-  if (isLoading || isLoadingUser) return <Loading />
+  if (isLoadingCritical) return <Loading />
 
-  if (isError || isErrorUser) {
+  if (isErrorCritical) {
     toast.error('An error occurred while loading the lesson. Please try again.')
   }
 

@@ -1,12 +1,10 @@
 'use client';
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { Button } from '../ui/button';
 import RegistrationForm from '../auth/RegistrationForms';
 import Modal from './Modal';
 import { useRoadmapQuery } from '@/hooks/useRoadmap';
 import { toast } from 'react-toastify';
-import Loading from '../Loading';
 import Loadingbut from '../ui/loading';
 import { useRouter } from 'next/navigation';
 
@@ -63,7 +61,7 @@ const questions = [
     ] as Option[]
   },
   {
-    id: 7,
+    id: 5,
     question: 'Как долго вы готовитесь к NUET/TSA/BMAT?',
     options: [
       { id: '1', label: 'Менее месяца' },
@@ -79,10 +77,11 @@ const StudyPathPrompt = () => {
   const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isRegistering, setIsRegistering] = useState(false); 
+  const [isRegistering, setIsRegistering] = useState(false);
   const { useGenerateRoadmap } = useRoadmapQuery();
-  const { mutate, isLoading: roadmapLoading, isError, error } = useGenerateRoadmap();
-  const router = useRouter()
+  const { mutate, isLoading: roadmapLoading, isError, error, isSuccess } = useGenerateRoadmap();
+  const router = useRouter();
+
   const handleOptionClick = (questionId: number, optionId: string) => {
     setSelectedOptions((prev) => ({ ...prev, [questionId]: optionId }));
     if (step < questions.length) {
@@ -94,15 +93,15 @@ const StudyPathPrompt = () => {
 
   const handleRegistrationSuccess = async () => {
     setIsModalOpen(false);
-    setIsRegistering(true); 
+    setIsRegistering(true);
     setIsLoading(true);
     try {
-      await mutate();
-      if (isError) {
-        toast.error(error?.message || 'Failed to generate roadmaps');
-      } else {
-        router.push('/testing/app')
+      const response = await mutate();
+      if (isSuccess) { 
+        router.push('/testing/app/math');
         toast.success('Registered successfully');
+      } else {
+        toast.error('Failed to generate roadmaps');
       }
     } catch (error) {
       toast.error('An unexpected error occurred');
@@ -114,16 +113,10 @@ const StudyPathPrompt = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-white text-gray-900">
-      <div className="absolute top-4 left-4">
-        <Link href="/login">
-          <div className="text-blue-600 hover:underline">Already have an account?</div>
-        </Link>
-      </div>
-
       {isRegistering ? (
         <div className="flex flex-col items-center justify-center min-h-screen p-4">
           <h2 className="text-2xl font-bold mb-4">Generating course...</h2>
-          <Loadingbut/>
+          <Loadingbut />
         </div>
       ) : step <= questions.length ? (
         <>

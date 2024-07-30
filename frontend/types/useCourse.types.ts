@@ -1,6 +1,6 @@
 interface PayloadCourse{
-    roadmapId: string;
-    unitIndex: number;
+    roadmapType: string;
+    lessonIndex: number;
     sectionIndex: number;
 }
 

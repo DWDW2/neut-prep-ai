@@ -1,85 +1,121 @@
-'use client'
-import TestButton from '@/components/specific/TestButton'
-import { useRoadmapQuery } from '@/hooks/useRoadmap'
-import React, { useState } from 'react'
-import dynamic from 'next/dynamic'
-import { useRouter } from 'next/navigation'
-import { Search } from 'lucide-react'
-const Loading = dynamic(() => import('@/components/Loading'), {ssr: false})
-type Props = {}
+// pages/chat.tsx
 
-export default function SPecific({}: Props) {
-  const router = useRouter()
-  const {useGenerateCriticalRoadmap, useGenerateMathRoadmap} = useRoadmapQuery()
-  const {data: RoadMapCritical, isLoading: isLoadingCritical, isError: isErrorCritical} = useGenerateCriticalRoadmap()
-  const {data: MathRoadmap, isLoading: isLoadingMath, isError: isErrorMath} = useGenerateMathRoadmap()
-  const [searchTerm, setSearchTerm] = useState('');
+'use client';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
+import BASE_URL from '@/lib/env';
 
-  if(isLoadingCritical || isLoadingMath){
-    return(
-      <Loading />
-    )
-  }
+const ChatPage = () => {
+  const [file, setFile] = useState<File | null>(null);
+  const [message, setMessage] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [chat, setChat] = useState<{ sender: string; content: string }[]>([]);
+  const router = useRouter();
 
-  if(isErrorCritical || isErrorMath){
-    return(
-      <div>Error</div>
-    )
-  }
-
-  const combinedRoadmaps = [RoadMapCritical, MathRoadmap];
-
-  const handleButtonClick = (roadmapId: string, sectionIndex: number, lessonIndex: number) => {
-    const lessonType = roadmapId === RoadMapCritical?._id ? 'critical' : 'math';
-    router.push(`/testing/${lessonType}/${roadmapId}/${sectionIndex}/${lessonIndex}`);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] || null;
+    setFile(file);
   };
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+  const handleMessageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMessage(event.target.value);
   };
 
-  const filteredRoadmaps = combinedRoadmaps.map((roadmap) => {
-    if (!roadmap) return null;
-    return {
-      ...roadmap,
-      roadmap: roadmap.roadmap.map((section) => ({
-        ...section,
-        lessons: section.lessons.filter((lesson) =>
-          lesson.title.toLowerCase().includes(searchTerm.toLowerCase())
-        ),
-      })),
-    };
-  });
+  const handleUpload = async () => {
+    if (!file && !message) {
+      toast.error('Please enter a message or select a file first');
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      if (file) {
+        const formData = new FormData();
+        formData.append('photo', file);
+
+        const uploadResponse = await fetch(`${BASE_URL}/photo/upload`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error('File upload failed');
+        }
+
+        const uploadData = await uploadResponse.json();
+        const { filepath, mimetype } = uploadData;
+
+        const generateResponse = await fetch(`${BASE_URL}/practice/generate-similar`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ filepath, mimetype }),
+        });
+
+        if (!generateResponse.ok) {
+          throw new Error('Failed to generate similar content');
+        }
+
+        toast.success('File uploaded and processed successfully');
+        setChat([...chat, { sender: 'user', content: 'File uploaded successfully' }]);
+      }
+
+      if (message) {
+        setChat([...chat, { sender: 'user', content: message }]);
+        setMessage('');
+      }
+
+    } catch (error: any) {
+      toast.error(error.message || 'An error occurred');
+    } finally {
+      setIsUploading(false);
+      setFile(null);
+    }
+  };
 
   return (
-    <section className='flex flex-col gap-4'>
-      <section className='flex flex-row justify-between items-center p-5'>
-        <h1 className='text-center p-5 text-3xl font-bold'>Test your skills</h1>
-        <div className='flex flex-row items-center gap-2'>
-          <Search className='text-gray-500' size={20} />
-          <input
-            type="text"
-            placeholder="Search..."
-            className='border border-gray-300 rounded-md px-3 py-2'
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-white text-gray-900">
+      <h1 className="text-2xl font-bold mb-4">Chat with File Upload</h1>
+      <div className="w-full max-w-md p-4 border rounded-lg shadow">
+        <div className="flex flex-col space-y-2 mb-4">
+          {chat.map((chatItem, index) => (
+            <div
+              key={index}
+              className={`p-2 rounded-lg ${
+                chatItem.sender === 'user' ? 'bg-blue-400 text-white self-end' : 'bg-gray-200 text-gray-900'
+              }`}
+            >
+              {chatItem.content}
+            </div>
+          ))}
         </div>
-      </section>
-      <section className='p-5 grid lg:grid-cols-4 gap-5 grid-cols-2'>
-        {filteredRoadmaps.map((roadmap, index) => {
-          if (!roadmap) return null;
-          return roadmap.roadmap.map((section, sectionIndex) => {
-            return section.lessons.map((lesson, lessonIndex) => (
-              <TestButton
-                key={`${index}-${sectionIndex}-${lessonIndex}`}
-                questionType={lesson.title}
-                onClick={() => handleButtonClick(roadmap._id, sectionIndex, lessonIndex)}
-              />
-            ));
-          });
-        })}
-      </section>
-    </section>
-  )
-}
+        <input
+          type="file"
+          accept="image/*"
+          capture="environment"
+          onChange={handleFileChange}
+          className="mb-4"
+        />
+        <input
+          type="text"
+          value={message}
+          onChange={handleMessageChange}
+          placeholder="Type your message..."
+          className="w-full mb-4 p-2 border rounded"
+        />
+        <button
+          onClick={handleUpload}
+          disabled={isUploading}
+          className="w-full text-white bg-blue-400 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+        >
+          {isUploading ? 'Uploading...' : 'Send'}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default ChatPage;
