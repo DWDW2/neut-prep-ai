@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import BASE_URL from '@/lib/env';
 
 type RegistrationProps = {
-  onSuccess?: () => Promise<void>
+  onSuccess?: () => void
 }
 
 const RegistrationForm = ({ onSuccess }: RegistrationProps) => {

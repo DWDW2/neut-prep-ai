@@ -16,6 +16,7 @@ interface Lesson {
   rightAnswer: number;
   type: string;
   explanation: string;
+  answer: number;
 }
 
 export type {PayloadCourse, UpdatePayloadCourse, Lesson}

@@ -35,7 +35,7 @@ export default function MathDetailed({ }: Props) {
   const { data: RoadMapMath, isLoading: isLoadingMath, isError: isErrorMath, refetch: refetchRoadmap } = useGetRoadmap()
 
   const handleLessonClick = ({ lessonIndex, sectionIndex, roadmapId, xp, questionType }: handleLesson) => {
-    router.push(`/testing/math/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}`)
+    router.push(`/testing/app/math/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}`)
   }
 
   useEffect(() => {

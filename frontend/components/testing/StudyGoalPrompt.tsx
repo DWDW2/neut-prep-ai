@@ -79,6 +79,7 @@ const StudyPathPrompt = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const { useGenerateRoadmap } = useRoadmapQuery();
+  
   const { mutate, isLoading: roadmapLoading, isError, error, isSuccess } = useGenerateRoadmap();
   const router = useRouter();
 
@@ -91,26 +92,26 @@ const StudyPathPrompt = () => {
     }
   };
 
-  const handleRegistrationSuccess = async () => {
+  const handleRegistrationSuccess = () => {
     setIsModalOpen(false);
     setIsRegistering(true);
     setIsLoading(true);
-    try {
-      const response = await mutate();
-      if (isSuccess) { 
-        router.push('/testing/app/math');
+  
+    mutate(undefined, {
+      onSuccess: () => {
         toast.success('Registered successfully');
-      } else {
+        router.push('/testing/app/math');
+      },
+      onError: (error) => {
         toast.error('Failed to generate roadmaps');
+        console.error(error);
+      },
+      onSettled: () => {
+        setIsLoading(false);
       }
-    } catch (error) {
-      toast.error('An unexpected error occurred');
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
+    });
   };
-
+  
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-white text-gray-900">
       {isRegistering ? (

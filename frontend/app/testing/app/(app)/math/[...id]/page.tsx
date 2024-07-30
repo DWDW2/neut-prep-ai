@@ -42,7 +42,7 @@ export default function MathId({params}: Props) {
     const [showExplanation, setShowExplanation] = useState(false);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [correctAnswers, setCorrectAnswers] = useState(0); 
-
+    console.log(MathRoadmapLesson)
     React.useEffect(() => {
         mutate({lessonIndex, sectionIndex, roadmapType})
     }, [])
@@ -54,7 +54,7 @@ export default function MathId({params}: Props) {
     }
 
     if (fetchError) {
-      router.push('/testing/math')
+      router.push('/testing/app/math')
       return null; 
     }
 
@@ -75,7 +75,7 @@ export default function MathId({params}: Props) {
         };
 
         const handleNextLesson = () => {
-          router.push('/testing/math'); 
+          router.push('/testing/app/math'); 
         };
 
         const calculatePerformance = () => {

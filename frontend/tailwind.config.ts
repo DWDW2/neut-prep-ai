@@ -7,7 +7,9 @@ const {
 } = require("tailwindcss/lib/util/flattenColorPalette");
  
 const config = {
-  darkMode: ["class"],
+  daisyui: {
+    themes: false
+  },
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
