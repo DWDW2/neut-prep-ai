@@ -4,7 +4,7 @@ import { Document } from 'mongoose';
 export interface ILesson extends Document {
   statement: string;
   question: string;
-  options: string[];
+  variants: string[];
   rightAnswer: number;
   type: string;
   explanation: string;
@@ -22,7 +22,7 @@ const lessonSchema: Schema = new Schema(
       {
         statement: { type: String, required: true },
         question: { type: String, required: false },
-        options: { type: [String], required: true },
+        variants: { type: [String], required: true },
         rightAnswer: { type: Number, required: true },
         type: { type: String, required: true },
         explanation: { type: String, required: true },

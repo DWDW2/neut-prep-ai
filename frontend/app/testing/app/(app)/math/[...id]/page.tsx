@@ -117,7 +117,7 @@ export default function MathId({params}: Props) {
               </section>
               <section className='flex flex-col gap-1 px-5'>
                 {   
-                  currentQuestion.options.map((variant, index) => {
+                  currentQuestion.variants.map((variant, index) => {
                     return (
                       <div 
                         key={index} 

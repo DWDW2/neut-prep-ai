@@ -30,9 +30,8 @@ export default function MathId({ params }: Props) {
   const sectionIndex = parseInt(id[1], 10)
   const roadmapId = id[0]
   const type = id[0]
-  const { useGenerateLessonMath, useGenerateLessonCritical } = useCourseApi()
-  const { mutate: mutateMath, isLoading: isLoadingMath, isError: isErrorMath, data: MathRoadmapLesson } = useGenerateLessonMath()
-  const { mutate: mutateCritical, isLoading: isLoadingCritical, isError: isErrorCritical, data: CriticalRoadmapLesson } = useGenerateLessonCritical()
+  const { useGenerateLesson } = useCourseApi()
+  const { mutate, isLoading: isLoadingMath, isError: isErrorMath, data: RoadMapLesson } = useGenerateLesson()
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [showExplanation, setShowExplanation] = useState(false)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -45,20 +44,20 @@ export default function MathId({ params }: Props) {
   
   useEffect(() => {
     if (type === 'math') {
-      mutateMath({ lessonIndex, sectionIndex, roadmapId })
+      mutate({ lessonIndex, sectionIndex, roadmapType: 'math' })
     } else if (type === 'critical') {
-      mutateCritical({ lessonIndex, sectionIndex, roadmapId })
+      mutate({ lessonIndex, sectionIndex, roadmapType: 'critical' })
     }
-  }, [lessonIndex, sectionIndex, roadmapId, mutateMath, mutateCritical, type])
+  }, [lessonIndex, sectionIndex, roadmapId, type, mutate])
 
-  if (isLoadingMath || isLoadingCritical) {
+  if (isLoadingMath) {
     return <Loading />
   }
 
-  if (type === 'math' && MathRoadmapLesson) {
-    const currentQuestion = MathRoadmapLesson[currentQuestionIndex]
+  if (type === 'math' && RoadMapLesson) {
+    const currentQuestion = RoadMapLesson[currentQuestionIndex]
     const questionFormulas = extractFormula(currentQuestion.question)
-    const optionFormulas: string[][] = currentQuestion.options.map(option => extractFormula(option))
+    const optionFormulas: string[][] = currentQuestion.variants.map(option => extractFormula(option))
 
     const isAnswerCorrect = (selectedIndex: number) => {
       return selectedIndex + 1 === currentQuestion.rightAnswer
@@ -83,7 +82,7 @@ export default function MathId({ params }: Props) {
           </section>
           <section className='h-[30%]'>
             {
-              currentQuestion.options.map((variant, index) => {
+              currentQuestion.variants.map((variant, index) => {
                 const formulas = optionFormulas[index]
                 return (
                   <div
@@ -127,7 +126,7 @@ export default function MathId({ params }: Props) {
                     <span className="block sm:inline">{currentQuestion.explanation}</span>
                   </div>
                 )}
-                {currentQuestionIndex < MathRoadmapLesson.length - 1 && (
+                {currentQuestionIndex < RoadMapLesson.length - 1 && (
                   <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2"
                     onClick={() => {
@@ -139,7 +138,7 @@ export default function MathId({ params }: Props) {
                     Next Question
                   </button>
                 )}
-                {currentQuestionIndex === MathRoadmapLesson.length - 1 && (
+                {currentQuestionIndex === RoadMapLesson.length - 1 && (
                   <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2"
                     onClick={() => {
@@ -157,8 +156,8 @@ export default function MathId({ params }: Props) {
         </section>
       </MathJaxContext>
     )
-  } else if (type === 'critical' && CriticalRoadmapLesson) {
-    const currentQuestion = CriticalRoadmapLesson[currentQuestionIndex]
+  } else if (type === 'critical' && RoadMapLesson) {
+    const currentQuestion = RoadMapLesson[currentQuestionIndex]
 
     const isAnswerCorrect = (selectedIndex: number) => {
       return selectedIndex === currentQuestion.rightAnswer
@@ -176,7 +175,7 @@ export default function MathId({ params }: Props) {
         </section>
         <section className='h-[30%]'>
           {
-            currentQuestion.options.map((variant, index) => {
+            currentQuestion.variants.map((variant, index) => {
               return (
                 <div
                   key={index}
@@ -211,7 +210,7 @@ export default function MathId({ params }: Props) {
                   <span className="block sm:inline">{currentQuestion.explanation}</span>
                 </div>
               )}
-              {currentQuestionIndex < CriticalRoadmapLesson.length - 1 && (
+              {currentQuestionIndex < RoadMapLesson.length - 1 && (
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2"
                   onClick={() => {
@@ -223,7 +222,7 @@ export default function MathId({ params }: Props) {
                   Next Question
                 </button>
               )}
-              {currentQuestionIndex === CriticalRoadmapLesson.length - 1 && (
+              {currentQuestionIndex === RoadMapLesson.length - 1 && (
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2"
                   onClick={() => {

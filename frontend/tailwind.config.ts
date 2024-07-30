@@ -104,8 +104,7 @@ const config = {
         },
         { values: flattenColorPalette(theme("backgroundColor")), type: "color" }
       );
-    },
-    require('daisyui')
+    }
   ],
 } satisfies Config
 

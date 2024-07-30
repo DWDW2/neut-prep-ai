@@ -104,7 +104,7 @@ export default function CriticalThinkingId({ params }: Props) {
           <div className='text-black text-xl pb-4'>{currentQuestion.question}</div>
         </section>
         <section className='flex flex-col gap-1 px-5'>
-          {currentQuestion.options.map((variant, index) => (
+          {currentQuestion.variants.map((variant, index) => (
             <div
               key={index}
               className={`flex flex-row gap-4 items-center cursor-pointer border-2 border-slate-200 rounded-lg p-2 ${selectedAnswer === index + 1 ? 'bg-slate-300 text-black' : 'bg-gray-100'}`}
