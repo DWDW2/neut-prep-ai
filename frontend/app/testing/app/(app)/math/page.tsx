@@ -1,49 +1,52 @@
 'use client'
-import { useEffect, useState, useMemo } from "react"
-import dynamic from "next/dynamic"
-import { useRouter } from "next/navigation"
-import { toast, ToastContainer } from 'react-toastify'
+import { useEffect, useState, useMemo } from "react";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import FeedWrapper from "@/components/testing/Feed-sidebar";
+import StickySideBar from "@/components/testing/Sticky-sidebar";
+import UserSideBar from "@/components/testing/XPgained";
+import UserProgress from "@/components/testing/UserProgress";
+import UnitButton from "@/components/testing/LessonButton";
+import UnitSection from "@/components/testing/UnitSection";
+import { useRoadmapQuery } from "@/hooks/useRoadmap";
+import useCourseApi from "@/hooks/useCourse";
+import CongratulationsModal from "@/components/testing/CongratulationsModal";
+import { Roadmap } from "@/types/useRoadmap.types";
 
-import FeedWrapper from "@/components/testing/Feed-sidebar"
-import StickySideBar from "@/components/testing/Sticky-sidebar"
-import UserSideBar from "@/components/testing/XPgained"
-import UserProgress from "@/components/testing/UserProgress"
-import UnitButton from "@/components/testing/LessonButton"
-import UnitSection from "@/components/testing/UnitSection"
-import { useRoadmapQuery } from "@/hooks/useRoadmap"
-import useCourseApi from "@/hooks/useCourse"
+const Loading = dynamic(() => import('@/components/Loading'), { ssr: false });
 
-const Loading = dynamic(() => import('@/components/Loading'), { ssr: false })
-
-type Props = {}
+type Props = {};
 
 interface handleLesson {
   sectionIndex: number,
   lessonIndex: number,
   roadmapId: string;
   xp: number;
-  questionType: string
+  questionType: string;
   locked: boolean;
   lessonContent: string;
 }
 
 export default function MathDetailed({ }: Props) {
-  const router = useRouter()
-  const { useGetRoadmap } = useRoadmapQuery()
-  const { useGetUser, useUpdateStreak} = useCourseApi()
-  const { data: user } = useGetUser()
-  const [isLessonActive, setLessonActive] = useState(false)
-  const { data: RoadMapMath, isLoading: isLoadingMath, isError: isErrorMath, refetch: refetchRoadmap } = useGetRoadmap()
-  const { mutate: mutateStreak } = useUpdateStreak()
+  const router = useRouter();
+  const { useGetRoadmap } = useRoadmapQuery();
+  const { useGetUser, useUpdateStreak, useUpdateXp } = useCourseApi();
+  const { data: user } = useGetUser();
+  const { data: updatedXp } = useUpdateXp();
+  const [isLessonActive, setLessonActive] = useState(false);
+  const [showModal, setShowModal] = useState(false); 
+  const { data: RoadMapMath, isLoading: isLoadingMath, isError: isErrorMath, refetch: refetchRoadmap } = useGetRoadmap();
+  const { mutate: mutateStreak } = useUpdateStreak();
 
   const handleLessonClick = ({ lessonIndex, sectionIndex, roadmapId, xp, questionType, locked, lessonContent }: handleLesson) => {
     if (!locked) {
-      router.push(`/testing/app/math/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}/${lessonContent ? lessonContent : ''}`)
+      router.push(`/testing/app/math/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}/${lessonContent ? lessonContent : ''}`);
     } else {
-      toast.info('Complete previous lessons to unlock this one')
+      toast.info('Complete previous lessons to unlock this one');
     }
-  }
+  };
 
   useEffect(() => {
     if (user?.roadmapMathId !== null) {
@@ -64,30 +67,39 @@ export default function MathDetailed({ }: Props) {
     }
   }, [user, mutateStreak]);
 
-  console.log(RoadMapMath?.mathRoadmap.roadmap[0])
+  useEffect(() => {
+    if (user?.todaysXp! >= 20) { 
+      setShowModal(true);
+    }
+  }, [user]);
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   const roadmapContent = useMemo(() => {
     if (!RoadMapMath?.mathRoadmap?.roadmap) return null;
     return RoadMapMath.mathRoadmap.roadmap.map((section, index) => (
       <div key={index}>
         <UnitSection Unit={section.unit} UnitName={section.section} />
         {section.lessons.map((lesson, lessonIndex) => (
-          <UnitButton 
+          <UnitButton
             locked={lesson.locked}
             isCurrent={lesson.isCurrent}
             maxValue={lesson.xp}
             finished={lesson.finished}
             xp={lesson.xpGained}
-            key={lessonIndex} 
-            index={lessonIndex} 
-            totalCount={section.lessons.length} 
-            onClick={() => handleLessonClick({ roadmapId: RoadMapMath.mathRoadmap._id, sectionIndex: index, lessonIndex, xp: lesson.xp, questionType: section.questionType, locked: lesson.locked, lessonContent: lesson.lessonContent})} 
+            key={lessonIndex}
+            index={lessonIndex}
+            totalCount={section.lessons.length}
+            onClick={() => handleLessonClick({ roadmapId: RoadMapMath.mathRoadmap._id, sectionIndex: index, lessonIndex, xp: lesson.xp, questionType: section.questionType, locked: lesson.locked, lessonContent: lesson.lessonContent })}
           />
         ))}
       </div>
     ));
   }, [RoadMapMath]);
 
-  if (isLoadingMath) return <Loading />
+  if (isLoadingMath) return <Loading />;
 
   if (isErrorMath) {
     toast.error('An error occurred while loading the lesson. Please try again.');
@@ -107,6 +119,7 @@ export default function MathDetailed({ }: Props) {
         </section>
       </FeedWrapper>
       <ToastContainer />
+      <CongratulationsModal show={showModal} onClose={closeModal} xp={user?.todaysXp || 0} /> 
     </div>
-  )
+  );
 }

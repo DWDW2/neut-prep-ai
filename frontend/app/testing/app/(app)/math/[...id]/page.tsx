@@ -67,6 +67,7 @@ export default function MathId({ params }: Props) {
   const [correctAnswers, setCorrectAnswers] = useState(0)
   const [lesson, setLesson] = useState<MathRoadmapLessonType>([])
   const [userAnswers, setUserAnswers] = useState<number[]>([])
+  const [showNextButton, setShowNextButton] = useState(false);
   console.log(userAnswers)
   
   useEffect(() => {
@@ -177,40 +178,20 @@ export default function MathId({ params }: Props) {
           {currentQuestion.variants.map((variant, index) => (
             <div
               key={index}
-              className={`flex flex-row gap-4 items-center cursor-pointer border-2 border-slate-200 rounded-lg p-2 ${
-                selectedAnswer === index ? 'bg-slate-300 text-black' : 'bg-gray-100'
+              className={`flex flex-row gap-4 items-center cursor-pointer border-2 border-b-4 active:border-b-2 border-slate-300 rounded-lg p-2 ${
+                selectedAnswer === index ? 'bg-sky-100 border-sky-300 text-black' : 'bg-slate-100'
               }`}
               onClick={() => setSelectedAnswer(index)}
             >
               <div className='text-lg font-bold'>
-                <MathJax inline>{variant}</MathJax>
+                <MathJax inline>{variant}</MathJax> 
               </div>
             </div>
           ))}
         </section>
-        <section className='px-5 mt-5 flex flex-row gap-4'>
-          {selectedAnswer !== null && (
-            <>
-              <button
-                className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
-                onClick={handleCheckAnswer}
-              >
-                Check Answer
-              </button>
-              {currentQuestionIndex < lesson.length - 1 && (
-                <button
-                  className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
-                  onClick={handleNextQuestion}
-                >
-                  Next Question
-                </button>
-              )}
-            </>
-          )}
-        </section>
-        <section className='px-5 mt-5'>
+        <section className='px-5 mt-5 flex flex-col gap-4'>
           {showExplanation && (
-            <div className='mt-4'>
+            <div className='bg-gray-100 border border-gray-400 p-4 rounded'>
               {selectedAnswer === (typeof currentQuestion.rightAnswer === 'string'
                 ? parseInt(currentQuestion.rightAnswer, 10)
                 : currentQuestion.rightAnswer) ? (
@@ -233,18 +214,38 @@ export default function MathId({ params }: Props) {
               )}
             </div>
           )}
-          {currentQuestionIndex === lesson.length - 1 && (
-            <button
-              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
-              onClick={() => {
-                sendXPAndQuestionType()
-                handleNextLesson()
-              }}
-            >
-              Finish Lesson
-            </button>
-          )}
+          <section className='flex flex-row gap-4'>
+            {selectedAnswer !== null && (
+              <>
+                <button
+                  className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline max-[800px]:w-full max-[800px]:text-center max-[800px]:mb-2 max-[800px]:mx-2 ${showExplanation ? 'hidden' : ''}`}
+                  onClick={handleCheckAnswer}
+                >
+                  Check Answer
+                </button>
+                {currentQuestionIndex < lesson.length - 1 && (
+                  <button
+                    className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline max-[800px]:${showExplanation ? 'w-full text-center mb-2 mx-2' : 'hidden'} `}
+                    onClick={handleNextQuestion}
+                  >
+                    Next Question
+                  </button>
+                )}
+              </>
+            )}
+          </section>
         </section>
+        {currentQuestionIndex === lesson.length - 1 && (
+          <button
+            className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4'
+            onClick={() => {
+              sendXPAndQuestionType()
+              handleNextLesson()
+            }}
+          >
+            Finish Lesson
+          </button>
+        )}
       </section>
     </MathJaxContext>
   )

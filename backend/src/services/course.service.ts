@@ -280,11 +280,7 @@ export default class CourseService {
         console.log('User not found');
         return null;
       }
-      const today = new Date().toISOString().split('T')[0];
-      if(user.lastActivityDate.toISOString().split('T')[0] === today){
-        user.todaysXp = 0;
-        await user.save()
-      }
+      
       console.log(user);
       return user;
     } catch (error) {

@@ -1,0 +1,1289 @@
+{
+    "_id": {
+      "$oid": "66a9cfec3b7838403f67ff58"
+    },
+    "roadmap": [
+      {
+        "section": "Argument Analysis",
+        "unit": "Critical Reasoning",
+        "questionType": "Which one of the following is an expression of the main conclusion of the above argument?",
+        "lessons": [
+          {
+            "title": "Introduction to Arguments",
+            "description": "Learn the fundamental components of an argument, including premises, conclusions, and the relationship between them.",
+            "difficulty": "easy",
+            "xp": 10,
+            "finished": false,
+            "locked": false,
+            "isCurrent": true,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff5a"
+            }
+          },
+          {
+            "title": "Identifying Premises and Conclusions",
+            "description": "Develop skills in distinguishing premises from conclusions in a given argument.",
+            "difficulty": "medium",
+            "xp": 20,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff5b"
+            }
+          },
+          {
+            "title": "Main Conclusion Identification",
+            "description": "Focus on identifying the main conclusion of an argument, recognizing the key point being supported by the premises.",
+            "difficulty": "medium",
+            "xp": 25,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff5c"
+            }
+          },
+          {
+            "title": "Distinguishing Main Conclusions from Sub-Conclusions",
+            "description": "Learn to differentiate between sub-conclusions (intermediate conclusions within an argument) and the ultimate main conclusion.",
+            "difficulty": "hard",
+            "xp": 30,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff5d"
+            }
+          },
+          {
+            "title": "Analyzing Complex Arguments",
+            "description": "Practice identifying the main conclusion in arguments with multiple premises and sub-conclusions.",
+            "difficulty": "hard",
+            "xp": 35,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff5e"
+            }
+          },
+          {
+            "title": "Recognizing Implicit Conclusions",
+            "description": "Develop skills in identifying conclusions that are not explicitly stated but are implied by the premises.",
+            "difficulty": "hard",
+            "xp": 40,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff5f"
+            }
+          },
+          {
+            "title": "Practice with Real-World Examples",
+            "description": "Apply the concepts of main conclusion identification to real-world arguments and passages.",
+            "difficulty": "medium",
+            "xp": 25,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff60"
+            }
+          },
+          {
+            "title": "Review and Feedback",
+            "description": "Review common pitfalls and strategies for effectively identifying main conclusions.",
+            "difficulty": "easy",
+            "xp": 10,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff61"
+            }
+          },
+          {
+            "title": "Mock Exams and Strategies",
+            "description": "Practice with mock exams and develop effective strategies for tackling this question type.",
+            "difficulty": "hard",
+            "xp": 40,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff62"
+            }
+          }
+        ],
+        "_id": {
+          "$oid": "66a9cfec3b7838403f67ff59"
+        }
+      },
+      {
+        "section": "Flawed Arguments",
+        "unit": "Critical Reasoning",
+        "questionType": "Which one of the following is the best statement of the flaw in the above argument?",
+        "lessons": [
+          {
+            "title": "Introduction to Flawed Arguments",
+            "description": "Learn the basic concepts of argument flaws, including common logical fallacies and weaknesses in reasoning.",
+            "difficulty": "easy",
+            "xp": 10,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff64"
+            }
+          },
+          {
+            "title": "Identifying Flawed Arguments",
+            "description": "Practice recognizing different types of argument flaws, such as faulty generalizations, appeals to emotion, and irrelevant premises.",
+            "difficulty": "medium",
+            "xp": 20,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff65"
+            }
+          },
+          {
+            "title": "Understanding Flaw Categories",
+            "description": "Explore common categories of argument flaws, such as causal fallacies, statistical fallacies, and ad hominem attacks.",
+            "difficulty": "medium",
+            "xp": 25,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff66"
+            }
+          },
+          {
+            "title": "Analyzing Flawed Arguments",
+            "description": "Develop strategies for breaking down complex arguments and identifying specific flaws in their structure or reasoning.",
+            "difficulty": "hard",
+            "xp": 30,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff67"
+            }
+          },
+          {
+            "title": "Evaluating Flaw Statements",
+            "description": "Practice evaluating statements that describe flaws in arguments and determining which statement best captures the key weakness.",
+            "difficulty": "hard",
+            "xp": 35,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff68"
+            }
+          }
+        ],
+        "_id": {
+          "$oid": "66a9cfec3b7838403f67ff63"
+        }
+      },
+      {
+        "section": "Inference and Conclusion",
+        "unit": "Reading Comprehension",
+        "questionType": "Which one of the following is a conclusion that can reliably be drawn from the above passage?",
+        "lessons": [
+          {
+            "title": "Introduction to Inference and Conclusion",
+            "description": "Learn the difference between stated facts and inferences, understand the concept of drawing conclusions, and explore the relationship between evidence and conclusions.",
+            "difficulty": "easy",
+            "xp": 10,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff6a"
+            }
+          },
+          {
+            "title": "Identifying Key Information",
+            "description": "Develop skills to identify relevant information from a passage, focusing on key details and supporting evidence.",
+            "difficulty": "medium",
+            "xp": 20,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff6b"
+            }
+          },
+          {
+            "title": "Drawing Logical Inferences",
+            "description": "Practice drawing inferences from given information, understanding how to connect ideas and form logical conclusions.",
+            "difficulty": "medium",
+            "xp": 25,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff6c"
+            }
+          },
+          {
+            "title": "Evaluating Conclusion Strength",
+            "description": "Learn to assess the strength of a conclusion based on the provided evidence, recognizing weak inferences and unsupported claims.",
+            "difficulty": "hard",
+            "xp": 30,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff6d"
+            }
+          },
+          {
+            "title": "Distinguishing Conclusions from Assumptions",
+            "description": "Understand the difference between conclusions drawn from evidence and assumptions made without explicit support.",
+            "difficulty": "hard",
+            "xp": 35,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff6e"
+            }
+          },
+          {
+            "title": "Practice with Passage-Based Questions",
+            "description": "Engage in hands-on practice with various passages, applying inference and conclusion skills to answer different question formats.",
+            "difficulty": "medium",
+            "xp": 25,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff6f"
+            }
+          },
+          {
+            "title": "Review and Feedback on Common Mistakes",
+            "description": "Analyze common errors made in drawing conclusions and develop strategies to avoid them.",
+            "difficulty": "easy",
+            "xp": 15,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff70"
+            }
+          },
+          {
+            "title": "Mock Exams and Strategy Review",
+            "description": "Take mock exams specifically focusing on conclusion-based questions, reviewing strategies and identifying areas for improvement.",
+            "difficulty": "hard",
+            "xp": 40,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff71"
+            }
+          }
+        ],
+        "_id": {
+          "$oid": "66a9cfec3b7838403f67ff69"
+        }
+      },
+      {
+        "section": "Assumptions",
+        "unit": "Critical Reasoning",
+        "questionType": "Which one of the following is an underlying assumption of the above argument?",
+        "lessons": [
+          {
+            "title": "Introduction to Assumptions",
+            "description": "Learn the definition of an assumption in argumentation, and how assumptions are related to premises and conclusions.",
+            "difficulty": "easy",
+            "xp": 10,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff73"
+            }
+          },
+          {
+            "title": "Identifying Necessary Assumptions",
+            "description": "Develop strategies for identifying assumptions that are essential for an argument's conclusion to be true.",
+            "difficulty": "medium",
+            "xp": 20,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff74"
+            }
+          },
+          {
+            "title": "Assumption Types",
+            "description": "Explore different types of assumptions, including causal assumptions, statistical assumptions, and value assumptions.",
+            "difficulty": "medium",
+            "xp": 25,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff75"
+            }
+          },
+          {
+            "title": "Assumption Negation Technique",
+            "description": "Learn how to negate an assumption and test its validity by examining the argument's conclusion.",
+            "difficulty": "hard",
+            "xp": 30,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff76"
+            }
+          },
+          {
+            "title": "Strengthening and Weakening Assumptions",
+            "description": "Understand how assumptions can strengthen or weaken arguments, and how to identify statements that support or refute assumptions.",
+            "difficulty": "hard",
+            "xp": 35,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff77"
+            }
+          }
+        ],
+        "_id": {
+          "$oid": "66a9cfec3b7838403f67ff72"
+        }
+      },
+      {
+        "section": "Weakening Arguments",
+        "unit": "Critical Reasoning",
+        "questionType": "Which one of the following, if true, would most weaken the above argument?",
+        "lessons": [
+          {
+            "title": "Introduction to Argument Weakening",
+            "description": "Understand the concept of weakening an argument by identifying flaws in its logic or evidence.",
+            "difficulty": "easy",
+            "xp": 10,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff79"
+            }
+          },
+          {
+            "title": "Identifying Assumptions and Counterarguments",
+            "description": "Learn to identify underlying assumptions in an argument and construct counterarguments that challenge these assumptions.",
+            "difficulty": "medium",
+            "xp": 20,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff7a"
+            }
+          },
+          {
+            "title": "Types of Weakening Arguments",
+            "description": "Explore different strategies for weakening arguments, including attacking premises, introducing alternative explanations, and highlighting logical fallacies.",
+            "difficulty": "medium",
+            "xp": 25,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff7b"
+            }
+          },
+          {
+            "title": "Evaluating the Strength of Weakening Arguments",
+            "description": "Analyze the effectiveness of different weakening arguments and determine which ones are most impactful.",
+            "difficulty": "hard",
+            "xp": 30,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff7c"
+            }
+          },
+          {
+            "title": "Practice Weakening Arguments",
+            "description": "Engage in practice exercises to identify weaknesses in given arguments and construct effective counterarguments.",
+            "difficulty": "hard",
+            "xp": 35,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff7d"
+            }
+          },
+          {
+            "title": "Common Weakening Techniques",
+            "description": "Review common techniques used to weaken arguments, including introducing new information, challenging the relevance of evidence, and demonstrating alternative interpretations.",
+            "difficulty": "medium",
+            "xp": 20,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff7e"
+            }
+          },
+          {
+            "title": "Analyzing Real-World Examples",
+            "description": "Apply the principles of weakening arguments to real-world examples from news articles, editorials, and debates.",
+            "difficulty": "hard",
+            "xp": 30,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff7f"
+            }
+          },
+          {
+            "title": "Mastering the Weakening Question Type",
+            "description": "Consolidate your understanding of weakening arguments and develop a strategic approach to answering this question type.",
+            "difficulty": "hard",
+            "xp": 40,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff80"
+            }
+          }
+        ],
+        "_id": {
+          "$oid": "66a9cfec3b7838403f67ff78"
+        }
+      },
+      {
+        "section": "Flawed Arguments",
+        "unit": "Critical Reasoning",
+        "questionType": "Which one of the following best identifies the flaw in the above reasoning?",
+        "lessons": [
+          {
+            "title": "Introduction to Flawed Arguments",
+            "description": "Understand the concept of logical fallacies and how they weaken arguments.",
+            "difficulty": "easy",
+            "xp": 10,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff82"
+            }
+          },
+          {
+            "title": "Common Logical Fallacies",
+            "description": "Learn to identify and explain various common fallacies such as ad hominem, appeal to authority, and false dichotomy.",
+            "difficulty": "medium",
+            "xp": 20,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff83"
+            }
+          },
+          {
+            "title": "Analyzing Argument Structures",
+            "description": "Break down complex arguments to identify premises, conclusions, and hidden assumptions.",
+            "difficulty": "medium",
+            "xp": 25,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff84"
+            }
+          },
+          {
+            "title": "Identifying Flawed Reasoning",
+            "description": "Practice recognizing the specific flaw in a given argument and explaining why it weakens the argument.",
+            "difficulty": "hard",
+            "xp": 30,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff85"
+            }
+          },
+          {
+            "title": "Strengthening and Weakening Arguments",
+            "description": "Learn how to strengthen or weaken arguments by addressing their flaws and identifying missing information.",
+            "difficulty": "hard",
+            "xp": 35,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff86"
+            }
+          }
+        ],
+        "_id": {
+          "$oid": "66a9cfec3b7838403f67ff81"
+        }
+      },
+      {
+        "section": "Identifying True and False Statements",
+        "unit": "Critical Reasoning",
+        "questionType": "Which one of the following statements is not true?",
+        "lessons": [
+          {
+            "title": "Introduction to True/False Statements",
+            "description": "Learn the fundamental concepts of truth and falsity in arguments and how to evaluate statements for accuracy.",
+            "difficulty": "easy",
+            "xp": 10,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff88"
+            }
+          },
+          {
+            "title": "Identifying Key Concepts",
+            "description": "Practice identifying the key elements of a statement that determine its truth or falsity.",
+            "difficulty": "medium",
+            "xp": 15,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff89"
+            }
+          },
+          {
+            "title": "Analyzing Arguments for Accuracy",
+            "description": "Develop strategies for breaking down arguments and identifying statements that are not true based on the given information.",
+            "difficulty": "medium",
+            "xp": 20,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff8a"
+            }
+          },
+          {
+            "title": "Common Fallacies and Misleading Statements",
+            "description": "Learn to recognize common fallacies and misleading language that can lead to false statements.",
+            "difficulty": "hard",
+            "xp": 25,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff8b"
+            }
+          },
+          {
+            "title": "Practice with Real-World Examples",
+            "description": "Apply your skills to real-world examples of arguments and identify statements that are not true in various contexts.",
+            "difficulty": "hard",
+            "xp": 30,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff8c"
+            }
+          }
+        ],
+        "_id": {
+          "$oid": "66a9cfec3b7838403f67ff87"
+        }
+      },
+      {
+        "section": "Inference and Conclusion",
+        "unit": "Reading Comprehension",
+        "questionType": "Which one of the following conclusions can reliably be drawn from the above passage?",
+        "lessons": [
+          {
+            "title": "Introduction to Inference",
+            "description": "Understanding the concept of inference and how it relates to drawing conclusions from given information.",
+            "difficulty": "easy",
+            "xp": 10,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff8e"
+            }
+          },
+          {
+            "title": "Identifying Explicit and Implicit Information",
+            "description": "Learning to differentiate between stated information in a passage and implied information that can be inferred.",
+            "difficulty": "medium",
+            "xp": 15,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff8f"
+            }
+          },
+          {
+            "title": "Drawing Logical Conclusions",
+            "description": "Developing skills in drawing conclusions that are logically supported by the passage, avoiding assumptions and biases.",
+            "difficulty": "medium",
+            "xp": 20,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff90"
+            }
+          },
+          {
+            "title": "Recognizing Supporting Evidence",
+            "description": "Practice identifying the specific evidence within a passage that supports a particular conclusion.",
+            "difficulty": "hard",
+            "xp": 25,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff91"
+            }
+          },
+          {
+            "title": "Evaluating Conclusion Validity",
+            "description": "Assessing the strength and reliability of conclusions drawn from a passage, considering potential flaws and limitations.",
+            "difficulty": "hard",
+            "xp": 30,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff92"
+            }
+          }
+        ],
+        "_id": {
+          "$oid": "66a9cfec3b7838403f67ff8d"
+        }
+      },
+      {
+        "section": "Flawed Arguments",
+        "unit": "Critical Reasoning",
+        "questionType": "Which one of the following is the best expression of the flaw in the above argument?",
+        "lessons": [
+          {
+            "title": "Introduction to Flawed Arguments",
+            "description": "Learn about common fallacies and logical errors that weaken arguments. Understand the concept of a 'flaw' in an argument.",
+            "difficulty": "easy",
+            "xp": 10,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff94"
+            }
+          },
+          {
+            "title": "Identifying Logical Fallacies",
+            "description": "Explore different types of fallacies like ad hominem, appeal to authority, false dilemma, and hasty generalization. Practice identifying these fallacies in arguments.",
+            "difficulty": "medium",
+            "xp": 20,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff95"
+            }
+          },
+          {
+            "title": "Analyzing Argument Structure for Flaws",
+            "description": "Learn how to analyze the structure of an argument to identify weaknesses and gaps in reasoning. Practice breaking down arguments into premises and conclusions.",
+            "difficulty": "medium",
+            "xp": 25,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff96"
+            }
+          },
+          {
+            "title": "Evaluating Flawed Arguments",
+            "description": "Learn how to assess the strength of an argument's conclusion based on the presence of fallacies and logical errors. Practice identifying the most serious flaw in an argument.",
+            "difficulty": "hard",
+            "xp": 30,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff97"
+            }
+          },
+          {
+            "title": "Expressing the Flaw in Words",
+            "description": "Learn how to clearly and concisely articulate the flaw in an argument in your own words. Practice summarizing the flaw using precise language.",
+            "difficulty": "hard",
+            "xp": 35,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff98"
+            }
+          }
+        ],
+        "_id": {
+          "$oid": "66a9cfec3b7838403f67ff93"
+        }
+      },
+      {
+        "section": "Parallel Reasoning",
+        "unit": "Critical Reasoning",
+        "questionType": "Which one of the following most closely parallels the reasoning used in the above argument?",
+        "lessons": [
+          {
+            "title": "Introduction to Parallel Reasoning",
+            "description": "Understand the concept of parallel reasoning and its role in critical reasoning. Learn to identify the logical structure of arguments.",
+            "difficulty": "easy",
+            "xp": 10,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff9a"
+            }
+          },
+          {
+            "title": "Analyzing Argument Structure",
+            "description": "Develop skills in identifying premises, conclusions, and the logical relationship between them. Practice breaking down complex arguments into their core components.",
+            "difficulty": "medium",
+            "xp": 20,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff9b"
+            }
+          },
+          {
+            "title": "Identifying Parallel Reasoning Patterns",
+            "description": "Learn to recognize common reasoning patterns, such as analogy, cause and effect, and generalization. Practice identifying the key elements that make arguments analogous.",
+            "difficulty": "medium",
+            "xp": 25,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff9c"
+            }
+          },
+          {
+            "title": "Distinguishing Valid and Invalid Analogies",
+            "description": "Understand the criteria for a valid analogy and how to differentiate between strong and weak analogies. Analyze arguments for logical fallacies and biases.",
+            "difficulty": "hard",
+            "xp": 30,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff9d"
+            }
+          },
+          {
+            "title": "Applying Parallel Reasoning Strategies",
+            "description": "Practice applying the principles of parallel reasoning to solve various question types. Learn to identify the best answer choice that mirrors the reasoning of the original argument.",
+            "difficulty": "hard",
+            "xp": 35,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ff9e"
+            }
+          }
+        ],
+        "_id": {
+          "$oid": "66a9cfec3b7838403f67ff99"
+        }
+      },
+      {
+        "section": "Argument Structure",
+        "unit": "Critical Reasoning",
+        "questionType": "Which one of the following identifies the principle underlying the above argument?",
+        "lessons": [
+          {
+            "title": "Introduction to Argument Structure",
+            "description": "Learn the basic components of an argument, including premises, conclusion, and underlying principles.",
+            "difficulty": "easy",
+            "xp": 10,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffa0"
+            }
+          },
+          {
+            "title": "Identifying Premises and Conclusions",
+            "description": "Practice identifying the premises and conclusion within a given argument.",
+            "difficulty": "medium",
+            "xp": 20,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffa1"
+            }
+          },
+          {
+            "title": "Unstated Premises and Conclusions",
+            "description": "Develop skills in identifying implicit premises and conclusions that are not explicitly stated in the argument.",
+            "difficulty": "medium",
+            "xp": 25,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffa2"
+            }
+          },
+          {
+            "title": "Principles Underlying Arguments",
+            "description": "Explore the concept of underlying principles and how they connect premises to conclusions.",
+            "difficulty": "medium",
+            "xp": 30,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffa3"
+            }
+          },
+          {
+            "title": "Identifying Principles in Arguments",
+            "description": "Practice identifying the principle that best explains the relationship between the premises and conclusion of a given argument.",
+            "difficulty": "hard",
+            "xp": 35,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffa4"
+            }
+          },
+          {
+            "title": "Evaluating Principles and Arguments",
+            "description": "Assess the strength and validity of arguments based on the underlying principles they rely on.",
+            "difficulty": "hard",
+            "xp": 40,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffa5"
+            }
+          },
+          {
+            "title": "Practice with Principle-Based Arguments",
+            "description": "Engage in practice exercises to reinforce understanding of identifying and applying principles in arguments.",
+            "difficulty": "hard",
+            "xp": 45,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffa6"
+            }
+          },
+          {
+            "title": "Review and Feedback",
+            "description": "Recap key concepts related to identifying principles in arguments and review common mistakes.",
+            "difficulty": "easy",
+            "xp": 10,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffa7"
+            }
+          },
+          {
+            "title": "Mock Exams and Strategies",
+            "description": "Practice with mock exams and develop strategies for effectively identifying principles in arguments under timed conditions.",
+            "difficulty": "hard",
+            "xp": 50,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffa8"
+            }
+          }
+        ],
+        "_id": {
+          "$oid": "66a9cfec3b7838403f67ff9f"
+        }
+      },
+      {
+        "section": "Conclusion Identification",
+        "unit": "Reading Comprehension",
+        "questionType": "Which one of the following conclusions can be drawn from the above passage?",
+        "lessons": [
+          {
+            "title": "Introduction to Conclusions",
+            "description": "Understanding the concept of conclusions in a passage, their role, and how they relate to the main idea.",
+            "difficulty": "easy",
+            "xp": 10,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffaa"
+            }
+          },
+          {
+            "title": "Identifying Explicit Conclusions",
+            "description": "Recognizing explicitly stated conclusions in a passage.",
+            "difficulty": "easy",
+            "xp": 15,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffab"
+            }
+          },
+          {
+            "title": "Inferring Implicit Conclusions",
+            "description": "Drawing logical conclusions from the information presented in the passage, even if they are not directly stated.",
+            "difficulty": "medium",
+            "xp": 20,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffac"
+            }
+          },
+          {
+            "title": "Distinguishing Supporting Details from Conclusions",
+            "description": "Differentiating between factual information and the main points the author is trying to convey.",
+            "difficulty": "medium",
+            "xp": 25,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffad"
+            }
+          },
+          {
+            "title": "Analyzing Argument Structure and Identifying Conclusions",
+            "description": "Analyzing the structure of the passage to identify the logical flow and the main conclusion.",
+            "difficulty": "hard",
+            "xp": 30,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffae"
+            }
+          },
+          {
+            "title": "Evaluating Conclusion Strength and Validity",
+            "description": "Assessing the strength of the conclusion based on the supporting evidence and its logical coherence.",
+            "difficulty": "hard",
+            "xp": 35,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffaf"
+            }
+          }
+        ],
+        "_id": {
+          "$oid": "66a9cfec3b7838403f67ffa9"
+        }
+      },
+      {
+        "section": "Inference and Conclusion",
+        "unit": "Reading Comprehension",
+        "questionType": "Which one of the following is a conclusion that can be drawn from the above passage?",
+        "lessons": [
+          {
+            "title": "Introduction to Inference and Conclusion",
+            "description": "Understanding the difference between explicit statements and implicit inferences. Learn how to identify key information and draw logical conclusions based on the passage.",
+            "difficulty": "easy",
+            "xp": 10,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffb1"
+            }
+          },
+          {
+            "title": "Types of Conclusions",
+            "description": "Explore different types of conclusions, such as direct conclusions, implied conclusions, and inferences based on evidence.",
+            "difficulty": "medium",
+            "xp": 15,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffb2"
+            }
+          },
+          {
+            "title": "Identifying Supporting Evidence",
+            "description": "Practice identifying the specific evidence within the passage that supports a particular conclusion. Learn to distinguish between strong and weak evidence.",
+            "difficulty": "medium",
+            "xp": 20,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffb3"
+            }
+          },
+          {
+            "title": "Evaluating Conclusion Strength",
+            "description": "Analyze conclusions to assess their validity and logical soundness. Recognize common fallacies and biases that can weaken conclusions.",
+            "difficulty": "hard",
+            "xp": 25,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffb4"
+            }
+          },
+          {
+            "title": "Practice with Passage Sets",
+            "description": "Apply the learned concepts to a variety of passages and practice drawing accurate and justifiable conclusions from different types of text.",
+            "difficulty": "hard",
+            "xp": 30,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffb5"
+            }
+          },
+          {
+            "title": "Common Mistakes and Strategies",
+            "description": "Review common pitfalls in drawing conclusions, including overgeneralization, assumption, and misinterpretation. Develop effective strategies to avoid these mistakes.",
+            "difficulty": "hard",
+            "xp": 35,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffb6"
+            }
+          },
+          {
+            "title": "Mock Exams and Review",
+            "description": "Simulate real exam conditions and practice answering a variety of 'Which one of the following is a conclusion...' questions. Review common mistakes and reinforce key concepts.",
+            "difficulty": "hard",
+            "xp": 40,
+            "finished": false,
+            "locked": true,
+            "isCurrent": false,
+            "xpGained": 0,
+            "lessonContent": null,
+            "_id": {
+              "$oid": "66a9cfec3b7838403f67ffb7"
+            }
+          }
+        ],
+        "_id": {
+          "$oid": "66a9cfec3b7838403f67ffb0"
+        }
+      }
+    ],
+    "userId": {
+      "$oid": "66a9cfde3b7838403f67fee4"
+    },
+    "__v": 0
+  }

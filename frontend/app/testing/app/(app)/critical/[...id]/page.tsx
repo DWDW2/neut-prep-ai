@@ -11,11 +11,11 @@ interface Question {
   statement: string
   question: string
   variants: string[]
-  rightAnswer: number // rightAnswer should be an index
+  rightAnswer: number | string
   explanation: string
 }
 
-type CriticalThinkingRoadmapLessonType = Question[]
+type CriticalRoadmapLessonType = Question[]
 
 type Props = {
   params: { id: string[] }
@@ -64,10 +64,10 @@ export default function CriticalId({ params }: Props) {
   const [showExplanation, setShowExplanation] = useState(false)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [correctAnswers, setCorrectAnswers] = useState(0)
-  const [lesson, setLesson] = useState<CriticalThinkingRoadmapLessonType>([])
+  const [lesson, setLesson] = useState<CriticalRoadmapLessonType>([])
   const [userAnswers, setUserAnswers] = useState<number[]>([])
-  const [answerChecked, setAnswerChecked] = useState(false)
-  console.log(userAnswers)
+  const [showNextButton, setShowNextButton] = useState(false);
+  
   useEffect(() => {
     const fetchLesson = async () => {
       if (lessonContent) {
@@ -82,9 +82,9 @@ export default function CriticalId({ params }: Props) {
 
   useEffect(() => {
     if (lessonContent && lessonData) {
-      setLesson(lessonData as CriticalThinkingRoadmapLessonType)
+      setLesson(lessonData as CriticalRoadmapLessonType)
     } else if (generatedLesson) {
-      setLesson(generatedLesson as CriticalThinkingRoadmapLessonType)
+      setLesson(generatedLesson as CriticalRoadmapLessonType)
     }
   }, [lessonContent, lessonData, generatedLesson])
 
@@ -112,12 +112,13 @@ export default function CriticalId({ params }: Props) {
   const currentQuestion = lesson[currentQuestionIndex]
 
   const handleCheckAnswer = () => {
-    setShowExplanation(true)
-    setAnswerChecked(true)
-
-    // Check if selectedAnswer matches rightAnswer index
-    if (selectedAnswer === currentQuestion.rightAnswer) {
-      setCorrectAnswers(correctAnswers + 1)
+    setShowExplanation(true);    
+    const rightAnswerNumber = typeof currentQuestion.rightAnswer === 'string'
+      ? parseInt(currentQuestion.rightAnswer, 10)
+      : currentQuestion.rightAnswer;
+    
+    if (selectedAnswer === rightAnswerNumber) {
+      setCorrectAnswers(correctAnswers + 1);
     }
   }
 
@@ -125,7 +126,6 @@ export default function CriticalId({ params }: Props) {
     setCurrentQuestionIndex(currentQuestionIndex + 1)
     setSelectedAnswer(null)
     setShowExplanation(false)
-    setAnswerChecked(false)
   }
 
   const handleNextLesson = async () => {
@@ -160,70 +160,87 @@ export default function CriticalId({ params }: Props) {
   return (
     <section className='flex flex-col h-screen justify-between p-10 max-[800px]:p-4'>
       <section className='px-5'>
-        <div className='text-2xl font-bold pb-4'>{currentQuestion.statement}</div>
-        <div className='text-black text-xl pb-4'>{currentQuestion.question}</div>
+        <div className='text-2xl font-bold pb-4'>
+          {currentQuestion.statement}
+        </div>
+        <div className='text-black text-xl pb-4'>
+          {currentQuestion.question.split('\n').map((line, index) => (
+            <div key={index}>{line}</div>
+          ))}
+        </div>
       </section>
       <section className='flex flex-col gap-1 px-5'>
         {currentQuestion.variants.map((variant, index) => (
           <div
             key={index}
-            className={`flex flex-row gap-4 items-center cursor-pointer border-2 border-slate-200 rounded-lg p-2 ${selectedAnswer === index ? 'bg-slate-300 text-black' : 'bg-gray-100'}`}
+            className={`flex flex-row gap-4 items-center cursor-pointer border-2 border-b-4 active:border-b-2 border-slate-300 rounded-lg p-2 ${
+              selectedAnswer === index ? 'bg-sky-100 border-sky-300 text-black' : 'bg-slate-100'
+            }`}
             onClick={() => setSelectedAnswer(index)}
           >
-            <div className='text-lg font-bold'>{variant}</div>
+            <div className='text-lg font-bold'>
+              {variant} 
+            </div>
           </div>
         ))}
       </section>
-      <section className='px-5 mt-5 flex flex-row gap-4'>
-        {selectedAnswer !== null && (
-          <>
-            {!answerChecked ? (
+      <section className='px-5 mt-5 flex flex-col gap-4'>
+        {showExplanation && (
+          <div className='bg-gray-100 border border-gray-400 p-4 rounded'>
+            {selectedAnswer === (typeof currentQuestion.rightAnswer === 'string'
+              ? parseInt(currentQuestion.rightAnswer, 10)
+              : currentQuestion.rightAnswer) ? (
+              <div
+                className='bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative'
+                role='alert'
+              >
+                <strong className='font-bold'>Correct!</strong>
+                <span className='block sm:inline'>
+                  {currentQuestion.explanation}
+                </span>
+              </div>
+            ) : (
+              <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative' role='alert'>
+                <strong className='font-bold'>Incorrect.</strong>
+                <span className='block sm:inline'>
+                  {currentQuestion.explanation}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+        <section className='flex flex-row gap-4'>
+          {selectedAnswer !== null && (
+            <>
               <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline max-[800px]:w-full max-[800px]:text-center max-[800px]:mb-2 max-[800px]:mx-2 ${showExplanation ? 'hidden' : ''}`}
                 onClick={handleCheckAnswer}
               >
                 Check Answer
               </button>
-            ) : (
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                onClick={handleNextQuestion}
-              >
-                Next Question
-              </button>
-            )}
-          </>
-        )}
+              {currentQuestionIndex < lesson.length - 1 && (
+                <button
+                  className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline max-[800px]:${showExplanation ? 'w-full text-center mb-2 mx-2' : 'hidden'} `}
+                  onClick={handleNextQuestion}
+                >
+                  Next Question
+                </button>
+              )}
+            </>
+          )}
+        </section>
       </section>
-      <section className='px-5 mt-5'>
-        {showExplanation && (
-          <div className="mt-4">
-            {selectedAnswer === currentQuestion.rightAnswer ? (
-              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                <strong className="font-bold">Correct!</strong>
-                <span className="block sm:inline">{currentQuestion.explanation}</span>
-              </div>
-            ) : (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                <strong className="font-bold">Incorrect.</strong>
-                <span className="block sm:inline">{currentQuestion.explanation}</span>
-              </div>
-            )}
-            {currentQuestionIndex === lesson.length - 1 && (
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2"
-                onClick={async () => {
-                  await sendXPAndQuestionType()
-                  handleNextLesson()
-                  refetchUser()
-                }}
-              >
-                Main Page
-              </button>
-            )}
-          </div>
-        )}
-      </section>
+      {currentQuestionIndex === lesson.length - 1 && (
+        <button
+        className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4'
+        onClick={() => {
+          sendXPAndQuestionType()
+          handleNextLesson()
+        }}
+      >
+        Finish Lesson
+      </button>
+      )}
     </section>
   )
 }
