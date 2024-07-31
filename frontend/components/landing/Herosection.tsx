@@ -77,8 +77,8 @@ const ParallaxBackground = () => {
         </svg>
       </div>
       <div className="relative z-10 flex items-center justify-center h-full text-black">
-        <main className="container py-16 flex items-center justify-center mx-20 max-[800px]:block max-[800px]:px-0 max-[800px]: max-[800px]:py-8 max-[800px]:text-center bg-white">
-          <div className="w-1/2 pr-8 max-[800px]:w-fit max-[800px]:px-5 float-left max-[800px]:text-center">
+        <main className="container py-16 flex items-center justify-center mx-20 max-[800px]:mx-9 max-[800px]:block max-[800px]:px-0  max-[800px]:py-8 max-[800px]:text-center  bg-white">
+          <div className="w-1/2 pr-8 max-[800px]:w-full max-[800px]:px-5 float-left max-[800px]:text-center">
             <h1 className="text-5xl font-bold mb-4 max-[800px]:text-3xl text-black">Achieve best scores on <span className="text-[#DCAF52]">NUET exam</span> with us!</h1>
             <p className="text-black mb-8">Our comprehensive study platform is designed to help you excel in the NUET.
             Gain access to tailored lessons, practice tests, all in one place.</p>

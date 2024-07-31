@@ -12,9 +12,8 @@ interface Question {
   statement: string
   question: string
   variants: string[]
-  rightAnswer: number
+  rightAnswer: number | string
   explanation: string
-  answer: number
 }
 
 type MathRoadmapLessonType = Question[]
@@ -68,7 +67,8 @@ export default function MathId({ params }: Props) {
   const [correctAnswers, setCorrectAnswers] = useState(0)
   const [lesson, setLesson] = useState<MathRoadmapLessonType>([])
   const [userAnswers, setUserAnswers] = useState<number[]>([])
-
+  console.log(userAnswers)
+  
   useEffect(() => {
     const fetchLesson = async () => {
       if (lessonContent) {
@@ -92,7 +92,7 @@ export default function MathId({ params }: Props) {
   useEffect(() => {
     if (lesson.length > 0) {
       const answersCopy = [...userAnswers]
-      answersCopy[currentQuestionIndex] = selectedAnswer || -1
+      answersCopy[currentQuestionIndex] = selectedAnswer ?? -1
       setUserAnswers(answersCopy)
     }
   }, [currentQuestionIndex, selectedAnswer, lesson.length])
@@ -113,9 +113,13 @@ export default function MathId({ params }: Props) {
   const currentQuestion = lesson[currentQuestionIndex]
 
   const handleCheckAnswer = () => {
-    setShowExplanation(true)
-    if (selectedAnswer === currentQuestion.rightAnswer) {
-      setCorrectAnswers(correctAnswers + 1)
+    setShowExplanation(true);    
+    const rightAnswerNumber = typeof currentQuestion.rightAnswer === 'string'
+      ? parseInt(currentQuestion.rightAnswer, 10)
+      : currentQuestion.rightAnswer;
+    
+    if (selectedAnswer === rightAnswerNumber) {
+      setCorrectAnswers(correctAnswers + 1);
     }
   }
 
@@ -174,9 +178,9 @@ export default function MathId({ params }: Props) {
             <div
               key={index}
               className={`flex flex-row gap-4 items-center cursor-pointer border-2 border-slate-200 rounded-lg p-2 ${
-                selectedAnswer === index + 1 ? 'bg-slate-300 text-black' : 'bg-gray-100'
+                selectedAnswer === index ? 'bg-slate-300 text-black' : 'bg-gray-100'
               }`}
-              onClick={() => setSelectedAnswer(index + 1)}
+              onClick={() => setSelectedAnswer(index)}
             >
               <div className='text-lg font-bold'>
                 <MathJax inline>{variant}</MathJax>
@@ -207,7 +211,9 @@ export default function MathId({ params }: Props) {
         <section className='px-5 mt-5'>
           {showExplanation && (
             <div className='mt-4'>
-              {selectedAnswer === currentQuestion.rightAnswer ? (
+              {selectedAnswer === (typeof currentQuestion.rightAnswer === 'string'
+                ? parseInt(currentQuestion.rightAnswer, 10)
+                : currentQuestion.rightAnswer) ? (
                 <div
                   className='bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative'
                   role='alert'

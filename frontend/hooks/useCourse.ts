@@ -197,8 +197,8 @@ const useCourseApi = () => {
             Authorization: `Bearer ${session?.accessToken}`,
           },
         });
-        return data;
         queryClient.invalidateQueries('getRoadmap')
+        return data;
       }
     );
   };

@@ -31,15 +31,16 @@ interface handleLesson {
 export default function MathDetailed({ }: Props) {
   const router = useRouter()
   const { useGetRoadmap } = useRoadmapQuery()
-  const { useGetUser } = useCourseApi()
+  const { useGetUser, useUpdateStreak} = useCourseApi()
   const { data: user } = useGetUser()
   const [isLessonActive, setLessonActive] = useState(false)
   const { data: RoadMapMath, isLoading: isLoadingMath, isError: isErrorMath, refetch: refetchRoadmap } = useGetRoadmap()
+  const { mutate: mutateStreak } = useUpdateStreak()
 
   const handleLessonClick = ({ lessonIndex, sectionIndex, roadmapId, xp, questionType, locked, lessonContent }: handleLesson) => {
-    if(!locked){
+    if (!locked) {
       router.push(`/testing/app/math/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}/${lessonContent ? lessonContent : ''}`)
-    }else{
+    } else {
       toast.info('Complete previous lessons to unlock this one')
     }
   }
@@ -54,6 +55,15 @@ export default function MathDetailed({ }: Props) {
     const intervalId = setInterval(refetchRoadmap, 10000);
     return () => clearInterval(intervalId);
   }, []);
+
+  useEffect(() => {
+    const lastUpdatedDate = new Date(user?.lastActivityDate || 0);
+    const today = new Date();
+    if (lastUpdatedDate.toDateString() !== today.toDateString()) {
+      mutateStreak();
+    }
+  }, [user, mutateStreak]);
+
   console.log(RoadMapMath?.mathRoadmap.roadmap[0])
   const roadmapContent = useMemo(() => {
     if (!RoadMapMath?.mathRoadmap?.roadmap) return null;

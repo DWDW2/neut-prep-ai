@@ -25,6 +25,7 @@ interface HandleLesson {
   roadmapId: string,
   xp: number,
   questionType: string,
+  locaked: boolean;
 }
 
 export default function CriticalDetailed({ }: Props) {
@@ -35,12 +36,12 @@ export default function CriticalDetailed({ }: Props) {
   const { data: user } = useGetUser()
   const { data: CriticalRoadmap, isLoading: isLoadingCritical, isError: isErrorCritical, refetch: refetchRoadmap } = useGetRoadmap()
 
-  const handleLessonClick = ({ sectionIndex, lessonIndex, roadmapId, xp, questionType }: HandleLesson) => {
-    router.push(`/testing/critical/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}`)
+  const handleLessonClick = ({ sectionIndex, lessonIndex, roadmapId, xp, questionType, locaked}: HandleLesson) => {
+    router.push(`/testing/app/critical/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}`)
   }
 
   useEffect(() => {
-    if (user?.roadmapMathId !== null) {
+    if (user?.roadmapCriticalId !== null) {
       refetchRoadmap();
     }
   }, [user]);
@@ -58,19 +59,21 @@ export default function CriticalDetailed({ }: Props) {
         {section.lessons.map((lesson, lessonIndex) => (
           <UnitButton 
             key={lessonIndex}
+            maxValue={lesson.xp}   
+            finished={lesson.finished}
             locked={lesson.locked}
             isCurrent={lesson.isCurrent}
-            xp={lesson.xpGained} 
-            index={lessonIndex} 
-            totalCount={section.lessons.length} 
-            onClick={() => handleLessonClick({ 
-              sectionIndex: index, 
-              lessonIndex, 
-              roadmapId: CriticalRoadmap.criticalRoadmap._id, 
-              xp: lesson.xp, 
-              questionType: section.questionType 
-            })} 
-          />
+            xp={lesson.xpGained}
+            index={lessonIndex}
+            totalCount={section.lessons.length}
+            onClick={() => handleLessonClick({
+              sectionIndex: index,
+              lessonIndex,
+              roadmapId: CriticalRoadmap.criticalRoadmap._id,
+              xp: lesson.xp,
+              questionType: section.questionType,
+              locaked: lesson.locked
+            })}/>
         ))}
       </div>
     ))
