@@ -49,6 +49,17 @@ export default function CriticalDetailed({ }: Props) {
   const { data: RoadMapCritical, isLoading: isLoadingCritical, isError: isErrorCritical, refetch: refetchRoadmap } = useGetRoadmap();
   const { isLessonCompleted, setLessonCompleted } = useStore();  
 
+
+  const handleFetchError = (error: any) => {
+    if (error.response?.status === 401) {
+      router.push('/login');
+    } else {
+      toast.error('An error occurred while fetching data.');
+    }
+  };
+
+
+
   const handleLessonClick = ({ lessonIndex, sectionIndex, roadmapId, xp, questionType, locked, lessonContent }: handleLesson) => {
     if (!locked) {
       router.push(`/testing/app/critical/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}/${lessonContent ? lessonContent : ''}`);
@@ -59,9 +70,12 @@ export default function CriticalDetailed({ }: Props) {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (session && user) {
+      if (session && !isLoadingUser) {
         try {
-          if (user.roadmapCriticalId !== null) {
+          if(!user){
+            router.push('/login')
+          }
+          if (user?.roadmapCriticalId !== null) {
             refetchRoadmap();
           }
           
@@ -72,7 +86,7 @@ export default function CriticalDetailed({ }: Props) {
             setRoadmapContent(RoadMapCritical?.criticalRoadmap || null);
           }
         } catch (error) {
-          toast.error('An error occurred while fetching data.');
+          handleFetchError(error);
         }
       } else {
         const criticalHard = await fetch('/criticalHard.json').then(res => res.json()).then((data:Roadmap) => {return data})

@@ -54,6 +54,7 @@ export default function CriticalId({ params }: Props) {
   const { mutate: setXpGained } = useSetXpGained()
   const { mutate: setAnswers } = useSetUserAnswers()
   const { mutate: setFinished } = useSetFinished()
+  const [incorrectIndexes, setIncorrectIndexes] = useState<number[]>()
   const { mutate: getLesson, isLoading: isLoadingLesson, isError: isErrorLesson, data: lessonData } = useGetLesson()
 
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
@@ -84,7 +85,8 @@ export default function CriticalId({ params }: Props) {
 
   useEffect(() => {
     if (lessonContent && lessonData) {
-      setLesson(lessonData as CriticalRoadmapLessonType)
+      setLesson(lessonData.lessons as CriticalRoadmapLessonType)
+      setIncorrectIndexes(lessonData.incorrectIndexes)
     } else if (generatedLesson) {
       setLesson(generatedLesson as CriticalRoadmapLessonType)
     }
@@ -152,7 +154,7 @@ export default function CriticalId({ params }: Props) {
       }
       updateXpByLesson({ points: xpEarned })
       setXpGained({ xpGained: xpEarned, lessonIndex, sectionIndex, roadmapId })
-      setAnswers({ answers: userAnswers, roadmapId, lessonIndex, sectionIndex })
+      setAnswers({ answers: userAnswers,incorrectIndexes: incorrectIndexes!, roadmapId, lessonIndex, sectionIndex })
       console.log('XP and questionType sent successfully!')
     } catch (error) {
       console.error('Error sending XP and questionType:', error)

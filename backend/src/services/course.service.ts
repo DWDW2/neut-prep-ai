@@ -162,6 +162,7 @@ export default class CourseService {
         return {message: 'Lesson not found', success: false}
       }
       lesson.lessons.map((les, index) => les.answer = answers[index])
+      console.log(answers)
       await lesson.save()
       await roadmap.save()
       return {message: 'Answers saved', success: true}
@@ -206,16 +207,21 @@ export default class CourseService {
     try {
       const user = await User.findById(userId);
       if (!user) return null;
-      
-      user.themesToImprove = [...new Set([...user.themesToImprove, ...incorrectThemes])];
+  
+      const processedIncorrectThemes = incorrectThemes.map(theme => theme.replace(/%/g, ' '));
+  
+      user.themesToImprove = [...new Set([...user.themesToImprove, ...processedIncorrectThemes])];
+  
+      user.bestThemes = user.bestThemes.filter(theme => !processedIncorrectThemes.includes(theme));
   
       await user.save();
       return true;
     } catch (error) {
-      console.log(error)
-      return false
+      console.log(error);
+      return false;
     }
   }
+  
 
   async updateXp(userId: string, points: number) {
     try {
@@ -295,6 +301,17 @@ export default class CourseService {
         if (!user) {
           console.log('User not found');
           return null;
+        }
+        if(user.lastActivityDate){
+          const today = new Date();
+          const todayDateString = today.toISOString().split('T')[0];
+          const lastActivityDate = new Date(user.lastActivityDate);
+          const lastActivityDateString = lastActivityDate.toISOString().split('T')[0];
+          if(lastActivityDateString !== todayDateString){
+            user.todaysXp = 0;
+            await user.save();
+            return true;
+          }
         }
         user.todaysXp = 0;
         await user.save();

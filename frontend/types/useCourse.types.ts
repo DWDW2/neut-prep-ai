@@ -49,6 +49,7 @@ interface useSetUserAnswers {
   roadmapId: string;
   lessonIndex: number;
   sectionIndex: number;
+  incorrectIndexes: number[]
 }
 
 export type {PayloadCourse, UpdatePayloadCourse, Lesson, SetFinishedPayload, SetXpGainedPayload, HandleNextLessonPayload, UseGetLessonPayload, useSetUserAnswers}

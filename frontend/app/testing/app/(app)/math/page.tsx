@@ -56,11 +56,23 @@ export default function MathDetailed({ }: Props) {
     }
   };
 
+  const handleFetchError = (error: any) => {
+    console.log('mounted handleFetcherror')
+    if (error.response?.status === 401) {
+      router.push('/login');
+    } else {
+      toast.error('An error occurred while fetching data.');
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      if (session && user) {
+      if (session && !isLoadingUser) {
         try {
-          if (user.roadmapMathId !== null) {
+          if(!user){
+            router.push('/login')
+          }
+          if (user?.roadmapMathId !== null) {
             refetchRoadmap();
           }
           
@@ -71,7 +83,7 @@ export default function MathDetailed({ }: Props) {
             setRoadmapContent(RoadMapMath?.mathRoadmap || null);
           }
         } catch (error) {
-          toast.error('An error occurred while fetching data.');
+          handleFetchError(error);
         }
       } else {
         const mathHard = await fetch('/mathHard.json').then(res => res.json()).then((data:Roadmap) => {return data})

@@ -15,7 +15,10 @@ type ResetTodaysXpResponse = any;
 type GetUserData = UserType;
 type UpdateUserResponse = any; 
 type GetAllUsersResponse = UserType[];
-
+type useGetLesson = {
+  incorrectIndexes: number[];
+  lessons: Lesson[];
+}
 const useCourseApi = () => {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
@@ -177,7 +180,7 @@ const useCourseApi = () => {
   };
 
   const useGetLesson = () => {
-    return useMutation<Lesson[], Error, UseGetLessonPayload>(
+    return useMutation<useGetLesson, Error, UseGetLessonPayload>(
       async (payload) => {
         const { data } = await axiosInstance.post('/course/get-lesson', payload, {
           headers: {

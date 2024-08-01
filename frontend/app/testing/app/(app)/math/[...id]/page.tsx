@@ -67,9 +67,10 @@ export default function MathId({ params }: Props) {
   const [lesson, setLesson] = useState<MathRoadmapLessonType>([])
   const [userAnswers, setUserAnswers] = useState<number[]>([])
   const [showNextButton, setShowNextButton] = useState(false)
+  const [incorrectIndexes, setIncorrectIndexes] = useState<number[]>()
   const { setLessonCompleted } = useStore()
   console.log(userAnswers)
-
+  console.log(lesson)
   useEffect(() => {
     const fetchLesson = async () => {
       if (session) {
@@ -97,7 +98,8 @@ export default function MathId({ params }: Props) {
 
   useEffect(() => {
     if (lessonContent && lessonData) {
-      setLesson(lessonData as MathRoadmapLessonType)
+      setLesson(lessonData.lessons as MathRoadmapLessonType)
+      setIncorrectIndexes(lessonData.incorrectIndexes)
     } else if (generatedLesson) {
       setLesson(generatedLesson as MathRoadmapLessonType)
     }
@@ -165,7 +167,7 @@ export default function MathId({ params }: Props) {
       }
       updateXpByLesson({ points: xpEarned })
       setXpGained({ xpGained: xpEarned, lessonIndex, sectionIndex, roadmapId })
-      setAnswers({ answers: userAnswers, roadmapId, lessonIndex, sectionIndex })
+      setAnswers({ answers: userAnswers, incorrectIndexes:incorrectIndexes!, roadmapId, lessonIndex, sectionIndex })
       console.log('XP and questionType sent successfully!')
     } catch (error) {
       console.error('Error sending XP and questionType:', error)
@@ -175,8 +177,6 @@ export default function MathId({ params }: Props) {
   const renderMath = (content: string) => {
     return <Latex>{content}</Latex>
   }
-
-  // ... (keep all the existing useEffect hooks and other functions)
 
   return (
     <section className='flex flex-col h-screen justify-between p-10 max-[800px]:p-4'>
@@ -218,14 +218,14 @@ export default function MathId({ params }: Props) {
           {currentQuestionIndex < lesson.length - 1 ? (
             <>
               <button
-                className='px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold'
+                className={`px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold max-[800px]:w-full max-[800px]:mx-3  ${showExplanation ? 'hidden' : ''}`}
                 onClick={handleCheckAnswer}
                 disabled={selectedAnswer === null}
               >
                 Check Answer
               </button>
               <button
-                className='px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold'
+                className={`px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold max-[800px]:w-full max-[800px]:mx-3 ${showExplanation ? '' : 'hidden'}`}
                 onClick={handleNextQuestion}
                 disabled={!showExplanation}
               >
@@ -234,13 +234,11 @@ export default function MathId({ params }: Props) {
             </>
           ) : (
             <button
-              className='px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold'
-              onClick={async () => {
-                handleCheckAnswer()
-                await sendXPAndQuestionType()
+              className='px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold max-[800px]:w-full max-[800px]:mx-3'
+              onClick={() => {
+                sendXPAndQuestionType()
                 handleNextLesson()
               }}
-              disabled={!showExplanation}
             >
               Finish Lesson
             </button>
