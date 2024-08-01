@@ -24,50 +24,50 @@ type Option = OptionWithDescription | OptionWithoutDescription;
 const questions = [
   {
     id: 1,
-    question: 'Какой путь вы хотите выбрать?',
+    question: 'What study path would you like to follow for NUET preparation?',
     options: [
-      { id: '1', label: 'Начать с основ', description: 'Пройдите вводный урок из курса испанского' },
-      { id: '2', label: 'Определить мой уровень', description: 'Duo посоветует, с чего лучше начать' }
+      { id: '1', label: 'Start with the basics', description: 'Complete an introductory lesson on fundamental concepts.' },
+      { id: '2', label: 'Assess my level', description: 'Get recommendations on where to start based on your current knowledge.' }
     ] as Option[]
   },
   {
     id: 2,
-    question: 'Сколько часов в день вы посвящаете учебе?',
+    question: 'How many hours per day can you dedicate to preparing for the NUET?',
     options: [
-      { id: '1', label: '1 час' },
-      { id: '2', label: '2 часа' },
-      { id: '3', label: '3 часа' },
-      { id: '4', label: 'Больше 3 часов' }
+      { id: '1', label: '1 hour' },
+      { id: '2', label: '2 hours' },
+      { id: '3', label: '3 hours' },
+      { id: '4', label: 'More than 3 hours' }
     ] as Option[]
   },
   {
     id: 3,
-    question: 'Сколько раз в неделю вы занимаетесь?',
+    question: 'How many times a week do you plan to study for the NUET?',
     options: [
-      { id: '1', label: '1 раз' },
-      { id: '2', label: '2-3 раза' },
-      { id: '3', label: '4-5 раз' },
-      { id: '4', label: 'Больше 5 раз' }
+      { id: '1', label: 'Once' },
+      { id: '2', label: '2-3 times' },
+      { id: '3', label: '4-5 times' },
+      { id: '4', label: 'More than 5 times' }
     ] as Option[]
   },
   {
     id: 4,
-    question: 'Каковы ваши цели по учебе?',
+    question: 'What are your primary goals for NUET preparation?',
     options: [
-      { id: '1', label: 'Изучение основы' },
-      { id: '2', label: 'Достижение продвинутого уровня' },
-      { id: '3', label: 'Подготовка к экзаменам' },
-      { id: '4', label: 'Другие цели' }
+      { id: '1', label: 'Understand the fundamentals' },
+      { id: '2', label: 'Reach an advanced level' },
+      { id: '3', label: 'Prepare specifically for NUET' },
+      { id: '4', label: 'Other goals related to the exam' }
     ] as Option[]
   },
   {
     id: 5,
-    question: 'Как долго вы готовитесь к NUET/TSA/BMAT?',
+    question: 'How long have you been preparing for the NUET?',
     options: [
-      { id: '1', label: 'Менее месяца' },
-      { id: '2', label: '1-3 месяца' },
-      { id: '3', label: '3-6 месяцев' },
-      { id: '4', label: 'Больше 6 месяцев' }
+      { id: '1', label: 'Less than a month' },
+      { id: '2', label: '1-3 months' },
+      { id: '3', label: '3-6 months' },
+      { id: '4', label: 'More than 6 months' }
     ] as Option[]
   }
 ];
@@ -84,11 +84,17 @@ const StudyPathPrompt = () => {
   const router = useRouter();
 
   const handleOptionClick = (questionId: number, optionId: string) => {
-    setSelectedOptions((prev) => ({ ...prev, [questionId]: optionId }));
-    if (step < questions.length) {
-      setStep(step + 1);
-    } else {
+    const selectedOption = questions[step - 1].options.find(option => option.id === optionId);
+    
+    if (selectedOption?.label === 'Start with the basics') {
       setIsModalOpen(true);
+    } else {
+      setSelectedOptions((prev) => ({ ...prev, [questionId]: optionId }));
+      if (step < questions.length) {
+        setStep(step + 1);
+      } else {
+        setIsModalOpen(true);
+      }
     }
   };
 

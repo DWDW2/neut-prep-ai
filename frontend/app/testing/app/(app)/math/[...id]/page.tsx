@@ -5,6 +5,8 @@ import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { MathJax, MathJaxContext } from 'better-react-mathjax'
+import { useSession } from 'next-auth/react'
+import useStore from '@/hooks/useStore'
 
 const Loading = dynamic(() => import('@/components/Loading'), { ssr: false })
 
@@ -17,7 +19,9 @@ interface Question {
 }
 
 type MathRoadmapLessonType = Question[]
-
+type mathHardcoded = {
+  lessons: MathRoadmapLessonType
+}
 type Props = {
   params: { id: string[] }
 }
@@ -44,14 +48,8 @@ export default function MathId({ params }: Props) {
     useSetUserAnswers
   } = useCourseApi()
 
-  const {
-    mutate: generateLesson,
-    isLoading: isLoadingMath,
-    isError: isErrorMath,
-    data: generatedLesson,
-    error: fetchError
-  } = useGenerateLesson()
-
+  const { data: session } = useSession()
+  const { mutate: generateLesson, isLoading: isLoadingMath, isError: isErrorMath, data: generatedLesson, error: fetchError } = useGenerateLesson()
   const { mutate: handleIncorrectTheme } = useHandleIncorrectThemes()
   const { mutate: updateXpByLesson } = useUpdateXpByLesson()
   const { mutate: handleBestTheme } = useHandleBestThemes()
@@ -67,20 +65,33 @@ export default function MathId({ params }: Props) {
   const [correctAnswers, setCorrectAnswers] = useState(0)
   const [lesson, setLesson] = useState<MathRoadmapLessonType>([])
   const [userAnswers, setUserAnswers] = useState<number[]>([])
-  const [showNextButton, setShowNextButton] = useState(false);
+  const [showNextButton, setShowNextButton] = useState(false)
+  const {setLessonCompleted} = useStore()
   console.log(userAnswers)
-  
+
   useEffect(() => {
     const fetchLesson = async () => {
-      if (lessonContent) {
-        await getLesson({ lessonIndex, sectionIndex, roadmapId })
+      if (session) {
+
+        if (lessonContent) {
+          await getLesson({ lessonIndex, sectionIndex, roadmapId })
+        } else {
+          await generateLesson({ lessonIndex, sectionIndex, roadmapType })
+        }
       } else {
-        await generateLesson({ lessonIndex, sectionIndex, roadmapType })
+        try {
+          const lesson = await fetch('/lessonMathHard.json').then(res => res.json()).then((data:mathHardcoded) => {return data})
+          setLesson(lesson.lessons as MathRoadmapLessonType)
+          setLessonCompleted(true)
+          console.log(lesson.lessons)
+        } catch (error) {
+          console.error('Error fetching hardcoded data:', error)
+        }
       }
     }
 
     fetchLesson()
-  }, [lessonContent, getLesson, generateLesson, lessonIndex, sectionIndex, roadmapId, roadmapType])
+  }, [lessonContent, getLesson, generateLesson, lessonIndex, sectionIndex, roadmapId, roadmapType, session])
 
   useEffect(() => {
     if (lessonContent && lessonData) {
@@ -98,7 +109,7 @@ export default function MathId({ params }: Props) {
     }
   }, [currentQuestionIndex, selectedAnswer, lesson.length])
 
-  if (isLoadingMath || (lessonContent && isLoadingLesson)) {
+  if (isLoadingMath || (!session && !lesson.length)) {
     return <Loading />
   }
 
@@ -114,13 +125,13 @@ export default function MathId({ params }: Props) {
   const currentQuestion = lesson[currentQuestionIndex]
 
   const handleCheckAnswer = () => {
-    setShowExplanation(true);    
+    setShowExplanation(true)
     const rightAnswerNumber = typeof currentQuestion.rightAnswer === 'string'
       ? parseInt(currentQuestion.rightAnswer, 10)
-      : currentQuestion.rightAnswer;
-    
+      : currentQuestion.rightAnswer
+
     if (selectedAnswer === rightAnswerNumber) {
-      setCorrectAnswers(correctAnswers + 1);
+      setCorrectAnswers(correctAnswers + 1)
     }
   }
 

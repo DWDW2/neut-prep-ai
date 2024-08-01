@@ -22,27 +22,12 @@ const ParallaxBackground = () => {
     setIsQuestionModalOpen(true);
   };
 
-  const handleRegistrationSuccess = async () => {
-    setIsModalOpen(false);
-    setIsRegistering(true);
-    toast.success('Registered successfully');
-  };
-
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-
-  const handleOptionClick = (option:any) => {
-    if (option === 'yes') {
-      router.push('/login');
-    } else {
-      router.push('/testing')
-    }
-    setIsQuestionModalOpen(false);
-  };
 
   return (
     <div className="relative h-screen overflow-hidden">
@@ -62,7 +47,6 @@ const ParallaxBackground = () => {
           <path d="M15 85 C20 80 25 85 30 80 S40 75 45 80" stroke="white" strokeWidth="0.5" fill="none" />
           <path d="M20 50 H30 V60 H20 Z M70 40 A10 10 0 0 1 80 50" stroke="white" strokeWidth="0.5" fill="none" />
 
-          {/* Math formulas */}
           <text x="5" y="15" fontSize="2" fill="white">E = mc²</text>
           <text x="60" y="25" fontSize="2" fill="white">∫_a^b f(x)dx</text>
           <text x="30" y="70" fontSize="2" fill="white">π ≈ 3.14159</text>
@@ -70,7 +54,6 @@ const ParallaxBackground = () => {
           <text x="10" y="40" fontSize="2" fill="white">a² + b² = c²</text>
           <text x="50" y="90" fontSize="2" fill="white">y = mx + b</text>
 
-          {/* Geometric shapes */}
           <circle cx="80" cy="20" r="5" stroke="white" strokeWidth="0.5" fill="none" />
           <line x1="10" y1="90" x2="90" y2="10" stroke="white" strokeWidth="0.5" />
           <polygon points="20,10 40,40 10,40" stroke="white" strokeWidth="0.5" fill="none" />
@@ -82,27 +65,13 @@ const ParallaxBackground = () => {
             <h1 className="text-5xl font-bold mb-4 max-[800px]:text-3xl text-black">Achieve best scores on <span className="text-[#DCAF52]">NUET exam</span> with us!</h1>
             <p className="text-black mb-8">Our comprehensive study platform is designed to help you excel in the NUET.
             Gain access to tailored lessons, practice tests, all in one place.</p>
-            <Button variant={'primary'} size={'lg'} onClick={handleGetStartedClick}>Get Started</Button>
+            <Button variant={'primary'} size={'lg'} onClick={() => router.push('/testing/app/math')}>Get Started</Button>
           </div>
           <div className='ml-14 max-[800px]:hidden'>
             <Image src={'/Graduate-person.svg'} width={300} height={700} alt='person'/> 
           </div>
         </main> 
       </div>
-
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <RegistrationForm onSuccess={handleRegistrationSuccess} />
-      </Modal>
-
-      <Modal isOpen={isQuestionModalOpen} onClose={() => setIsQuestionModalOpen(false)}>
-        <div className="p-6">
-          <h2 className="text-2xl font-bold mb-4">Do you already have an account?</h2>
-          <div className="flex space-x-4">
-            <Button variant={'primary'} onClick={() => handleOptionClick('yes')}>Yes</Button>
-            <Button variant={'primaryOutline'} onClick={() => handleOptionClick('no')}>No</Button>
-          </div>
-        </div>
-      </Modal>
     </div>
   );
 };

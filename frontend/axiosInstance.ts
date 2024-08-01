@@ -15,13 +15,4 @@ axiosInstance.interceptors.request.use(async (config) => {
   return config;
 });
 
-axiosInstance.interceptors.response.use(
-  (response) => response, 
-  (error) => {
-    if (error.response && error.response.status === 401) {
-      signOut({ callbackUrl: '/login' });
-    }
-    return Promise.reject(error);
-  }
-);
 export default axiosInstance;

@@ -14,6 +14,10 @@ import { useRoadmapQuery } from "@/hooks/useRoadmap";
 import useCourseApi from "@/hooks/useCourse";
 import CongratulationsModal from "@/components/testing/CongratulationsModal";
 import { Roadmap } from "@/types/useRoadmap.types";
+import { useSession } from "next-auth/react";
+import AuthForm from "@/components/testing/AuthForm";
+import useStore from "@/hooks/useStore";
+import LessonCompleteModal from "@/components/testing/AuthFormaModal";
 
 const Loading = dynamic(() => import('@/components/Loading'), { ssr: false });
 
@@ -33,12 +37,16 @@ export default function MathDetailed({ }: Props) {
   const router = useRouter();
   const { useGetRoadmap } = useRoadmapQuery();
   const { useGetUser, useUpdateStreak, useUpdateXp } = useCourseApi();
-  const { data: user } = useGetUser();
-  const { data: updatedXp } = useUpdateXp();
+  const { data: session } = useSession();
   const [isLessonActive, setLessonActive] = useState(false);
   const [showModal, setShowModal] = useState(false); 
-  const { data: RoadMapMath, isLoading: isLoadingMath, isError: isErrorMath, refetch: refetchRoadmap } = useGetRoadmap();
+  const [roadmapContent, setRoadmapContent] = useState<Roadmap | null>(null);
+
+  const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useGetUser();
+  const { data: updatedXp } = useUpdateXp();
   const { mutate: mutateStreak } = useUpdateStreak();
+  const { data: RoadMapMath, isLoading: isLoadingMath, isError: isErrorMath, refetch: refetchRoadmap } = useGetRoadmap();
+  const {isLessonCompleted, setLessonCompleted} = useStore()
 
   const handleLessonClick = ({ lessonIndex, sectionIndex, roadmapId, xp, questionType, locked, lessonContent }: handleLesson) => {
     if (!locked) {
@@ -49,37 +57,56 @@ export default function MathDetailed({ }: Props) {
   };
 
   useEffect(() => {
-    if (user?.roadmapMathId !== null) {
-      refetchRoadmap();
-    }
-  }, [user]);
+    const fetchData = async () => {
+      if (session && user) {
+        try {
+          if (user.roadmapMathId !== null) {
+            refetchRoadmap();
+          }
+          
+          if (isLoadingMath) return;
+          if (isErrorMath) {
+            toast.error('An error occurred while loading the lesson. Please try again.');
+          } else {
+            setRoadmapContent(RoadMapMath?.mathRoadmap || null);
+          }
+        } catch (error) {
+          toast.error('An error occurred while fetching data.');
+        }
+      } else {
+        const mathHard = await fetch('/mathHard.json').then(res => res.json()).then((data:Roadmap) => {return data})
+        setRoadmapContent(mathHard);
+      }
+    };
 
-  useEffect(() => {
-    const intervalId = setInterval(refetchRoadmap, 10000);
+    fetchData();
+    const intervalId = setInterval(() => fetchData(), 10000);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [session, user, RoadMapMath, isLoadingMath, isErrorMath, refetchRoadmap]);
 
   useEffect(() => {
-    const lastUpdatedDate = new Date(user?.lastActivityDate || 0);
-    const today = new Date();
-    if (lastUpdatedDate.toDateString() !== today.toDateString()) {
-      mutateStreak();
+    if (session && user) {
+      const lastUpdatedDate = new Date(user.lastActivityDate || 0);
+      const today = new Date();
+      if (lastUpdatedDate.toDateString() !== today.toDateString()) {
+        mutateStreak();
+      }
     }
-  }, [user, mutateStreak]);
+  }, [session, user, mutateStreak]);
 
   useEffect(() => {
-    if (user?.todaysXp! >= 20) { 
+    if (session && user?.todaysXp! >= 20) { 
       setShowModal(true);
     }
-  }, [user]);
+  }, [session, user]);
 
   const closeModal = () => {
     setShowModal(false);
   };
 
-  const roadmapContent = useMemo(() => {
-    if (!RoadMapMath?.mathRoadmap?.roadmap) return null;
-    return RoadMapMath.mathRoadmap.roadmap.map((section, index) => (
+  const roadmapDisplay = useMemo(() => {
+    if (!roadmapContent) return null;
+    return roadmapContent.roadmap.map((section, index) => (
       <div key={index}>
         <UnitSection Unit={section.unit} UnitName={section.section} />
         {section.lessons.map((lesson, lessonIndex) => (
@@ -92,34 +119,37 @@ export default function MathDetailed({ }: Props) {
             key={lessonIndex}
             index={lessonIndex}
             totalCount={section.lessons.length}
-            onClick={() => handleLessonClick({ roadmapId: RoadMapMath.mathRoadmap._id, sectionIndex: index, lessonIndex, xp: lesson.xp, questionType: section.questionType, locked: lesson.locked, lessonContent: lesson.lessonContent })}
+            onClick={() => handleLessonClick({ roadmapId: RoadMapMath?.mathRoadmap._id || '', sectionIndex: index, lessonIndex, xp: lesson.xp, questionType: section.questionType, locked: lesson.locked, lessonContent: lesson.lessonContent })}
           />
         ))}
       </div>
     ));
-  }, [RoadMapMath]);
+  }, [roadmapContent]);
 
-  if (isLoadingMath) return <Loading />;
-
-  if (isErrorMath) {
-    toast.error('An error occurred while loading the lesson. Please try again.');
-  }
+  if (!roadmapContent && !isLoadingMath) return <Loading />;
 
   return (
     <div className="flex flex-row-reverse gap-[48px] px-6">
       <StickySideBar>
         <section className="flex flex-col gap-y-4 p-4">
-          <UserSideBar title="Daily quest" dailyGoal={20} xp={user?.todaysXp || 0} />
-          <UserProgress dailyGoal={20} xp={user?.todaysXp || 0} />
+          {session && user ? (
+            <>
+              <UserSideBar title="Daily quest" dailyGoal={20} xp={user?.todaysXp || 0} />
+              <UserProgress dailyGoal={20} xp={user?.todaysXp || 0} />
+            </>
+          ) : (
+            <AuthForm />
+          )}
         </section>
       </StickySideBar>
       <FeedWrapper>
         <section className="pt-6 gap-y-4 flex flex-col">
-          {roadmapContent}
+          {roadmapDisplay}
         </section>
       </FeedWrapper>
       <ToastContainer />
       <CongratulationsModal show={showModal} onClose={closeModal} xp={user?.todaysXp || 0} /> 
+      <LessonCompleteModal isModalOpen={isLessonCompleted} closeModal={() =>  setLessonCompleted(false)} />
     </div>
   );
 }

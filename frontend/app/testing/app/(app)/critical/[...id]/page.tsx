@@ -16,6 +16,9 @@ interface Question {
 }
 
 type CriticalRoadmapLessonType = Question[]
+type hardCodeData = {
+  lessons: CriticalRoadmapLessonType
+}
 
 type Props = {
   params: { id: string[] }
@@ -43,14 +46,7 @@ export default function CriticalId({ params }: Props) {
     useSetUserAnswers
   } = useCourseApi()
 
-  const {
-    mutate: generateLesson,
-    isLoading: isLoadingCritical,
-    isError: isErrorCritical,
-    data: generatedLesson,
-    error: fetchError
-  } = useGenerateLesson()
-
+  const { mutate: generateLesson, isLoading: isLoadingCritical, isError: isErrorCritical, data: generatedLesson, error: fetchError } = useGenerateLesson()
   const { mutate: handleIncorrectTheme } = useHandleIncorrectThemes()
   const { mutate: updateXpByLesson } = useUpdateXpByLesson()
   const { mutate: handleBestTheme } = useHandleBestThemes()
@@ -66,14 +62,20 @@ export default function CriticalId({ params }: Props) {
   const [correctAnswers, setCorrectAnswers] = useState(0)
   const [lesson, setLesson] = useState<CriticalRoadmapLessonType>([])
   const [userAnswers, setUserAnswers] = useState<number[]>([])
-  const [showNextButton, setShowNextButton] = useState(false);
-  
+  const [showNextButton, setShowNextButton] = useState(false)
+
   useEffect(() => {
     const fetchLesson = async () => {
       if (lessonContent) {
         await getLesson({ lessonIndex, sectionIndex, roadmapId })
       } else {
-        await generateLesson({ lessonIndex, sectionIndex, roadmapType })
+        try {
+          const lesson = await fetch('/lessonCriticalHard.json').then(res => res.json()).then((data: hardCodeData) => data)
+          setLesson(lesson.lessons as CriticalRoadmapLessonType )
+          console.log(lesson)
+        } catch (error) {
+          console.error('Error fetching hardcoded data:', error)
+        }
       }
     }
 
@@ -112,13 +114,13 @@ export default function CriticalId({ params }: Props) {
   const currentQuestion = lesson[currentQuestionIndex]
 
   const handleCheckAnswer = () => {
-    setShowExplanation(true);    
+    setShowExplanation(true)
     const rightAnswerNumber = typeof currentQuestion.rightAnswer === 'string'
       ? parseInt(currentQuestion.rightAnswer, 10)
-      : currentQuestion.rightAnswer;
-    
+      : currentQuestion.rightAnswer
+
     if (selectedAnswer === rightAnswerNumber) {
-      setCorrectAnswers(correctAnswers + 1);
+      setCorrectAnswers(correctAnswers + 1)
     }
   }
 
@@ -178,9 +180,7 @@ export default function CriticalId({ params }: Props) {
             }`}
             onClick={() => setSelectedAnswer(index)}
           >
-            <div className='text-lg font-bold'>
-              {variant} 
-            </div>
+            <div className='text-lg font-bold'>{variant}</div>
           </div>
         ))}
       </section>
@@ -195,16 +195,12 @@ export default function CriticalId({ params }: Props) {
                 role='alert'
               >
                 <strong className='font-bold'>Correct!</strong>
-                <span className='block sm:inline'>
-                  {currentQuestion.explanation}
-                </span>
+                <span className='block sm:inline'>{currentQuestion.explanation}</span>
               </div>
             ) : (
               <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative' role='alert'>
                 <strong className='font-bold'>Incorrect.</strong>
-                <span className='block sm:inline'>
-                  {currentQuestion.explanation}
-                </span>
+                <span className='block sm:inline'>{currentQuestion.explanation}</span>
               </div>
             )}
           </div>
@@ -220,7 +216,7 @@ export default function CriticalId({ params }: Props) {
               </button>
               {currentQuestionIndex < lesson.length - 1 && (
                 <button
-                  className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline max-[800px]:${showExplanation ? 'w-full text-center mb-2 mx-2' : 'hidden'} `}
+                  className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline max-[800px]:${showExplanation ? 'w-full text-center mb-2 mx-2' : 'hidden'}`}
                   onClick={handleNextQuestion}
                 >
                   Next Question
@@ -232,14 +228,14 @@ export default function CriticalId({ params }: Props) {
       </section>
       {currentQuestionIndex === lesson.length - 1 && (
         <button
-        className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4'
-        onClick={() => {
-          sendXPAndQuestionType()
-          handleNextLesson()
-        }}
-      >
-        Finish Lesson
-      </button>
+          className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline max-[800px]:w-full max-[800px]:text-center max-[800px]:mb-2 max-[800px]:mx-2'
+          onClick={async () => {
+            await sendXPAndQuestionType()
+            handleNextLesson()
+          }}
+        >
+          Finish Lesson
+        </button>
       )}
     </section>
   )

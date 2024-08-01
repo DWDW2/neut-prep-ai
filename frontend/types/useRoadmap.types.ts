@@ -9,7 +9,7 @@ interface Roadmap {
       lessons: Lesson[];
     }
   ],
-  user:string;
+  userId:string;
 }
 
 interface RoadmapPayload {

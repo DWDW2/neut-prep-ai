@@ -44,7 +44,7 @@ export default function FooterNav({}: Props) {
             />
           </Link>
         </div>
-        <div className='relative m-1'>
+        {/* <div className='relative m-1'>
           <Link href={'/testing/app/specific'} >
             <Image
               src={'/testing/archery-focus-goal-svgrepo-com.svg'}
@@ -54,7 +54,7 @@ export default function FooterNav({}: Props) {
               className='transition-transform duration-300 transform hover:scale-110'
             />
           </Link>
-        </div>
+        </div> */}
         <div className='relative m-1'>
           <Link href={'/testing/app/leaderboard'} >
             <Image

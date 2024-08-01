@@ -1,7 +1,6 @@
 import { ArrowBigRight } from 'lucide-react'
 import React from 'react'
 import { Button } from '../ui/button'
-import { RoadMap } from '@/app/constants'
 import { Lesson, Roadmap } from '@/types/useRoadmap.types'
 import Link from 'next/link'
 type Props = {

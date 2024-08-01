@@ -1,11 +1,9 @@
 'use client'
-
 import { useEffect, useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 import FeedWrapper from "@/components/testing/Feed-sidebar";
 import StickySideBar from "@/components/testing/Sticky-sidebar";
 import UserSideBar from "@/components/testing/XPgained";
@@ -15,17 +13,22 @@ import UnitSection from "@/components/testing/UnitSection";
 import { useRoadmapQuery } from "@/hooks/useRoadmap";
 import useCourseApi from "@/hooks/useCourse";
 import CongratulationsModal from "@/components/testing/CongratulationsModal";
+import { Roadmap } from "@/types/useRoadmap.types";
+import { useSession } from "next-auth/react";
+import AuthForm from "@/components/testing/AuthForm";
+import LessonCompleteModal from "@/components/testing/AuthFormaModal";
+import useStore from "@/hooks/useStore";
 
 const Loading = dynamic(() => import('@/components/Loading'), { ssr: false });
 
 type Props = {};
 
-interface HandleLesson {
+interface handleLesson {
   sectionIndex: number,
   lessonIndex: number,
-  roadmapId: string,
-  xp: number,
-  questionType: string,
+  roadmapId: string;
+  xp: number;
+  questionType: string;
   locked: boolean;
   lessonContent: string;
 }
@@ -34,14 +37,19 @@ export default function CriticalDetailed({ }: Props) {
   const router = useRouter();
   const { useGetRoadmap } = useRoadmapQuery();
   const { useGetUser, useUpdateStreak, useUpdateXp } = useCourseApi();
-  const { data: user } = useGetUser();
-  const { data: updatedXp } = useUpdateXp();
+  const { data: session } = useSession();
   const [isLessonActive, setLessonActive] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const { data: CriticalRoadmap, isLoading: isLoadingCritical, isError: isErrorCritical, refetch: refetchRoadmap } = useGetRoadmap();
-  const { mutate: mutateStreak } = useUpdateStreak();
+  const [showCongratulationsModal, setShowCongratulationsModal] = useState(false); 
+  const [showLessonCompleteModal, setShowLessonCompleteModal] = useState(false);  
+  const [roadmapContent, setRoadmapContent] = useState<Roadmap | null>(null);
 
-  const handleLessonClick = ({ lessonIndex, sectionIndex, roadmapId, xp, questionType, locked, lessonContent }: HandleLesson) => {
+  const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useGetUser();
+  const { data: updatedXp } = useUpdateXp();
+  const { mutate: mutateStreak } = useUpdateStreak();
+  const { data: RoadMapCritical, isLoading: isLoadingCritical, isError: isErrorCritical, refetch: refetchRoadmap } = useGetRoadmap();
+  const { isLessonCompleted, setLessonCompleted } = useStore();  
+
+  const handleLessonClick = ({ lessonIndex, sectionIndex, roadmapId, xp, questionType, locked, lessonContent }: handleLesson) => {
     if (!locked) {
       router.push(`/testing/app/critical/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}/${lessonContent ? lessonContent : ''}`);
     } else {
@@ -50,37 +58,64 @@ export default function CriticalDetailed({ }: Props) {
   };
 
   useEffect(() => {
-    if (user?.roadmapCriticalId !== null) {
-      refetchRoadmap();
-    }
-  }, [user]);
+    const fetchData = async () => {
+      if (session && user) {
+        try {
+          if (user.roadmapCriticalId !== null) {
+            refetchRoadmap();
+          }
+          
+          if (isLoadingCritical) return;
+          if (isErrorCritical) {
+            toast.error('An error occurred while loading the lesson. Please try again.');
+          } else {
+            setRoadmapContent(RoadMapCritical?.criticalRoadmap || null);
+          }
+        } catch (error) {
+          toast.error('An error occurred while fetching data.');
+        }
+      } else {
+        const criticalHard = await fetch('/criticalHard.json').then(res => res.json()).then((data:Roadmap) => {return data})
+        setRoadmapContent(criticalHard);
+      }
+    };
 
-  useEffect(() => {
-    const intervalId = setInterval(refetchRoadmap, 10000);
+    fetchData();
+    const intervalId = setInterval(() => fetchData(), 10000);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [session, user, RoadMapCritical, isLoadingCritical, isErrorCritical, refetchRoadmap]);
 
   useEffect(() => {
-    const lastUpdatedDate = new Date(user?.lastActivityDate || 0);
-    const today = new Date();
-    if (lastUpdatedDate.toDateString() !== today.toDateString()) {
-      mutateStreak();
+    if (session && user) {
+      const lastUpdatedDate = new Date(user.lastActivityDate || 0);
+      const today = new Date();
+      if (lastUpdatedDate.toDateString() !== today.toDateString()) {
+        mutateStreak();
+      }
     }
-  }, [user, mutateStreak]);
+  }, [session, user, mutateStreak]);
 
   useEffect(() => {
-    if (user?.todaysXp! >= 20) {
-      setShowModal(true);
+    if (session && user?.todaysXp! >= 20) { 
+      setShowCongratulationsModal(true);
     }
-  }, [user]);
+  }, [session, user]);
+
+  useEffect(() => {
+    if (isLessonCompleted) {
+      setShowLessonCompleteModal(true);
+      setLessonCompleted(false);  
+    }
+  }, [isLessonCompleted]);
 
   const closeModal = () => {
-    setShowModal(false);
+    setShowCongratulationsModal(false);
+    setShowLessonCompleteModal(false);
   };
 
-  const roadmapContent = useMemo(() => {
-    if (!CriticalRoadmap?.criticalRoadmap?.roadmap) return null;
-    return CriticalRoadmap.criticalRoadmap.roadmap.map((section, index) => (
+  const roadmapDisplay = useMemo(() => {
+    if (!roadmapContent) return null;
+    return roadmapContent.roadmap.map((section, index) => (
       <div key={index}>
         <UnitSection Unit={section.unit} UnitName={section.section} />
         {section.lessons.map((lesson, lessonIndex) => (
@@ -93,34 +128,37 @@ export default function CriticalDetailed({ }: Props) {
             key={lessonIndex}
             index={lessonIndex}
             totalCount={section.lessons.length}
-            onClick={() => handleLessonClick({ roadmapId: CriticalRoadmap.criticalRoadmap._id, sectionIndex: index, lessonIndex, xp: lesson.xp, questionType: section.questionType, locked: lesson.locked, lessonContent: lesson.lessonContent })}
+            onClick={() => handleLessonClick({ roadmapId: RoadMapCritical?.criticalRoadmap._id || '', sectionIndex: index, lessonIndex, xp: lesson.xp, questionType: section.questionType, locked: lesson.locked, lessonContent: lesson.lessonContent })}
           />
         ))}
       </div>
     ));
-  }, [CriticalRoadmap]);
+  }, [roadmapContent]);
 
-  if (isLoadingCritical) return <Loading />;
-
-  if (isErrorCritical) {
-    toast.error('An error occurred while loading the lesson. Please try again.');
-  }
+  if (!roadmapContent && !isLoadingCritical) return <Loading />;
 
   return (
     <div className="flex flex-row-reverse gap-[48px] px-6">
       <StickySideBar>
         <section className="flex flex-col gap-y-4 p-4">
-          <UserSideBar title="Daily quest" dailyGoal={20} xp={user?.todaysXp || 0} />
-          <UserProgress dailyGoal={20} xp={user?.todaysXp || 0} />
+          {session && user ? (
+            <>
+              <UserSideBar title="Daily quest" dailyGoal={20} xp={user?.todaysXp || 0} />
+              <UserProgress dailyGoal={20} xp={user?.todaysXp || 0} />
+            </>
+          ) : (
+            <AuthForm />
+          )}
         </section>
       </StickySideBar>
       <FeedWrapper>
         <section className="pt-6 gap-y-4 flex flex-col">
-          {roadmapContent}
+          {roadmapDisplay}
         </section>
       </FeedWrapper>
       <ToastContainer />
-      <CongratulationsModal show={showModal} onClose={closeModal} xp={user?.todaysXp || 0} />
+      <CongratulationsModal show={showCongratulationsModal} onClose={closeModal} xp={user?.todaysXp || 0} />
+      <LessonCompleteModal isModalOpen={showLessonCompleteModal} closeModal={closeModal} />
     </div>
   );
 }
