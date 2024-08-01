@@ -104,7 +104,7 @@ export default function MathId({ params }: Props) {
       setLesson(generatedLesson as MathRoadmapLessonType)
     }
   }, [lessonContent, lessonData, generatedLesson])
-
+  console.log(incorrectIndexes)
   useEffect(() => {
     if (lesson.length > 0) {
       const answersCopy = [...userAnswers]

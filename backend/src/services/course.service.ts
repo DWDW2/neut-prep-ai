@@ -119,8 +119,6 @@ export default class CourseService {
       const incorrectLessons = lesson.lessons
         .filter((_, index) => incorrectIndexes.includes(index));
   
-      console.log({ incorrectIndexes, incorrectLessons });
-  
       if (incorrectIndexes.length === 0) {
         roadmap.roadmap[sectionIndex].lessons[lessonIndex].finished = true;
         roadmap.roadmap[sectionIndex].lessons[lessonIndex].locked = true;
@@ -137,6 +135,7 @@ export default class CourseService {
       return { message: error.message, success: false };
     }
   }
+  
   
   
 
@@ -166,19 +165,22 @@ export default class CourseService {
         return { message: 'RoadmapId is required', success: false };
       }
   
-      const lesson = await LessonModel.findById(roadmap.roadmap[sectionIndex].lessons[lessonIndex].lessonContent);
+      const lessonId = roadmap.roadmap[sectionIndex].lessons[lessonIndex].lessonContent;
+      const lesson = await LessonModel.findById(lessonId);
       if (!lesson) {
         return { message: 'Lesson not found', success: false };
       }
   
       lesson.lessons = lesson.lessons.map((les, index) => {
-        if (incorrectIndexes.includes(index)) {
+        if (incorrectIndexes.length > 0) {
+          if (incorrectIndexes.includes(index)) {
+            les.answer = answers[index];
+          }
+        } else {
           les.answer = answers[index];
         }
         return les;
       });
-  
-      console.log(answers);
   
       await lesson.save();
       await roadmap.save();
@@ -189,6 +191,7 @@ export default class CourseService {
       return { message: error.message, success: false };
     }
   }
+  
   
   
   async handleNextLesson(lessonIndex:number, sectionIndex: number, roadmapId: string){
