@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { getSession, signOut, useSession } from 'next-auth/react';
+import BASE_URL from './lib/env';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5000',
+  baseURL: BASE_URL,
   timeout: 50000,
 });
 
@@ -14,13 +15,4 @@ axiosInstance.interceptors.request.use(async (config) => {
   return config;
 });
 
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response && error.response.status === 401) {
-      signOut({ callbackUrl: '/login' });
-    }
-    return Promise.reject(error);
-  }
-);
 export default axiosInstance;

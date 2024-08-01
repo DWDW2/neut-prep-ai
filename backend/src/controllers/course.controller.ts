@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import CourseService from '../services/course.service';
-import { request } from 'http';
+
 
 export default class CourseController {
   private courseService: CourseService;
@@ -9,35 +9,33 @@ export default class CourseController {
     this.courseService = courseService;
   }
 
-  async generateLessonMath(req: Request, res: Response) {
+  async generateLessonByUserId(req:Request, res:Response){
     try {
-      const { roadmapId, lessonIndex, sectionIndex } = req.body;
-      console.log(req.body)
-      const lessonJson = await this.courseService.generateLessonMath(
-        roadmapId,
-        parseInt(lessonIndex),
-        parseInt(sectionIndex)
-      );
-      res.status(200).json(lessonJson);
+      const {userId, lessonIndex, sectionIndex, roadmapType} = req.body
+      const lesson = await this.courseService.generateLessonByUserId(lessonIndex, sectionIndex, roadmapType, userId)
+      if(lesson.success){
+        res.status(200).json(lesson.lessons)
+      }else{
+        res.status(500).json({message: lesson.message})
+      }
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to generate math lesson' });
+      console.log(error)
+      res.status(500).json({message: error})
     }
   }
 
-  async generateLessonCritical(req: Request, res: Response) {
+  async getLessonById(req:Request, res:Response){
     try {
-      const { roadmapId, lessonIndex, sectionIndex } = req.body;
-      console.log(roadmapId, lessonIndex, sectionIndex)
-      const lessonJson = await this.courseService.generateLessonCritical(
-        roadmapId,
-        parseInt(lessonIndex),
-        parseInt(sectionIndex)
-      );
-      res.status(200).json(lessonJson);
+      const {lessonIndex, sectionIndex, roadmapId} = req.body
+      const lesson = await this.courseService.getLessonById(lessonIndex, sectionIndex, roadmapId)
+      if(lesson.success){
+        res.status(200).json(lesson.lessons)
+      }else{
+        res.status(500).json({message: lesson.message})
+      }
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to generate critical thinking lesson' });
+      console.log(error)
+      res.status(500).json({message: error})  
     }
   }
 
@@ -74,7 +72,7 @@ export default class CourseController {
     }
   }
 
-  async resetTodaysXp(req: Request, res: Response) {
+  async updateStreak(req: Request, res: Response) {
     try {
       const { userId } = req.body; 
       const success = await this.courseService.updateStreak(userId);
@@ -145,4 +143,63 @@ export default class CourseController {
     }
   }
 
+  async setFinished(req:Request, res:Response){
+    try {
+      const {lessonIndex, sectionIndex, roadmapId} = req.body
+      const lesson = await this.courseService.setFinished(lessonIndex, sectionIndex, roadmapId)
+      if(lesson.success){
+        res.status(200).json(lesson)
+      }else{
+        res.status(500).json({message: lesson.message})
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({message: error})  
+    }
+  }
+
+  async setXpGained(req:Request, res:Response){
+    try {
+      const {lessonIndex, sectionIndex, roadmapId, xpGained} = req.body
+      const lesson = await this.courseService.setXpGained(lessonIndex, sectionIndex, roadmapId, xpGained)
+      if(lesson.success){
+        res.status(200).json(lesson)
+      }else{
+        res.status(500).json({message: lesson.message})
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({message: error})  
+    }
+  }
+
+  async handleNextLesson(req:Request, res:Response){
+    try {
+      const  {lessonIndex, roadmapId, sectionIndex} = req.body
+      const lesson = await this.courseService.handleNextLesson(lessonIndex, roadmapId, sectionIndex)
+      if(lesson.success){
+        res.status(200).json(lesson)
+      }else{
+        res.status(500).json({message: lesson.message})
+      }
+    } catch (error) {
+      console.log(error)
+      return {message: error, success: false}
+    }
+  }
+
+  async setUserAnswers(req:Request, res:Response){
+    try {
+      const {lessonIndex, sectionIndex, roadmapId, answers} = req.body
+      const lesson = await this.courseService.setUserAnswers(answers, lessonIndex, sectionIndex, roadmapId)
+      if(lesson.success){
+        res.status(200).json(lesson)
+      }else{
+        res.status(500).json({message: lesson.message})
+      }
+    } catch (error) {
+      console.log(error)
+      return {message: error, success: false}
+    }
+  }
 }

@@ -1,42 +1,48 @@
-'use client'
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { Button } from '../ui/button';
 import { FaGoogle } from 'react-icons/fa';
+import { toast, ToastContainer } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css'; 
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {data: screen} = useSession()
-  console.log(screen?.accessToken)
-  console.log(screen)
+  const { data: session } = useSession();
+  console.log(session?.accessToken);
+  console.log(session);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const result = await signIn('credentials', {
       email,
       password,
-      redirect: false,
-      callbackUrl: '/'
+      redirect: false, 
+      callbackUrl: '/testing/app/'
     });
     if (result?.error) {
       console.error('Authentication failed:', result.error);
+      toast.error('User not found'); 
     } else {
       console.log('Authentication successful:', result);
+      if (result?.url) {
+        window.location.href = result.url;  
+      }
     }
   };
 
   return (
-    <section className="bg-gray-100 h-full"> {/* Light gray background */}
+    <section className="bg-gray-100 h-full">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0"> {/* White form container */}
+        <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <div className='flex flex-row gap-2'>
-                <Image src={'/drago.svg'} width={30} height={30} alt='image' />
-                <h1 className="text-xl">NUET AI</h1>
+              <Image src={'/drago.svg'} width={30} height={30} alt='image' />
+              <h1 className="text-xl">NUET AI</h1>
             </div>
-            
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
               Login
             </h1>
@@ -73,8 +79,8 @@ const LoginForm: React.FC = () => {
               </div>
               <div className="flex items-start">
                 <div className="flex items-center h-5 w-full">
-                  <Button variant={'sidebarOutline'} className='w-full flex flex-row gap-3 font-normal' onClick={ () => { const result = signIn('google', {callbackUrl: '/'}) }}>
-                    <FaGoogle />Sign In with Google
+                  <Button variant={'sidebarOutline'} className='w-full flex flex-row gap-3 font-normal' onClick={ () => { signIn('google', {callbackUrl: '/'}) }}>
+                    <FaGoogle /> Sign In with Google
                   </Button>
                 </div>
               </div>
@@ -97,9 +103,10 @@ const LoginForm: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* Add ToastContainer to render toast notifications */}
+      <ToastContainer />
     </section>
   );
 };
 
 export default LoginForm;
-

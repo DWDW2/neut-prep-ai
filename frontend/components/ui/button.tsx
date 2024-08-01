@@ -9,6 +9,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        locked: "bg-neutral-200 text-primary-foreground hover:bg-neutral-200/90 border-neutral-400 border-b-4 active:border-b-0",
+        lesson: "bg-[#DCAF52] text-primary-foreground hover:bg-[#DCAF52]/90 border-[#C39840] border-b-4 active:border-b-0",
         default: "bg-white border-slate-200 border-2 border-b-4 hover:bg-slate-100 text-slate-500 active:border-b-2",
         primary:
           "bg-[#DCAF52] text-primary-foreground hover:bg-[#DCAF52]/90 border-[#C39840] border-b-4 active:border-b-0",
@@ -33,6 +35,7 @@ const buttonVariants = cva(
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-md px-16",
         icon: "h-10 w-10",
+        rounded: "rounded-full"
       },
     },
     defaultVariants: {

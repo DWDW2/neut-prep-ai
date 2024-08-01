@@ -6,7 +6,11 @@ interface Lesson {
   description: string;
   difficulty: string;
   xp: number;
-  lessonContent: string;
+  finished: boolean;
+  locked: boolean;
+  isCurrent: boolean;
+  xpGained: number;
+  lessonContent: string; 
 }
 
 interface RoadMapType {
@@ -14,11 +18,11 @@ interface RoadMapType {
     {
       section: string;
       unit: string;
-      questionType: string;
+      questionType: string; 
       lessons: Lesson[];
     }
   ],
-  user: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   }
@@ -30,22 +34,29 @@ const RoadMapSchema = new mongoose.Schema<RoadMapType>({
       section: { type: String, required: true },
       unit: { type: String, required: true },
       questionType: { type: String, required: true },
-      lessons: [
-        {
-          title: { type: String, required: true },
-          description: { type: String, required: true },
-          difficulty: { type: String, required: true },
-          xp: { type: Number, required: true },
-          lessonContent: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Lesson',
-            default: null,
+      lessons: {
+        type: [
+          {
+            title: { type: String, required: true },
+            description: { type: String, required: true },
+            difficulty: { type: String, required: true },
+            xp: { type: Number, required: true },
+            finished: {type: Boolean, default: false},
+            locked: {type: Boolean, default: true},
+            isCurrent: {type: Boolean, default: false},
+            xpGained: {type: Number, default: 0},
+            lessonContent: { 
+              type: mongoose.Schema.Types.ObjectId, 
+              ref: 'Lesson', 
+              default: null
+            }
           }
-        }
-      ]
+        ],
+        required: true
+      }
     }
   ],
-  user: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true, 

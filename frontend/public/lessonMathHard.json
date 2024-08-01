@@ -1,0 +1,98 @@
+{
+    "_id": {
+      "$oid": "66a9d03bcd9b0c89893984fb"
+    },
+    "lessons": [
+      {
+        "statement": "Consider a binary operation * defined on the set of real numbers.",
+        "question": "If \\(a * b = a^2 - 2ab + b^2\\) for all real numbers \\(a\\) and \\(b\\), find the value of \\((2 * 3) * 4\\).",
+        "variants": [
+          "1",
+          "9",
+          "16",
+          "25",
+          "36"
+        ],
+        "rightAnswer": 1,
+        "type": "binary operations",
+        "explanation": "First, calculate \\(2 * 3 = 2^2 - 2(2)(3) + 3^2 = 1\\). Then, calculate \\((2 * 3) * 4 = 1 * 4 = 1^2 - 2(1)(4) + 4^2 = 9\\).",
+        "answer": null,
+        "_id": {
+          "$oid": "66a9d03bcd9b0c89893984fc"
+        }
+      },
+      {
+        "statement": "Consider the binary operation * defined on the set of real numbers as follows:",
+        "question": "If \\(a * b = a^2 + b^2 - 3ab\\), what is the value of \\((2 * 3) * 4\\)?",
+        "variants": [
+          "-23",
+          "113",
+          "17",
+          "-5",
+          "41"
+        ],
+        "rightAnswer": 1,
+        "type": "binary operations",
+        "explanation": "First, calculate \\(2 * 3 = 2^2 + 3^2 - 3(2)(3) = -5\\). Next, calculate \\((-5) * 4 = (-5)^2 + 4^2 - 3(-5)(4) = 113\\).",
+        "answer": null,
+        "_id": {
+          "$oid": "66a9d03bcd9b0c89893984fd"
+        }
+      },
+      {
+        "statement": "Consider the binary operation defined as follows:",
+        "question": "If \\( a \\ast b = a^2 + b^2 - ab \\), find the value of \\( (2 \\ast 3) \\ast 4 \\).",
+        "variants": [
+          "13",
+          "25",
+          "33",
+          "49",
+          "None of the above"
+        ],
+        "rightAnswer": 2,
+        "type": "binary operations",
+        "explanation": "First, calculate \\( 2 \\ast 3 = 2^2 + 3^2 - (2 \\cdot 3) = 7 \\). Next, calculate \\( (2 \\ast 3) \\ast 4 = 7 \\ast 4 = 7^2 + 4^2 - (7 \\cdot 4) = 33 \\).",
+        "answer": null,
+        "_id": {
+          "$oid": "66a9d03bcd9b0c89893984fe"
+        }
+      },
+      {
+        "statement": "Let \\( * \\) be a binary operation defined on the set of real numbers \\( \\mathbb{R} \\) by \\( a * b = a^2 + b^2 - ab \\).",
+        "question": "Find the value of \\( (2 * 3) * 4 \\).",
+        "variants": [
+          "13",
+          "25",
+          "33",
+          "49",
+          "None of the above"
+        ],
+        "rightAnswer": 2,
+        "type": "binary operations",
+        "explanation": "First, calculate \\( 2 * 3 = 2^2 + 3^2 - (2 \\cdot 3) = 7 \\). Next, calculate \\( (2 * 3) * 4 = 7 * 4 = 7^2 + 4^2 - (7 \\cdot 4) = 33 \\).",
+        "answer": null,
+        "_id": {
+          "$oid": "66a9d03bcd9b0c89893984ff"
+        }
+      },
+      {
+        "statement": "Consider the binary operation * defined on the set of real numbers as follows:",
+        "question": "If \\(a * b = a^2 + b^2 - ab\\), find the value of \\( (2 * 3) * 4 \\).",
+        "variants": [
+          "13",
+          "25",
+          "37",
+          "49",
+          "None of the above"
+        ],
+        "rightAnswer": 2,
+        "type": "binary operations",
+        "explanation": "First, we calculate \\(2 * 3 = 2^2 + 3^2 - (2 * 3) = 4 + 9 - 6 = 7\\).  Then, we calculate \\( (2 * 3) * 4 = 7 * 4 = 7^2 + 4^2 - (7 * 4) = 49 + 16 - 28 = 37\\).",
+        "answer": null,
+        "_id": {
+          "$oid": "66a9d03bcd9b0c8989398500"
+        }
+      }
+    ],
+    "__v": 0
+  }

@@ -3,11 +3,14 @@ import axiosInstance from '@/axiosInstance';
 import { RoadmapPayload, Roadmap } from '@/types/useRoadmap.types';
 import { getSession } from 'next-auth/react';
 
+interface getRoadmapResponse {
+  mathRoadmap: Roadmap;
+  criticalRoadmap: Roadmap;
+}
+
 const getAuthHeader = async () => {
   const session = await getSession();
-  console.log(session?.accessToken);
-  console.log(axiosInstance);
-  return session?.accessToken;
+  return session?.accessToken ? `Bearer ${session.accessToken}` : '';
 };
 
 export const useRoadmapQuery = () => {
@@ -22,60 +25,44 @@ export const useRoadmapQuery = () => {
     }
   };
 
-  const useGenerateCriticalRoadmap = () =>
-    useQuery(
-      'criticalRoadmap',
-      async () => {
+  const useGenerateRoadmap = () =>
+    useMutation<Roadmap, Error>(
+      async (payload) => {
         const authHeader = await fetchAuthHeader();
         return axiosInstance
-          .get<Roadmap>('/roadmap/critical/generate-and-get-roadmapCritical', {
+          .post<Roadmap>('/roadmap/generate-roadmap', payload, {
             headers: { Authorization: authHeader },
           })
           .then((res) => res.data);
       },
       {
-        staleTime: 120000, 
-        cacheTime: 300000, 
+        onSuccess: () => {
+          queryClient.invalidateQueries('getRoadmap');
+        },
       }
     );
 
-  const useGenerateMathRoadmap = () =>
-    useQuery(
-      'mathRoadmap',
+  const useGetRoadmap = () =>
+    useQuery<getRoadmapResponse, Error>(
+      'getRoadmap',
       async () => {
         const authHeader = await fetchAuthHeader();
         return axiosInstance
-          .get<Roadmap>('/roadmap/math/generate-and-get-roadmapMath', {
+          .get<getRoadmapResponse>('/roadmap/get-roadmap', {
             headers: { Authorization: authHeader },
           })
           .then((res) => res.data);
       },
       {
-        staleTime: 120000, 
+        staleTime: 0, 
         cacheTime: 300000, 
-      }
-    );
-
-  const useGetMathRoadmap = (userId: string) =>
-    useQuery(
-      ['mathRoadmap', userId],
-      async () => {
-        const authHeader = await fetchAuthHeader();
-        return axiosInstance
-          .get<Roadmap>(`/roadmap/math/${userId}`, {
-            headers: { Authorization: authHeader },
-          })
-          .then((res) => res.data);
-      },
-      {
-        staleTime: 120000, 
-        cacheTime: 300000, 
+        refetchOnWindowFocus: true, 
+        refetchInterval: 60000, 
       }
     );
 
   return {
-    useGenerateCriticalRoadmap,
-    useGenerateMathRoadmap,
-    useGetMathRoadmap,
+    useGenerateRoadmap,
+    useGetRoadmap,
   };
 };

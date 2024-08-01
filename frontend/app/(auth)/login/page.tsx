@@ -5,6 +5,8 @@ type Props = {}
 
 export default function Login({}: Props) {
   return (
-    <LoginForm />
+    <div className='items-center justify-center h-full  w-full mx-auto max-[800px]:mt-[50%]'>
+      <LoginForm />
+    </div>
     )
 }
