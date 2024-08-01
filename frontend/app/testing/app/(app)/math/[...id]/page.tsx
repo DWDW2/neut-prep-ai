@@ -26,6 +26,16 @@ type Props = {
   params: { id: string[] }
 }
 
+const mathJaxConfig = {
+  loader: { load: ['input/asciimath', 'output/chtml'] },
+  asciimath: {
+    delimiters: [['$', '$'], ['`', '`']]
+  },
+  chtml: {
+    scale: 1.2
+  }
+};
+
 export default function MathId({ params }: Props) {
   const router = useRouter()
   const { id } = params
@@ -66,13 +76,12 @@ export default function MathId({ params }: Props) {
   const [lesson, setLesson] = useState<MathRoadmapLessonType>([])
   const [userAnswers, setUserAnswers] = useState<number[]>([])
   const [showNextButton, setShowNextButton] = useState(false)
-  const {setLessonCompleted} = useStore()
+  const { setLessonCompleted } = useStore()
   console.log(userAnswers)
 
   useEffect(() => {
     const fetchLesson = async () => {
       if (session) {
-
         if (lessonContent) {
           await getLesson({ lessonIndex, sectionIndex, roadmapId })
         } else {
@@ -80,7 +89,9 @@ export default function MathId({ params }: Props) {
         }
       } else {
         try {
-          const lesson = await fetch('/lessonMathHard.json').then(res => res.json()).then((data:mathHardcoded) => {return data})
+          const lesson = await fetch('/lessonMathHard.json')
+            .then(res => res.json())
+            .then((data: mathHardcoded) => data)
           setLesson(lesson.lessons as MathRoadmapLessonType)
           setLessonCompleted(true)
           console.log(lesson.lessons)
@@ -171,7 +182,7 @@ export default function MathId({ params }: Props) {
   }
 
   return (
-    <MathJaxContext>
+    <MathJaxContext config={mathJaxConfig}>
       <section className='flex flex-col h-screen justify-between p-10 max-[800px]:p-4'>
         <section className='px-5'>
           <div className='text-2xl font-bold pb-4'>
