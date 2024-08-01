@@ -6,17 +6,9 @@ import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import useCourseApi from '@/hooks/useCourse'
 import useStore from '@/hooks/useStore'
+import 'katex/dist/katex.min.css'
 
-// Dynamically import MathJax
-const MathJaxContext = dynamic(
-  () => import('better-react-mathjax').then((mod) => mod.MathJaxContext),
-  { ssr: false }
-)
-const MathJax = dynamic(
-  () => import('better-react-mathjax').then((mod) => mod.MathJax),
-  { ssr: false }
-)
-
+const Latex = dynamic(() => import('react-latex-next'), { ssr: false })
 const Loading = dynamic(() => import('@/components/Loading'), { ssr: false })
 
 interface Question {
@@ -34,16 +26,6 @@ type mathHardcoded = {
 type Props = {
   params: { id: string[] }
 }
-
-const mathJaxConfig = {
-  loader: { load: ['input/asciimath', 'output/chtml'] },
-  asciimath: {
-    delimiters: [['$', '$'], ['`', '`']]
-  },
-  chtml: {
-    scale: 1.2
-  }
-};
 
 export default function MathId({ params }: Props) {
   const router = useRouter()
@@ -190,77 +172,81 @@ export default function MathId({ params }: Props) {
     }
   }
 
+  const renderMath = (content: string) => {
+    return <Latex>{content}</Latex>
+  }
+
+  // ... (keep all the existing useEffect hooks and other functions)
+
   return (
-    <MathJaxContext config={mathJaxConfig}>
-      <section className='flex flex-col h-screen justify-between p-10 max-[800px]:p-4'>
-        <section className='px-5'>
-          <div className='text-2xl font-bold pb-4'>
-            <MathJax inline>{currentQuestion.statement}</MathJax>
-          </div>
-          <div className='text-black text-xl pb-4'>
-            {currentQuestion.question.split('\n').map((line, index) => (
-              <div key={index}>
-                <MathJax>{line}</MathJax>
-              </div>
-            ))}
-          </div>
-        </section>
-        <section className='flex flex-col gap-1 px-5'>
-          {currentQuestion.variants.map((variant, index) => (
-            <div
-              key={index}
-              className={`flex flex-row gap-4 items-center cursor-pointer border-2 border-b-4 active:border-b-2 border-slate-300 rounded-lg p-2 ${
-                selectedAnswer === index ? 'bg-sky-100 border-sky-300 text-black' : 'bg-slate-100'
-              }`}
-              onClick={() => setSelectedAnswer(index)}
-            >
-              <div className='text-lg font-bold'>
-                <MathJax inline>{variant}</MathJax> 
-              </div>
+    <section className='flex flex-col h-screen justify-between p-10 max-[800px]:p-4'>
+      <section className='px-5'>
+        <div className='text-2xl font-bold pb-4'>
+          {renderMath(currentQuestion.statement)}
+        </div>
+        <div className='text-black text-xl pb-4'>
+          {currentQuestion.question.split('\n').map((line, index) => (
+            <div key={index}>
+              {renderMath(line)}
             </div>
           ))}
-        </section>
-        <section className='py-5'>
-          {showExplanation && (
-            <div className='bg-sky-50 border-t-4 border-sky-400 rounded p-4 text-black'>
-              <div className='font-bold text-lg'>Explanation:</div>
-              <MathJax>{currentQuestion.explanation}</MathJax>
+        </div>
+      </section>
+      <section className='flex flex-col gap-1 px-5'>
+        {currentQuestion.variants.map((variant, index) => (
+          <div
+            key={index}
+            className={`flex flex-row gap-4 items-center cursor-pointer border-2 border-b-4 active:border-b-2 border-slate-300 rounded-lg p-2 ${
+              selectedAnswer === index ? 'bg-sky-100 border-sky-300 text-black' : 'bg-slate-100'
+            }`}
+            onClick={() => setSelectedAnswer(index)}
+          >
+            <div className='text-lg font-bold'>
+              {renderMath(variant)}
             </div>
-          )}
-          <div className='flex justify-end gap-4 pt-4'>
-            {currentQuestionIndex < lesson.length - 1 ? (
-              <>
-                <button
-                  className='px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold'
-                  onClick={handleCheckAnswer}
-                  disabled={selectedAnswer === null}
-                >
-                  Check Answer
-                </button>
-                <button
-                  className='px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold'
-                  onClick={handleNextQuestion}
-                  disabled={!showExplanation}
-                >
-                  Next Question
-                </button>
-              </>
-            ) : (
+          </div>
+        ))}
+      </section>
+      <section className='py-5'>
+        {showExplanation && (
+          <div className='bg-sky-50 border-t-4 border-sky-400 rounded p-4 text-black'>
+            <div className='font-bold text-lg'>Explanation:</div>
+            {renderMath(currentQuestion.explanation)}
+          </div>
+        )}
+        <div className='flex justify-end gap-4 pt-4'>
+          {currentQuestionIndex < lesson.length - 1 ? (
+            <>
               <button
                 className='px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold'
-                onClick={async () => {
-                  handleCheckAnswer()
-                  await sendXPAndQuestionType()
-                  handleNextLesson()
-                }}
+                onClick={handleCheckAnswer}
+                disabled={selectedAnswer === null}
+              >
+                Check Answer
+              </button>
+              <button
+                className='px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold'
+                onClick={handleNextQuestion}
                 disabled={!showExplanation}
               >
-                Finish Lesson
+                Next Question
               </button>
-            )}
-          </div>
-        </section>
+            </>
+          ) : (
+            <button
+              className='px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold'
+              onClick={async () => {
+                handleCheckAnswer()
+                await sendXPAndQuestionType()
+                handleNextLesson()
+              }}
+              disabled={!showExplanation}
+            >
+              Finish Lesson
+            </button>
+          )}
+        </div>
       </section>
-    </MathJaxContext>
+    </section>
   )
 }
