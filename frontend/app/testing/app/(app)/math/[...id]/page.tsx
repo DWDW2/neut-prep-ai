@@ -1,12 +1,21 @@
 'use client'
 
-import useCourseApi from '@/hooks/useCourse'
 import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
-import { MathJax, MathJaxContext } from 'better-react-mathjax'
 import { useSession } from 'next-auth/react'
+import useCourseApi from '@/hooks/useCourse'
 import useStore from '@/hooks/useStore'
+
+// Dynamically import MathJax
+const MathJaxContext = dynamic(
+  () => import('better-react-mathjax').then((mod) => mod.MathJaxContext),
+  { ssr: false }
+)
+const MathJax = dynamic(
+  () => import('better-react-mathjax').then((mod) => mod.MathJax),
+  { ssr: false }
+)
 
 const Loading = dynamic(() => import('@/components/Loading'), { ssr: false })
 
@@ -211,63 +220,46 @@ export default function MathId({ params }: Props) {
             </div>
           ))}
         </section>
-        <section className='px-5 mt-5 flex flex-col gap-4'>
+        <section className='py-5'>
           {showExplanation && (
-            <div className='bg-gray-100 border border-gray-400 p-4 rounded'>
-              {selectedAnswer === (typeof currentQuestion.rightAnswer === 'string'
-                ? parseInt(currentQuestion.rightAnswer, 10)
-                : currentQuestion.rightAnswer) ? (
-                <div
-                  className='bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative'
-                  role='alert'
-                >
-                  <strong className='font-bold'>Correct!</strong>
-                  <span className='block sm:inline'>
-                    <MathJax>{currentQuestion.explanation}</MathJax>
-                  </span>
-                </div>
-              ) : (
-                <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative' role='alert'>
-                  <strong className='font-bold'>Incorrect.</strong>
-                  <span className='block sm:inline'>
-                    <MathJax>{currentQuestion.explanation}</MathJax>
-                  </span>
-                </div>
-              )}
+            <div className='bg-sky-50 border-t-4 border-sky-400 rounded p-4 text-black'>
+              <div className='font-bold text-lg'>Explanation:</div>
+              <MathJax>{currentQuestion.explanation}</MathJax>
             </div>
           )}
-          <section className='flex flex-row gap-4'>
-            {selectedAnswer !== null && (
+          <div className='flex justify-end gap-4 pt-4'>
+            {currentQuestionIndex < lesson.length - 1 ? (
               <>
                 <button
-                  className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline max-[800px]:w-full max-[800px]:text-center max-[800px]:mb-2 max-[800px]:mx-2 ${showExplanation ? 'hidden' : ''}`}
+                  className='px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold'
                   onClick={handleCheckAnswer}
+                  disabled={selectedAnswer === null}
                 >
                   Check Answer
                 </button>
-                {currentQuestionIndex < lesson.length - 1 && (
-                  <button
-                    className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline max-[800px]:${showExplanation ? 'w-full text-center mb-2 mx-2' : 'hidden'} `}
-                    onClick={handleNextQuestion}
-                  >
-                    Next Question
-                  </button>
-                )}
+                <button
+                  className='px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold'
+                  onClick={handleNextQuestion}
+                  disabled={!showExplanation}
+                >
+                  Next Question
+                </button>
               </>
+            ) : (
+              <button
+                className='px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold'
+                onClick={async () => {
+                  handleCheckAnswer()
+                  await sendXPAndQuestionType()
+                  handleNextLesson()
+                }}
+                disabled={!showExplanation}
+              >
+                Finish Lesson
+              </button>
             )}
-          </section>
+          </div>
         </section>
-        {currentQuestionIndex === lesson.length - 1 && (
-          <button
-            className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4'
-            onClick={() => {
-              sendXPAndQuestionType()
-              handleNextLesson()
-            }}
-          >
-            Finish Lesson
-          </button>
-        )}
       </section>
     </MathJaxContext>
   )
