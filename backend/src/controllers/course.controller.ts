@@ -28,6 +28,7 @@ export default class CourseController {
     try {
       const {lessonIndex, sectionIndex, roadmapId} = req.body
       const lesson = await this.courseService.getLessonById(lessonIndex, sectionIndex, roadmapId)
+      console.log(lesson)
       if(lesson.success){
         res.status(200).json({lessons: lesson.incorrectLessons, incorrectIndexes: lesson.incorrectIndexes})
       }else{
@@ -191,7 +192,8 @@ export default class CourseController {
   async setUserAnswers(req:Request, res:Response){
     try {
       const {lessonIndex, sectionIndex, roadmapId, answers, incorrectIndexes} = req.body
-      const lesson = await this.courseService.setUserAnswers(answers, lessonIndex, sectionIndex, roadmapId, incorrectIndexes)
+      console.log(req.body)
+      const lesson = await this.courseService.setUserAnswers(answers, incorrectIndexes, lessonIndex, sectionIndex, roadmapId)
       if(lesson.success){
         res.status(200).json(lesson)
       }else{

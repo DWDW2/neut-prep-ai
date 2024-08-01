@@ -20,6 +20,7 @@ interface Question {
 }
 
 type MathRoadmapLessonType = Question[]
+
 type mathHardcoded = {
   lessons: MathRoadmapLessonType
 }
@@ -63,14 +64,16 @@ export default function MathId({ params }: Props) {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [showExplanation, setShowExplanation] = useState(false)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [correctAnswers, setCorrectAnswers] = useState(0)
+  const [correctAnswers, setCorrectAnswers] = useState(1)
   const [lesson, setLesson] = useState<MathRoadmapLessonType>([])
   const [userAnswers, setUserAnswers] = useState<number[]>([])
   const [showNextButton, setShowNextButton] = useState(false)
-  const [incorrectIndexes, setIncorrectIndexes] = useState<number[]>()
+  const [incorrectIndexes, setIncorrectIndexes] = useState<number[]>([])
   const { setLessonCompleted } = useStore()
+  
   console.log(userAnswers)
   console.log(lesson)
+  
   useEffect(() => {
     const fetchLesson = async () => {
       if (session) {
@@ -104,7 +107,8 @@ export default function MathId({ params }: Props) {
       setLesson(generatedLesson as MathRoadmapLessonType)
     }
   }, [lessonContent, lessonData, generatedLesson])
-  console.log(incorrectIndexes)
+
+
   useEffect(() => {
     if (lesson.length > 0) {
       const answersCopy = [...userAnswers]
@@ -153,6 +157,7 @@ export default function MathId({ params }: Props) {
   }
 
   const calculatePerformance = () => {
+    console.log((correctAnswers / lesson.length) * 100)
     return (correctAnswers / lesson.length) * 100
   }
 
@@ -166,8 +171,8 @@ export default function MathId({ params }: Props) {
         handleBestTheme({ bestThemes: [questionType] })
       }
       updateXpByLesson({ points: xpEarned })
-      setXpGained({ xpGained: xpEarned, lessonIndex, sectionIndex, roadmapId })
-      setAnswers({ answers: userAnswers, incorrectIndexes:incorrectIndexes!, roadmapId, lessonIndex, sectionIndex })
+      setXpGained({ xpGained: xpEarned, lessonIndex:lessonIndex, sectionIndex:sectionIndex, roadmapId:roadmapId })
+      setAnswers({ answers: userAnswers, incorrectIndexes:incorrectIndexes!, roadmapId:roadmapId, lessonIndex:lessonIndex, sectionIndex:sectionIndex })
       console.log('XP and questionType sent successfully!')
     } catch (error) {
       console.error('Error sending XP and questionType:', error)

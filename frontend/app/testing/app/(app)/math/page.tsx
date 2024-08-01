@@ -47,7 +47,7 @@ export default function MathDetailed({ }: Props) {
   const { mutate: mutateStreak } = useUpdateStreak();
   const { data: RoadMapMath, isLoading: isLoadingMath, isError: isErrorMath, refetch: refetchRoadmap } = useGetRoadmap();
   const {isLessonCompleted, setLessonCompleted} = useStore()
-
+  const {setIsModalShowed, isModalShowed} = useStore()
   const handleLessonClick = ({ lessonIndex, sectionIndex, roadmapId, xp, questionType, locked, lessonContent }: handleLesson) => {
     if (!locked) {
       router.push(`/testing/app/math/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}/${lessonContent ? lessonContent : ''}`);
@@ -64,7 +64,7 @@ export default function MathDetailed({ }: Props) {
       toast.error('An error occurred while fetching data.');
     }
   };
-
+  
   useEffect(() => {
     const fetchData = async () => {
       if (session && !isLoadingUser) {
@@ -98,17 +98,16 @@ export default function MathDetailed({ }: Props) {
 
   useEffect(() => {
     if (session && user) {
-      const lastUpdatedDate = new Date(user.lastActivityDate || 0);
-      const today = new Date();
-      if (lastUpdatedDate.toDateString() !== today.toDateString()) {
         mutateStreak();
-      }
     }
   }, [session, user, mutateStreak]);
 
   useEffect(() => {
     if (session && user?.todaysXp! >= 20) { 
-      setShowModal(true);
+      if(!isModalShowed){
+        setShowModal(true);
+        setIsModalShowed(true)
+      }
     }
   }, [session, user]);
 
