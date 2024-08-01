@@ -132,7 +132,7 @@ export default function MathDetailed({ }: Props) {
     <div className="flex flex-row-reverse gap-[48px] px-6">
       <StickySideBar>
         <section className="flex flex-col gap-y-4 p-4">
-          {session && user ? (
+          {session ? (
             <>
               <UserSideBar title="Daily quest" dailyGoal={20} xp={user?.todaysXp || 0} />
               <UserProgress dailyGoal={20} xp={user?.todaysXp || 0} />
