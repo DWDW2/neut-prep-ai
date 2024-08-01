@@ -1,13 +1,14 @@
 'use client'
 
-import useCourseApi from '@/hooks/useCourse'
 import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
-import { MathJax, MathJaxContext } from 'better-react-mathjax'
 import { useSession } from 'next-auth/react'
+import useCourseApi from '@/hooks/useCourse'
 import useStore from '@/hooks/useStore'
+import 'katex/dist/katex.min.css'
 
+const Latex = dynamic(() => import('react-latex-next'), { ssr: false })
 const Loading = dynamic(() => import('@/components/Loading'), { ssr: false })
 
 interface Question {
@@ -66,13 +67,13 @@ export default function MathId({ params }: Props) {
   const [lesson, setLesson] = useState<MathRoadmapLessonType>([])
   const [userAnswers, setUserAnswers] = useState<number[]>([])
   const [showNextButton, setShowNextButton] = useState(false)
-  const {setLessonCompleted} = useStore()
+  const [incorrectIndexes, setIncorrectIndexes] = useState<number[]>()
+  const { setLessonCompleted } = useStore()
   console.log(userAnswers)
-
+  console.log(lesson)
   useEffect(() => {
     const fetchLesson = async () => {
       if (session) {
-
         if (lessonContent) {
           await getLesson({ lessonIndex, sectionIndex, roadmapId })
         } else {
@@ -80,7 +81,9 @@ export default function MathId({ params }: Props) {
         }
       } else {
         try {
-          const lesson = await fetch('/lessonMathHard.json').then(res => res.json()).then((data:mathHardcoded) => {return data})
+          const lesson = await fetch('/lessonMathHard.json')
+            .then(res => res.json())
+            .then((data: mathHardcoded) => data)
           setLesson(lesson.lessons as MathRoadmapLessonType)
           setLessonCompleted(true)
           console.log(lesson.lessons)
@@ -95,7 +98,8 @@ export default function MathId({ params }: Props) {
 
   useEffect(() => {
     if (lessonContent && lessonData) {
-      setLesson(lessonData as MathRoadmapLessonType)
+      setLesson(lessonData.lessons as MathRoadmapLessonType)
+      setIncorrectIndexes(lessonData.incorrectIndexes)
     } else if (generatedLesson) {
       setLesson(generatedLesson as MathRoadmapLessonType)
     }
@@ -163,101 +167,84 @@ export default function MathId({ params }: Props) {
       }
       updateXpByLesson({ points: xpEarned })
       setXpGained({ xpGained: xpEarned, lessonIndex, sectionIndex, roadmapId })
-      setAnswers({ answers: userAnswers, roadmapId, lessonIndex, sectionIndex })
+      setAnswers({ answers: userAnswers, incorrectIndexes:incorrectIndexes!, roadmapId, lessonIndex, sectionIndex })
       console.log('XP and questionType sent successfully!')
     } catch (error) {
       console.error('Error sending XP and questionType:', error)
     }
   }
 
+  const renderMath = (content: string) => {
+    return <Latex>{content}</Latex>
+  }
+
   return (
-    <MathJaxContext>
-      <section className='flex flex-col h-screen justify-between p-10 max-[800px]:p-4'>
-        <section className='px-5'>
-          <div className='text-2xl font-bold pb-4'>
-            <MathJax inline>{currentQuestion.statement}</MathJax>
-          </div>
-          <div className='text-black text-xl pb-4'>
-            {currentQuestion.question.split('\n').map((line, index) => (
-              <div key={index}>
-                <MathJax>{line}</MathJax>
-              </div>
-            ))}
-          </div>
-        </section>
-        <section className='flex flex-col gap-1 px-5'>
-          {currentQuestion.variants.map((variant, index) => (
-            <div
-              key={index}
-              className={`flex flex-row gap-4 items-center cursor-pointer border-2 border-b-4 active:border-b-2 border-slate-300 rounded-lg p-2 ${
-                selectedAnswer === index ? 'bg-sky-100 border-sky-300 text-black' : 'bg-slate-100'
-              }`}
-              onClick={() => setSelectedAnswer(index)}
-            >
-              <div className='text-lg font-bold'>
-                <MathJax inline>{variant}</MathJax> 
-              </div>
+    <section className='flex flex-col h-screen justify-between p-10 max-[800px]:p-4'>
+      <section className='px-5'>
+        <div className='text-2xl font-bold pb-4'>
+          {renderMath(currentQuestion.statement)}
+        </div>
+        <div className='text-black text-xl pb-4'>
+          {currentQuestion.question.split('\n').map((line, index) => (
+            <div key={index}>
+              {renderMath(line)}
             </div>
           ))}
-        </section>
-        <section className='px-5 mt-5 flex flex-col gap-4'>
-          {showExplanation && (
-            <div className='bg-gray-100 border border-gray-400 p-4 rounded'>
-              {selectedAnswer === (typeof currentQuestion.rightAnswer === 'string'
-                ? parseInt(currentQuestion.rightAnswer, 10)
-                : currentQuestion.rightAnswer) ? (
-                <div
-                  className='bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative'
-                  role='alert'
-                >
-                  <strong className='font-bold'>Correct!</strong>
-                  <span className='block sm:inline'>
-                    <MathJax>{currentQuestion.explanation}</MathJax>
-                  </span>
-                </div>
-              ) : (
-                <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative' role='alert'>
-                  <strong className='font-bold'>Incorrect.</strong>
-                  <span className='block sm:inline'>
-                    <MathJax>{currentQuestion.explanation}</MathJax>
-                  </span>
-                </div>
-              )}
-            </div>
-          )}
-          <section className='flex flex-row gap-4'>
-            {selectedAnswer !== null && (
-              <>
-                <button
-                  className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline max-[800px]:w-full max-[800px]:text-center max-[800px]:mb-2 max-[800px]:mx-2 ${showExplanation ? 'hidden' : ''}`}
-                  onClick={handleCheckAnswer}
-                >
-                  Check Answer
-                </button>
-                {currentQuestionIndex < lesson.length - 1 && (
-                  <button
-                    className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline max-[800px]:${showExplanation ? 'w-full text-center mb-2 mx-2' : 'hidden'} `}
-                    onClick={handleNextQuestion}
-                  >
-                    Next Question
-                  </button>
-                )}
-              </>
-            )}
-          </section>
-        </section>
-        {currentQuestionIndex === lesson.length - 1 && (
-          <button
-            className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4'
-            onClick={() => {
-              sendXPAndQuestionType()
-              handleNextLesson()
-            }}
-          >
-            Finish Lesson
-          </button>
-        )}
+        </div>
       </section>
-    </MathJaxContext>
+      <section className='flex flex-col gap-1 px-5'>
+        {currentQuestion.variants.map((variant, index) => (
+          <div
+            key={index}
+            className={`flex flex-row gap-4 items-center cursor-pointer border-2 border-b-4 active:border-b-2 border-slate-300 rounded-lg p-2 ${
+              selectedAnswer === index ? 'bg-sky-100 border-sky-300 text-black' : 'bg-slate-100'
+            }`}
+            onClick={() => setSelectedAnswer(index)}
+          >
+            <div className='text-lg font-bold'>
+              {renderMath(variant)}
+            </div>
+          </div>
+        ))}
+      </section>
+      <section className='py-5'>
+        {showExplanation && (
+          <div className='bg-sky-50 border-t-4 border-sky-400 rounded p-4 text-black'>
+            <div className='font-bold text-lg'>Explanation:</div>
+            {renderMath(currentQuestion.explanation)}
+          </div>
+        )}
+        <div className='flex justify-end gap-4 pt-4'>
+          {currentQuestionIndex < lesson.length - 1 ? (
+            <>
+              <button
+                className={`px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold max-[800px]:w-full max-[800px]:mx-3  ${showExplanation ? 'hidden' : ''}`}
+                onClick={handleCheckAnswer}
+                disabled={selectedAnswer === null}
+              >
+                Check Answer
+              </button>
+              <button
+                className={`px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold max-[800px]:w-full max-[800px]:mx-3 ${showExplanation ? '' : 'hidden'}`}
+                onClick={handleNextQuestion}
+                disabled={!showExplanation}
+              >
+                Next Question
+              </button>
+            </>
+          ) : (
+            <button
+              className='px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold max-[800px]:w-full max-[800px]:mx-3'
+              onClick={() => {
+                sendXPAndQuestionType()
+                handleNextLesson()
+              }}
+            >
+              Finish Lesson
+            </button>
+          )}
+        </div>
+      </section>
+    </section>
   )
 }

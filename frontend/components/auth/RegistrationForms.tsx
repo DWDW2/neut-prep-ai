@@ -66,9 +66,13 @@ const RegistrationForm = ({ onSuccess }: RegistrationProps) => {
 
   const handleGoogleRegistration = async () => {
     try {
-      await signIn('google', { callbackUrl: '/testing/app/' });
-      if (onSuccess) {
-        await onSuccess();
+      const signInResult = await signIn('google', { callbackUrl: '/testing/app/' });
+      if (signInResult?.ok) {
+        if (onSuccess) {
+          await onSuccess();
+        }
+      } else {
+        toast.error('Sign-in failed after registration');
       }
     } catch (error) {
       console.error('Error during Google registration:', error);
