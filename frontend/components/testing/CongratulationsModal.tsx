@@ -52,7 +52,7 @@ const CongratulationsModal = ({ show, onClose, xp }: Props) => {
         </button>
         <h2 className="text-2xl font-bold mb-4">Congratulations!</h2>
         <p className="mb-4">You have reached your daily XP goal of {xp} XP!</p>
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-4">
           <button className="bg-blue-600 text-white py-2 px-4 rounded" onClick={() => captureAndShare('facebook')}>
             Share on Facebook
           </button>

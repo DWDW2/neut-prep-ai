@@ -4,6 +4,8 @@ import useCourseApi from '@/hooks/useCourse'
 import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
+import useStore from '@/hooks/useStore'
+import { useSession } from 'next-auth/react'
 
 const Loading = dynamic(() => import('@/components/Loading'), { ssr: false })
 
@@ -16,7 +18,8 @@ interface Question {
 }
 
 type CriticalRoadmapLessonType = Question[]
-type hardCodeData = {
+
+type CritcalHardCodeData = {
   lessons: CriticalRoadmapLessonType
 }
 
@@ -34,6 +37,7 @@ export default function CriticalId({ params }: Props) {
   const xp = parseInt(id[3], 10)
   const questionType = id[4]
   const lessonContent = id[5]
+  console.log(id)
   const {
     useGenerateLesson,
     useHandleIncorrectThemes,
@@ -46,6 +50,7 @@ export default function CriticalId({ params }: Props) {
     useSetUserAnswers
   } = useCourseApi()
 
+  const { data: session } = useSession()
   const { mutate: generateLesson, isLoading: isLoadingCritical, isError: isErrorCritical, data: generatedLesson, error: fetchError } = useGenerateLesson()
   const { mutate: handleIncorrectTheme } = useHandleIncorrectThemes()
   const { mutate: updateXpByLesson } = useUpdateXpByLesson()
@@ -54,26 +59,35 @@ export default function CriticalId({ params }: Props) {
   const { mutate: setXpGained } = useSetXpGained()
   const { mutate: setAnswers } = useSetUserAnswers()
   const { mutate: setFinished } = useSetFinished()
-  const [incorrectIndexes, setIncorrectIndexes] = useState<number[]>()
   const { mutate: getLesson, isLoading: isLoadingLesson, isError: isErrorLesson, data: lessonData } = useGetLesson()
 
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [showExplanation, setShowExplanation] = useState(false)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [correctAnswers, setCorrectAnswers] = useState(0)
+  const [correctAnswers, setCorrectAnswers] = useState(1)
   const [lesson, setLesson] = useState<CriticalRoadmapLessonType>([])
   const [userAnswers, setUserAnswers] = useState<number[]>([])
   const [showNextButton, setShowNextButton] = useState(false)
+  const [incorrectIndexes, setIncorrectIndexes] = useState<number[]>([])
+  const { setLessonCompleted } = useStore()
+  
 
   useEffect(() => {
     const fetchLesson = async () => {
-      if (lessonContent) {
-        await getLesson({ lessonIndex, sectionIndex, roadmapId })
+      if (session) {
+        if (lessonContent) {
+          await getLesson({ lessonIndex, sectionIndex, roadmapId })
+        } else {
+          await generateLesson({ lessonIndex:lessonIndex, sectionIndex:sectionIndex, roadmapType:roadmapType })
+        }
       } else {
         try {
-          const lesson = await fetch('/lessonCriticalHard.json').then(res => res.json()).then((data: hardCodeData) => data)
-          setLesson(lesson.lessons as CriticalRoadmapLessonType )
-          console.log(lesson)
+          const lesson = await fetch('/lessonCriticalHard.json')
+            .then(res => res.json())
+            .then((data: CritcalHardCodeData) => data)
+          setLesson(lesson.lessons as CriticalRoadmapLessonType)
+          setLessonCompleted(true)
+          console.log(lesson.lessons)
         } catch (error) {
           console.error('Error fetching hardcoded data:', error)
         }
@@ -81,7 +95,7 @@ export default function CriticalId({ params }: Props) {
     }
 
     fetchLesson()
-  }, [lessonContent, getLesson, generateLesson, lessonIndex, sectionIndex, roadmapId, roadmapType])
+  }, [lessonContent, getLesson, generateLesson, lessonIndex, sectionIndex, roadmapId, roadmapType, session])
 
   useEffect(() => {
     if (lessonContent && lessonData) {
@@ -154,7 +168,7 @@ export default function CriticalId({ params }: Props) {
       }
       updateXpByLesson({ points: xpEarned })
       setXpGained({ xpGained: xpEarned, lessonIndex, sectionIndex, roadmapId })
-      setAnswers({ answers: userAnswers,incorrectIndexes: incorrectIndexes!, roadmapId, lessonIndex, sectionIndex })
+      setAnswers({ answers: userAnswers, incorrectIndexes: incorrectIndexes!, roadmapId, lessonIndex, sectionIndex })
       console.log('XP and questionType sent successfully!')
     } catch (error) {
       console.error('Error sending XP and questionType:', error)
@@ -169,7 +183,9 @@ export default function CriticalId({ params }: Props) {
         </div>
         <div className='text-black text-xl pb-4'>
           {currentQuestion.question.split('\n').map((line, index) => (
-            <div key={index}>{line}</div>
+            <div key={index}>
+              {line}
+            </div>
           ))}
         </div>
       </section>
@@ -182,63 +198,58 @@ export default function CriticalId({ params }: Props) {
             }`}
             onClick={() => setSelectedAnswer(index)}
           >
-            <div className='text-lg font-bold'>{variant}</div>
+            <div className='text-lg font-bold'>
+              {variant}
+            </div>
           </div>
         ))}
       </section>
-      <section className='px-5 mt-5 flex flex-col gap-4'>
+      <section className='py-5'>
         {showExplanation && (
-          <div className='bg-gray-100 border border-gray-400 p-4 rounded'>
-            {selectedAnswer === (typeof currentQuestion.rightAnswer === 'string'
-              ? parseInt(currentQuestion.rightAnswer, 10)
-              : currentQuestion.rightAnswer) ? (
-              <div
-                className='bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative'
-                role='alert'
-              >
-                <strong className='font-bold'>Correct!</strong>
-                <span className='block sm:inline'>{currentQuestion.explanation}</span>
-              </div>
-            ) : (
-              <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative' role='alert'>
-                <strong className='font-bold'>Incorrect.</strong>
-                <span className='block sm:inline'>{currentQuestion.explanation}</span>
-              </div>
-            )}
+          <div className='bg-sky-50 border-t-4 border-sky-400 rounded p-4 text-black'>
+            <div className='font-bold text-lg'>Explanation:</div>
+            {currentQuestion.explanation}
           </div>
         )}
-        <section className='flex flex-row gap-4'>
-          {selectedAnswer !== null && (
+        <div className='flex justify-end gap-4 pt-4'>
+          {currentQuestionIndex < lesson.length - 1 ? (
             <>
               <button
-                className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline max-[800px]:w-full max-[800px]:text-center max-[800px]:mb-2 max-[800px]:mx-2 ${showExplanation ? 'hidden' : ''}`}
+                className={`px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold max-[800px]:w-full max-[800px]:mx-3 ${showExplanation ? 'hidden' : ''}`}
                 onClick={handleCheckAnswer}
+                disabled={selectedAnswer === null}
               >
                 Check Answer
               </button>
-              {currentQuestionIndex < lesson.length - 1 && (
-                <button
-                  className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline max-[800px]:${showExplanation ? 'w-full text-center mb-2 mx-2' : 'hidden'}`}
-                  onClick={handleNextQuestion}
-                >
-                  Next Question
-                </button>
-              )}
+              <button
+                className={`px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold max-[800px]:w-full max-[800px]:mx-3 ${showExplanation ? '' : 'hidden'}`}
+                onClick={handleNextQuestion}
+              >
+                Next Question
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className={`px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold max-[800px]:w-full max-[800px]:mx-3 ${showExplanation ? 'hidden' : ''}`}
+                onClick={handleCheckAnswer}
+                disabled={selectedAnswer === null}
+              >
+                Check Answer
+              </button>
+              <button
+                className={`px-6 py-3 rounded-lg bg-sky-400 text-white text-lg font-bold max-[800px]:w-full max-[800px]:mx-3 ${showExplanation ? '' : 'hidden'}`}
+                onClick={async () => {
+                  await sendXPAndQuestionType()
+                  handleNextLesson()
+                }}
+              >
+                Next Lesson
+              </button>
             </>
           )}
-        </section>
+        </div>
       </section>
-      {currentQuestionIndex === lesson.length - 1 && (
-        <button
-          className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline max-[800px]:w-full max-[800px]:text-center max-[800px]:mb-2 max-[800px]:mx-2'
-          onClick={async () => {
-            await sendXPAndQuestionType()
-            handleNextLesson()
-          }}
-        >
-          Finish Lesson
-        </button>
-      )}
     </section>
   )
 }

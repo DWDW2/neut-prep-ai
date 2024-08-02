@@ -18,6 +18,7 @@ import { useSession } from "next-auth/react";
 import AuthForm from "@/components/testing/AuthForm";
 import LessonCompleteModal from "@/components/testing/AuthFormaModal";
 import useStore from "@/hooks/useStore";
+import { AiOutlineConsoleSql } from "react-icons/ai";
 
 const Loading = dynamic(() => import('@/components/Loading'), { ssr: false });
 
@@ -47,8 +48,9 @@ export default function CriticalDetailed({ }: Props) {
   const { data: updatedXp } = useUpdateXp();
   const { mutate: mutateStreak } = useUpdateStreak();
   const { data: RoadMapCritical, isLoading: isLoadingCritical, isError: isErrorCritical, refetch: refetchRoadmap } = useGetRoadmap();
-  const { isLessonCompleted, setLessonCompleted } = useStore();  
-
+  console.log(roadmapContent)
+  const { isLessonCompleted, setLessonCompleted } = useStore();
+  const { setIsModalShowed, isModalShowed } = useStore();
 
   const handleFetchError = (error: any) => {
     if (error.response?.status === 401) {
@@ -58,11 +60,10 @@ export default function CriticalDetailed({ }: Props) {
     }
   };
 
-
-
   const handleLessonClick = ({ lessonIndex, sectionIndex, roadmapId, xp, questionType, locked, lessonContent }: handleLesson) => {
     if (!locked) {
-      router.push(`/testing/app/critical/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}/${lessonContent ? lessonContent : ''}`);
+      const sanitizedQuestionType = questionType.replace('?', '');
+      router.push(`/testing/app/critical/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${sanitizedQuestionType}/${lessonContent ? lessonContent : ''}`);
     } else {
       toast.info('Complete previous lessons to unlock this one');
     }
@@ -72,13 +73,13 @@ export default function CriticalDetailed({ }: Props) {
     const fetchData = async () => {
       if (session && !isLoadingUser) {
         try {
-          if(!user){
+          if (!user) {
             router.push('/login')
           }
           if (user?.roadmapCriticalId !== null) {
             refetchRoadmap();
           }
-          
+
           if (isLoadingCritical) return;
           if (isErrorCritical) {
             toast.error('An error occurred while loading the lesson. Please try again.');
@@ -89,7 +90,7 @@ export default function CriticalDetailed({ }: Props) {
           handleFetchError(error);
         }
       } else {
-        const criticalHard = await fetch('/criticalHard.json').then(res => res.json()).then((data:Roadmap) => {return data})
+        const criticalHard = await fetch('/criticalHard.json').then(res => res.json()).then((data: Roadmap) => { return data })
         setRoadmapContent(criticalHard);
       }
     };
@@ -101,24 +102,23 @@ export default function CriticalDetailed({ }: Props) {
 
   useEffect(() => {
     if (session && user) {
-      const lastUpdatedDate = new Date(user.lastActivityDate || 0);
-      const today = new Date();
-      if (lastUpdatedDate.toDateString() !== today.toDateString()) {
         mutateStreak();
-      }
     }
   }, [session, user, mutateStreak]);
 
   useEffect(() => {
-    if (session && user?.todaysXp! >= 20) { 
-      setShowCongratulationsModal(true);
+    if (session && user?.todaysXp! >= 20) {
+      if (!isModalShowed) {
+        setShowCongratulationsModal(true);
+        setIsModalShowed(true)
+      }
     }
   }, [session, user]);
 
   useEffect(() => {
     if (isLessonCompleted) {
       setShowLessonCompleteModal(true);
-      setLessonCompleted(false);  
+      setLessonCompleted(false);
     }
   }, [isLessonCompleted]);
 

@@ -167,7 +167,7 @@ For the {{questionType}} "Main Conclusion", the roadmap could be structured as f
         RoadMap.findById(user.roadmapMathId).lean(),
         RoadMap.findById(user.roadmapCriticalId).lean()
       ]);
-
+      // console.log(criticalRoadmapModel?.roadmap[0].lessons[0])
       if (mathRoadmapModel && criticalRoadmapModel) {
         return { message: 'Roadmaps found', mathRoadmap: mathRoadmapModel, criticalRoadmap: criticalRoadmapModel, success: true };
       } else {

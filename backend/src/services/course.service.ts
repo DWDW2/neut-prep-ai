@@ -96,7 +96,7 @@ export default class CourseService {
   async getLessonById(lessonIndex: number, sectionIndex: number, roadmapId: string) {
     try {
       const roadmap = await RoadMap.findById(roadmapId);
-      
+      console.log(roadmap)
       if (!roadmap) {
         return { message: 'Roadmap not found', success: false };
       }
@@ -119,8 +119,6 @@ export default class CourseService {
       const incorrectLessons = lesson.lessons
         .filter((_, index) => incorrectIndexes.includes(index));
   
-      console.log({ incorrectIndexes, incorrectLessons });
-  
       if (incorrectIndexes.length === 0) {
         roadmap.roadmap[sectionIndex].lessons[lessonIndex].finished = true;
         roadmap.roadmap[sectionIndex].lessons[lessonIndex].locked = true;
@@ -138,8 +136,6 @@ export default class CourseService {
     }
   }
   
-  
-
   async setFinished(lessonIndex: number, sectionIndex: number, roadmapId: string){
     try {
       const roadmap = await RoadMap.findById(roadmapId)
@@ -166,19 +162,15 @@ export default class CourseService {
         return { message: 'RoadmapId is required', success: false };
       }
   
-      const lesson = await LessonModel.findById(roadmap.roadmap[sectionIndex].lessons[lessonIndex].lessonContent);
+      const lessonId = roadmap.roadmap[sectionIndex].lessons[lessonIndex].lessonContent;
+      const lesson = await LessonModel.findById(lessonId);
       if (!lesson) {
         return { message: 'Lesson not found', success: false };
       }
   
-      lesson.lessons = lesson.lessons.map((les, index) => {
-        if (incorrectIndexes.includes(index)) {
-          les.answer = answers[index];
-        }
-        return les;
+      incorrectIndexes.forEach((incorrectIndex, i) => {
+        lesson.lessons[incorrectIndex].answer = answers[i];
       });
-  
-      console.log(answers);
   
       await lesson.save();
       await roadmap.save();
@@ -207,21 +199,21 @@ export default class CourseService {
     }
   }
 
-  async setXpGained(lessonIndex: number, sectionIndex: number, roadmapId: string, xp: number){
+  async setXpGained(lessonIndex: number, sectionIndex: number, roadmapId: string, xp: number) {
     try {
-      const roadmap = await RoadMap.findById(roadmapId)
-      if(!roadmap){
-        return {message: 'Roadmap not found', success: false}
+      const roadmap = await RoadMap.findById(roadmapId);
+      if (!roadmap) {
+        return { message: 'Roadmap not found', success: false };
       }
-      roadmap.roadmap[sectionIndex].lessons[lessonIndex].xpGained = xp
-      await roadmap.save()
-      return {message: 'Lesson finished', success: true}
+      roadmap.roadmap[sectionIndex].lessons[lessonIndex].xpGained = Math.round(xp);
+      await roadmap.save();
+      return { message: 'Lesson finished', success: true };
     } catch (error) {
-      console.log(error)
-      return {message: error, success: false}
+      console.log(error);
+      return { message: error, success: false };
     }
   }
-
+  
   async handleIncorrectThemes(userId: string, incorrectThemes: string[]) {
     try {
       const user = await User.findById(userId);
@@ -241,21 +233,22 @@ export default class CourseService {
     }
   }
   
-
   async updateXp(userId: string, points: number) {
     try {
       const user = await User.findById(userId);
       if (!user) return null;
-      user.todaysXp += points;
-      user.totalXp += points;
-
+      const roundedPoints = Math.round(points);
+      user.todaysXp += roundedPoints;
+      user.totalXp += roundedPoints;
+  
       await user.save();
       return true;
     } catch (error) {
-      console.log(error)
-      return false
+      console.log(error);
+      return false;
     }
   }
+  
 
   async updateStreak(userId: string) {
     try {
@@ -332,8 +325,6 @@ export default class CourseService {
             return true;
           }
         }
-        user.todaysXp = 0;
-        await user.save();
         return true;
       } catch (error) {
         console.log(error)
@@ -356,20 +347,25 @@ export default class CourseService {
     }
   }
 
-  async updateBestThemes(userId: string, bestThemes: string[]){
+  async updateBestThemes(userId: string, bestThemes: string[]) {
     try {
       const user = await User.findById(userId);
       if (!user) return null;
-
-      user.bestThemes = [...new Set([...user.bestThemes, ...bestThemes])];
-
+  
+      const processedBestThemes = bestThemes.map(theme => theme.replace(/%/g, ' '));
+  
+      user.bestThemes = [...new Set([...user.bestThemes, ...processedBestThemes])];
+  
+      user.themesToImprove = user.themesToImprove.filter(theme => !processedBestThemes.includes(theme));
+  
       await user.save();
-      return true; 
+      return true;
     } catch (error) {
-      console.log(error)
-      return false
+      console.log(error);
+      return false;
     }
   }
+  
 
   async getAllUsers(){
     try {

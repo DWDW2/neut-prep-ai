@@ -47,6 +47,7 @@ export default function MathDetailed({ }: Props) {
   const { mutate: mutateStreak } = useUpdateStreak();
   const { data: RoadMapMath, isLoading: isLoadingMath, isError: isErrorMath, refetch: refetchRoadmap } = useGetRoadmap();
   const {isLessonCompleted, setLessonCompleted} = useStore()
+  const {setIsModalShowed, isModalShowed} = useStore()
 
   const handleLessonClick = ({ lessonIndex, sectionIndex, roadmapId, xp, questionType, locked, lessonContent }: handleLesson) => {
     if (!locked) {
@@ -64,29 +65,30 @@ export default function MathDetailed({ }: Props) {
       toast.error('An error occurred while fetching data.');
     }
   };
-
+  
   useEffect(() => {
     const fetchData = async () => {
       if (session && !isLoadingUser) {
         try {
-          if(!user){
-            router.push('/login')
-          }
-          if (user?.roadmapMathId !== null) {
-            refetchRoadmap();
-          }
-          
-          if (isLoadingMath) return;
-          if (isErrorMath) {
-            toast.error('An error occurred while loading the lesson. Please try again.');
+          if (!user) {
+            router.push('/login');
           } else {
-            setRoadmapContent(RoadMapMath?.mathRoadmap || null);
+            if (user.roadmapMathId !== null) {
+              refetchRoadmap();
+            }
+
+            if (isLoadingMath) return;
+            if (isErrorMath) {
+              toast.error('An error occurred while loading the lesson. Please try again.');
+            } else {
+              setRoadmapContent(RoadMapMath?.mathRoadmap || null);
+            }
           }
         } catch (error) {
           handleFetchError(error);
         }
       } else {
-        const mathHard = await fetch('/mathHard.json').then(res => res.json()).then((data:Roadmap) => {return data})
+        const mathHard = await fetch('/mathHard.json').then(res => res.json()).then((data: Roadmap) => { return data })
         setRoadmapContent(mathHard);
       }
     };
@@ -98,17 +100,16 @@ export default function MathDetailed({ }: Props) {
 
   useEffect(() => {
     if (session && user) {
-      const lastUpdatedDate = new Date(user.lastActivityDate || 0);
-      const today = new Date();
-      if (lastUpdatedDate.toDateString() !== today.toDateString()) {
-        mutateStreak();
-      }
+      mutateStreak();
     }
   }, [session, user, mutateStreak]);
 
   useEffect(() => {
     if (session && user?.todaysXp! >= 20) { 
-      setShowModal(true);
+      if(!isModalShowed){
+        setShowModal(true);
+        setIsModalShowed(true)
+      }
     }
   }, [session, user]);
 
