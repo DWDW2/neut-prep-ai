@@ -36,12 +36,6 @@ export default function LessonCompleteModal({isModalOpen, closeModal}: Props) {
               LOGIN
             </button>
           </div>
-          <button
-            className="mt-4 w-full py-2 bg-gray-300 text-gray-700 font-bold rounded-2xl transition duration-300"
-            onClick={closeModal}
-          >
-            Close
-          </button>
         </div>
       </div>
     )
