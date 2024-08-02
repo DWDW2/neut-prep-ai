@@ -67,8 +67,8 @@ export const authOptions: NextAuthOptions = {
               headers: {
                 'Content-Type': 'application/json'
               }
-            })
-
+            })  
+            
             const tokenAccess = await fetch(`${BASE_URL}/user/login`, {
               method: 'POST',
               headers: {
@@ -78,11 +78,25 @@ export const authOptions: NextAuthOptions = {
                 id_token: account.id_token
               }),
             });
+            const data = await tokenAccess.json();
+            if(register.ok && register.status !== 400){
+              try {
+                const roadmap = await fetch(`${BASE_URL}/roadmap/generate-roadmap`,{
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${data.accessToken}`
+                  },
+                })
+              } catch (error) {
+                console.log(error)
+              }
+            }
             if (!tokenAccess.ok) {
               const errorText = await tokenAccess.text();
               throw new Error(`Token fetch failed: ${errorText}`);
             }
-            const data = await tokenAccess.json();
+
             if (data.accessToken && data.refreshToken) {
               token.accessToken = data.accessToken;
               token.refreshToken = data.refreshToken; 

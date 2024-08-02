@@ -1,13 +1,20 @@
-import PleaseLogin from '@/components/testing/PleaseLogin'
+'use client'
 import React from 'react'
+import PleaseLogin from '@/components/testing/PleaseLogin'
+import UserDashboard from '@/components/testing/dashboard/Dashboard'
+import useCourseApi from '@/hooks/useCourse'
 
-type Props = {}
+export default function DashboardPage() {
+  const { useGetUser } = useCourseApi()
+  const { data: user, isLoading } = useGetUser()
 
-export default function page({}: Props) {
-  
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div>
-      <PleaseLogin />
+      {user ? <UserDashboard /> : <PleaseLogin />}
     </div>
   )
 }

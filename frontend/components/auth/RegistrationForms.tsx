@@ -11,9 +11,10 @@ import BASE_URL from '@/lib/env';
 
 type RegistrationProps = {
   onSuccess?: () => void
+  onGoogleSuccess?: () => void
 }
 
-const RegistrationForm = ({ onSuccess }: RegistrationProps) => {
+const RegistrationForm = ({ onSuccess, onGoogleSuccess }: RegistrationProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
@@ -65,23 +66,22 @@ const RegistrationForm = ({ onSuccess }: RegistrationProps) => {
   };
 
   const handleGoogleRegistration = async () => {
+    setIsLoading(true)
     try {
-      const signInResult = await signIn('google', { callbackUrl: '/testing/app/' });
-      if (signInResult?.ok) {
-        if (onSuccess) {
-          await onSuccess();
-        }
-      } else {
-        toast.error('Sign-in failed after registration');
+      const signInResult = await signIn('google', {redirect:true, callbackUrl:'/testing/app/math'})
+      if(onGoogleSuccess){
+        onGoogleSuccess()
       }
     } catch (error) {
       console.error('Error during Google registration:', error);
       toast.error('An error occurred during Google registration');
+    } finally{
+      setIsLoading(false)
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center"> 
       <div className="w-full bg-white rounded-lg shadow-md p-6">
         <div className="flex flex-row gap-2 mb-4">
           <Image src={'/drago.svg'} width={30} height={30} alt='image' />

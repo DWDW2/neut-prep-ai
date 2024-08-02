@@ -1,27 +1,33 @@
 import React from 'react';
 import { UserType } from '@/types/User.types';
-import Image from 'next/image';
-type Props = {
+
+type LeaderboardItemProps = {
   rank: number;
   user: UserType;
-  first: boolean;
-  second:boolean;
-  third:boolean;
-};
+  first?: boolean;
+  second?: boolean;
+  third?: boolean;
+}
 
-export default function LeaderboardItem({ rank, user, first, second, third}: Props) {
+const LeaderboardItem = ({ rank, user, first, second, third }: LeaderboardItemProps) => {
+  let rankClasses = '';
+  if (first) rankClasses = 'bg-yellow-400';
+  if (second) rankClasses = 'bg-gray-300';
+  if (third) rankClasses = 'bg-orange-400';
+
   return (
-    <li className="flex flex-row justify-between mb-2">
-      <div className='flex items-center gap-4'>
-        <span className="font-bold">{rank}</span>
-        <div className="flex items-center gap-2">
-          <span>{user.username}</span>
+    <li className={`flex items-center justify-between p-4 rounded-lg shadow-md bg-white hover:shadow-lg transition-shadow duration-200 ${rankClasses}`}>
+      <div className="flex items-center">
+        <span className={`font-bold text-xl mr-4 ${first ? 'text-yellow-600' : second ? 'text-gray-600' : third ? 'text-orange-600' : 'text-gray-700'}`}>
+          {rank}
+        </span>
+        <div>
+          <p className="font-semibold">{user.username}</p>
+          <p className="text-sm text-gray-500">{user.totalXp} XP</p>
         </div>
-        <span className="text-gray-500">{user.totalXp} XP</span>
       </div>
-      <Image src={'/testing/medal-gold-svgrepo-com.svg'} alt='crown' width={35} height={35} className={first ? 'float-right' : 'hidden'}/>
-      <Image src={'/testing/silver-medal-svgrepo-com.svg'} alt='crown' width={35} height={35} className={second ? 'float-right' : 'hidden'}/>
-      <Image src={'/testing/bronze-medal-svgrepo-com.svg'} alt='crown' width={35} height={35} className={third ? 'float-right' : 'hidden'}/>
     </li>
   );
-}
+};
+
+export default LeaderboardItem;

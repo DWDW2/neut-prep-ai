@@ -117,6 +117,16 @@ const StudyPathPrompt = () => {
       }
     });
   };
+
+  const onGoogleSuccess = () => {
+    try {
+      setIsModalOpen(false);
+      setIsRegistering(true);
+      setIsLoading(true);
+    } catch (error) {
+      console.log(error)
+    }
+  }
   
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-white text-gray-900">
@@ -158,7 +168,7 @@ const StudyPathPrompt = () => {
       )}
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <RegistrationForm onSuccess={handleRegistrationSuccess} />
+        <RegistrationForm onSuccess={handleRegistrationSuccess} onGoogleSuccess={onGoogleSuccess}/>
       </Modal>
     </div>
   );
