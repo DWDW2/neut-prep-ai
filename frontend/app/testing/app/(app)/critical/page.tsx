@@ -152,7 +152,7 @@ export default function CriticalDetailed({ }: Props) {
   if (!roadmapContent && !isLoadingCritical) return <Loading />;
 
   return (
-    <div className="flex flex-row-reverse gap-[48px] px-6">
+    <div className="flex lg:flex-row-reverse  px-6">
       <StickySideBar>
         <section className="flex flex-col gap-y-4 p-4">
           {session ? (

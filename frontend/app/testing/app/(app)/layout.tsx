@@ -20,15 +20,15 @@ export default function Layout({children}: Props) {
   }
 
   return (
-    <>
-        <MobileHeader />
+    <div className='max-[1000px]:overflow-x-hidden'>
+      <MobileHeader />
         <SideBar className='hidden lg:flex' />
         <div className='lg:pl-[256px] h-full pt-[50px] lg:pt-[0px]'>
             <div className='h-full'>
                 {children}
             </div>
         </div>
-        {/* {!shouldHideFooterNav() && <FooterNav />} */}
-    </>
+        {!shouldHideFooterNav() && <FooterNav />}
+    </div>
   )
 }

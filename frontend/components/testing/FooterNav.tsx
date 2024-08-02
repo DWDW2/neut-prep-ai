@@ -66,19 +66,7 @@ export default function FooterNav({}: Props) {
             />
           </Link>
         </div>
-        <div className='fixed bottom-16 right-4 z-50'>
-          <button
-            onClick={() => setShowXp(!showXp)}
-            className='bg-blue-500 text-white p-3 rounded-full shadow-lg flex items-center justify-center'
-          >
-            <span className='font-bold text-xl'>XP</span>
-          </button>
-          {showXp && (
-            <div className='absolute bottom-12 right-0 bg-white border border-gray-300 shadow-lg rounded-lg p-3'>
-              <p className='text-lg font-semibold'>XP: {xpAmount}</p>
-            </div>
-          )}
-        </div>
+        
       </main>
     </section>
   )
