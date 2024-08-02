@@ -1,3 +1,4 @@
+'use client'
 import { Nunito } from "next/font/google";
 import { Analytics } from '@vercel/analytics/react';
 import Head from 'next/head';
@@ -11,9 +12,6 @@ const nunito = Nunito({
   display: "swap",
 });
 
-export const metadata = {
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
-};
 
 export default function RootLayout({
   children,
@@ -25,7 +23,7 @@ export default function RootLayout({
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
         <html lang="en">
-          <Head>
+        <Head>
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
             <meta name="description" content="Prepare for the NUET (Nazarbayev University Entrance Test) with AI-generated tasks and personalized roadmaps tailored to your needs." />
             <meta name="keywords" content="NUET, Nazarbayev University Entrance Test, AI-generated tasks, personalized roadmaps, exam preparation" />
@@ -34,7 +32,10 @@ export default function RootLayout({
             <meta property="og:image" content="/Thur.jpg" />
             <meta property="og:url" content="https://nuet-prep-ai.vercel.app" />
             <meta property="og:type" content="website" />
-           
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title" content="NUET Exam Preparation" />
+            <meta name="twitter:description" content="Prepare for the NUET with AI-generated tasks and personalized roadmaps." />
+            <meta name="twitter:image" content="/path-to-your-image.jpg" />
             <link rel="icon" href="/favicon.ico" />
             <title>NUET Exam Preparation</title>
           </Head>
