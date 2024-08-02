@@ -9,7 +9,7 @@ export default function FooterNav({}: Props) {
   const xpAmount = 1000; 
 
   return (
-    <section className='lg:hidden sticky bottom-0 w-full z-50 bg-white h-[70px] border-t-2 border-slate-200'>
+    <section className='lg:hidden fixed bottom-0 w-full z-50 bg-white h-[70px] border-t-2 border-slate-200'>
       <main className='flex flex-row justify-around items-center h-full'>
         <div className='relative m-1'>
           <Link href={'/testing/app'} >
@@ -66,6 +66,7 @@ export default function FooterNav({}: Props) {
             />
           </Link>
         </div>
+        
       </main>
     </section>
   )
