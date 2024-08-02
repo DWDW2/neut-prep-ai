@@ -28,7 +28,7 @@ export default function Layout({children}: Props) {
                 {children}
             </div>
         </div>
-        {/* {!shouldHideFooterNav() && <FooterNav />} */}
+        {!shouldHideFooterNav() && <FooterNav />}
     </>
   )
 }
