@@ -1,10 +1,7 @@
-'use client'
 import { Nunito } from "next/font/google";
 import { Analytics } from '@vercel/analytics/react';
-import Head from 'next/head';
 import "./globals.css";
-import { QueryClientProvider, QueryClient } from 'react-query';
-import { SessionProvider } from "next-auth/react";
+import GlobalProvider from "@/components/GlobalProvider";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -12,39 +9,32 @@ const nunito = Nunito({
   display: "swap",
 });
 
+export const metadata = {
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
+  description: "Prepare for the NUET (Nazarbayev University Entrance Test) with AI-generated tasks and personalized roadmaps tailored to your needs.",
+  keywords: "NUET, Nazarbayev University Entrance Test, AI-generated tasks, personalized roadmaps, exam preparation",
+  ogTitle: "NUET Exam Preparation",
+  ogDescription: "Prepare for the NUET with AI-generated tasks and personalized roadmaps.",
+  ogImage: "/Thur.jpg",
+  ogUrl: "https://nuet-prep-ai.vercel.app",
+  ogType: "website",
+  favicon: "/favicon.ico",
+  title: "NUET Exam Preparation"
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const queryClient = new QueryClient();
   return (
-    <QueryClientProvider client={queryClient}>
-      <SessionProvider>
+      <GlobalProvider>
         <html lang="en">
-        <Head>
-            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-            <meta name="description" content="Prepare for the NUET (Nazarbayev University Entrance Test) with AI-generated tasks and personalized roadmaps tailored to your needs." />
-            <meta name="keywords" content="NUET, Nazarbayev University Entrance Test, AI-generated tasks, personalized roadmaps, exam preparation" />
-            <meta property="og:title" content="NUET Exam Preparation" />
-            <meta property="og:description" content="Prepare for the NUET with AI-generated tasks and personalized roadmaps." />
-            <meta property="og:image" content="/Thur.jpg" />
-            <meta property="og:url" content="https://nuet-prep-ai.vercel.app" />
-            <meta property="og:type" content="website" />
-            <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:title" content="NUET Exam Preparation" />
-            <meta name="twitter:description" content="Prepare for the NUET with AI-generated tasks and personalized roadmaps." />
-            <meta name="twitter:image" content="/path-to-your-image.jpg" />
-            <link rel="icon" href="/favicon.ico" />
-            <title>NUET Exam Preparation</title>
-          </Head>
           <body className={nunito.className}>
             {children}
             <Analytics />
           </body>
         </html>
-      </SessionProvider>
-    </QueryClientProvider>
+      </GlobalProvider>
   );
 }
