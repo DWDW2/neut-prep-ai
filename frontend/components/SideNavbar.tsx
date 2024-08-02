@@ -15,14 +15,15 @@ import { signIn, signOut, useSession } from "next-auth/react";
   interface SideBarItemProps {
     href: string;
     text: string;
+    onClick?: () => void;
   }
   
-  const SideBarItem = ({ href, text }: SideBarItemProps) => {
+  const SideBarItem = ({ href, text, onClick }: SideBarItemProps) => {
     const router = usePathname();
     const isActive = router === href;
   
     return (
-      <Link href={href}>
+      <Link href={href} onClick={() => onClick ? onClick() : console.log('')}>
         <div
           className={`flex items-center gap-2 p-3 rounded-md cursor-pointer ${
             isActive ? "bg-gray-200" : "hover:bg-gray-100"
@@ -36,7 +37,8 @@ import { signIn, signOut, useSession } from "next-auth/react";
   
   const SideNavbar = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const session = useSession()
+    const {data:session} = useSession()
+    const router = useRouter()
     return (
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger>
@@ -50,9 +52,9 @@ import { signIn, signOut, useSession } from "next-auth/react";
             <SideBarItem href="/" text="Home" />
             <SideBarItem href="#features" text="Features" />
             <SideBarItem href="#about" text="About" />
-            {session.status === 'authenticated' ? (
-                <div className="text-gray-600 hover:text-gray-800 max-[800px]:hidden" onClick={() => signOut()}>Sign out</div>) :
-                (<div className="text-gray-600 hover:text-gray-800 max-[800px]:hidden" onClick={() => signIn()}>Sign in</div>)
+            {session ? (
+                <SideBarItem href="#" text="logout" onClick={signOut}/>) :
+                (<SideBarItem href="/login" text="signIn" />)
             }
           </SheetContent>
         </SheetContent>
