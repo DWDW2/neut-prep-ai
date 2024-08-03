@@ -219,16 +219,15 @@ export default class CourseService {
       const user = await User.findById(userId);
       if (!user) return null;
 
+      // Remove % and numbers from incorrect themes
       const processedIncorrectThemes = incorrectThemes.map(theme => 
-        theme.replace(/%|\d/g, '')
-          .trim() 
-          .toLowerCase() 
+        theme.replace(/%|\d/g, '') 
       );
 
       user.themesToImprove = [...new Set([...user.themesToImprove, ...processedIncorrectThemes])];
 
       user.bestThemes = user.bestThemes.filter(theme => 
-        !processedIncorrectThemes.includes(theme.replace(/%|\d/g, '').trim().toLowerCase())
+        !processedIncorrectThemes.includes(theme.replace(/%|\d/g, ''))
       );
 
       await user.save();
@@ -359,15 +358,13 @@ export default class CourseService {
       if (!user) return null;
 
       const processedBestThemes = bestThemes.map(theme => 
-        theme.replace(/%|\d/g, '') 
-          .trim() 
-          .toLowerCase() 
+        theme.replace(/%|\d/g, '')
       );
 
       user.bestThemes = [...new Set([...user.bestThemes, ...processedBestThemes])];
 
       user.themesToImprove = user.themesToImprove.filter(theme => 
-        !processedBestThemes.includes(theme.replace(/%|\d/g, '').trim().toLowerCase())
+        !processedBestThemes.includes(theme.replace(/%|\d/g, ''))
       );
 
       await user.save();
