@@ -51,10 +51,10 @@ export default function Leaderboard({}: Props) {
           <h2 className="text-2xl font-bold">Leaderboard</h2>
           <ul className="mt-4 space-y-4">
             {sortedUsers.map((user, index) => (
-              <LeaderboardItem 
-                key={index} 
-                rank={index + 1} 
-                user={user} 
+              <LeaderboardItem
+                key={index}
+                rank={index + 1}
+                user={user}
                 first={index === 0}
                 second={index === 1}
                 third={index === 2}
