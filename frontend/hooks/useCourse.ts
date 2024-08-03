@@ -32,7 +32,7 @@ const useCourseApi = () => {
 
   const handleError = async (error: any) => {
     if (error.response && error.response.status === 401 && session) {
-      await signOut({ callbackUrl: '/auth/login' });
+      await signOut({ callbackUrl: '/login' });
     }
     return Promise.reject(error);
   };

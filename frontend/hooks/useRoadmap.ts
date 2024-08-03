@@ -10,12 +10,12 @@ interface getRoadmapResponse {
 
 const getAuthHeader = async () => {
   const session = await getSession();
-  return session?.accessToken ? `Bearer ${session.accessToken}` : '';
+  return session?.accessToken ? `Bearer ${session.accessToken}` : false;
 };
 
 const handleError = async (error: any) => {
-  if (error.response && error.response.status === 401) {
-    await signOut({ callbackUrl: '/auth/login' });
+  if (error.response && error.response.status === 401 && await getAuthHeader()) {
+    await signOut({ callbackUrl: '/login' });
   }
   return Promise.reject(error);
 };
@@ -33,7 +33,7 @@ export const useRoadmapQuery = () => {
   };
 
   const useGenerateRoadmap = () =>
-    useMutation<Roadmap, Error, RoadmapPayload>(
+    useMutation<Roadmap | undefined, Error, RoadmapPayload>(
       async (payload) => {
         const authHeader = await fetchAuthHeader();
         if (!authHeader) throw new Error('No session');
