@@ -214,29 +214,35 @@ export default class CourseService {
     }
   }
   
-  async handleIncorrectThemes(userId: string, incorrectThemes: string[]) {
+  async  handleIncorrectThemes(userId: string, incorrectThemes: string[]) {
     try {
       const user = await User.findById(userId);
       if (!user) return null;
-
-      // Remove % and numbers from incorrect themes
-      const processedIncorrectThemes = incorrectThemes.map(theme => 
-        theme.replace(/%|\d/g, '') 
-      );
-
-      user.themesToImprove = [...new Set([...user.themesToImprove, ...processedIncorrectThemes])];
-
-      user.bestThemes = user.bestThemes.filter(theme => 
-        !processedIncorrectThemes.includes(theme.replace(/%|\d/g, ''))
-      );
-
+  
+      const processedIncorrectThemes = incorrectThemes.map(this.processTheme);
+  
+      user.themesToImprove = [...new Set([
+        ...user.themesToImprove, 
+        ...processedIncorrectThemes
+      ])];
+  
+      user.bestThemes = user.bestThemes.filter(theme => {
+        const processedTheme = this.processTheme(theme);
+        return !processedIncorrectThemes.includes(processedTheme);
+      });
+  
       await user.save();
       return true;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return false;
     }
   }
+
+  private processTheme(theme: string): string {
+    return theme.replace(/%20/g, ' ').replace(/%|\d/g, '');
+  }
+  
   
   async updateXp(userId: string, points: number) {
     try {
@@ -356,21 +362,23 @@ export default class CourseService {
     try {
       const user = await User.findById(userId);
       if (!user) return null;
-
-      const processedBestThemes = bestThemes.map(theme => 
-        theme.replace(/%|\d/g, '')
-      );
-
-      user.bestThemes = [...new Set([...user.bestThemes, ...processedBestThemes])];
-
-      user.themesToImprove = user.themesToImprove.filter(theme => 
-        !processedBestThemes.includes(theme.replace(/%|\d/g, ''))
-      );
-
+  
+      const processedBestThemes = bestThemes.map(this.processTheme);
+  
+      user.bestThemes = [...new Set([
+        ...user.bestThemes, 
+        ...processedBestThemes
+      ])];
+  
+      user.themesToImprove = user.themesToImprove.filter(theme => {
+        const processedTheme = this.processTheme(theme);
+        return !processedBestThemes.includes(processedTheme);
+      });
+  
       await user.save();
       return true;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return false;
     }
   }
