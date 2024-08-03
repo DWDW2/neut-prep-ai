@@ -10,6 +10,7 @@ import UserProgress from '@/components/testing/UserProgress';
 import FeedWrapper from '@/components/testing/Feed-sidebar';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PleaseLogin from '@/components/testing/PleaseLogin';
 
 const Loading = dynamic(() => import('@/components/Loading'), {
   ssr: false,
@@ -35,7 +36,7 @@ export default function Leaderboard({}: Props) {
   }
 
   if (isError) {
-    return <div>Error fetching users.</div>;
+    return <PleaseLogin />;
   }
 
   return (

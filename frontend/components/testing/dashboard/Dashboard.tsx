@@ -2,6 +2,8 @@
 import React from 'react';
 import { UserType } from '@/types/User.types';
 import useCourseApi from '@/hooks/useCourse';
+import Loading from '@/components/Loading';
+import PleaseLogin from '../PleaseLogin';
 
 const ContributionGraph = ({ visitedDays }: { visitedDays: string[] }) => {
   const today = new Date();
@@ -73,9 +75,9 @@ const UserDashboard = () => {
   const { useGetUser } = useCourseApi();
   const { data: user, isLoading, isError } = useGetUser();
 
-  if (isLoading) return <div className="text-center py-10">Loading...</div>;
-  if (isError) return <div className="text-center py-10 text-red-500">Error loading user data</div>;
-  if (!user) return <div className="text-center py-10">No user data available</div>;
+  if (isLoading) return <Loading />;
+  if (isError) return <PleaseLogin />
+  if (!user) return <PleaseLogin />
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-gray-50">
@@ -84,10 +86,10 @@ const UserDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
           <h2 className="text-xl font-semibold mb-4 text-gray-700">Your Progress</h2>
-          <p className="mb-2"><span className="font-medium">Total XP:</span> {user.totalXp}</p>
-          <p className="mb-2"><span className="font-medium">Todays XP:</span> {user.todaysXp}</p>
-          <p className="mb-2"><span className="font-medium">Current Streak:</span> {user.streak} days</p>
-          <p><span className="font-medium">Longest Streak:</span> {user.longestStreak} days</p>
+          <p className="mb-2"><span className="font-medium">🚀 Total XP:</span> {user.totalXp}</p>
+          <p className="mb-2"><span className="font-medium">❤️ Todays XP:</span> {user.todaysXp}</p>
+          <p className="mb-2"><span className="font-medium">🤖 Current Streak:</span> {user.streak} days</p>
+          <p><span className="font-medium">😎 Longest Streak:</span> {user.longestStreak} days</p>
         </div>
         
         <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
@@ -105,7 +107,7 @@ const UserDashboard = () => {
         <ContributionGraph visitedDays={user.visitedDays} />
       </div>
       
-      <div className="mt-6 bg-white p-6 rounded-lg shadow-md border border-gray-200">
+      <div className="mt-6 bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-10">
         <h2 className="text-xl font-semibold mb-4 text-gray-700">Themes to Improve</h2>
         {user.themesToImprove.length > 0 ? (
           <ul className="list-disc pl-5 text-gray-600">

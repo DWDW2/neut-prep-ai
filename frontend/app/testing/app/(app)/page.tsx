@@ -3,13 +3,14 @@ import React from 'react'
 import PleaseLogin from '@/components/testing/PleaseLogin'
 import UserDashboard from '@/components/testing/dashboard/Dashboard'
 import useCourseApi from '@/hooks/useCourse'
+import Loading from '@/components/Loading'
 
 export default function DashboardPage() {
   const { useGetUser } = useCourseApi()
   const { data: user, isLoading } = useGetUser()
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <Loading />
   }
 
   return (

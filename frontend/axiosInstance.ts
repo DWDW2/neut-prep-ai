@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { getSession, signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import BASE_URL from './lib/env';
+import { getServerSession } from 'next-auth';
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,

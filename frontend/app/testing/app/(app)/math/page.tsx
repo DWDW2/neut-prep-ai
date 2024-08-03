@@ -18,6 +18,7 @@ import { useSession } from "next-auth/react";
 import AuthForm from "@/components/testing/AuthForm";
 import useStore from "@/hooks/useStore";
 import LessonCompleteModal from "@/components/testing/AuthFormaModal";
+import MobileXPDisplay from "@/components/testing/MobileXP";
 
 const Loading = dynamic(() => import('@/components/Loading'), { ssr: false });
 
@@ -31,6 +32,7 @@ interface handleLesson {
   questionType: string;
   locked: boolean;
   lessonContent: string;
+  finished: boolean;
 }
 
 export default function MathDetailed({ }: Props) {
@@ -49,9 +51,11 @@ export default function MathDetailed({ }: Props) {
   const {isLessonCompleted, setLessonCompleted} = useStore()
   const {setIsModalShowed, isModalShowed} = useStore()
 
-  const handleLessonClick = ({ lessonIndex, sectionIndex, roadmapId, xp, questionType, locked, lessonContent }: handleLesson) => {
+  const handleLessonClick = ({ lessonIndex, sectionIndex, roadmapId, xp, questionType, locked, lessonContent, finished}: handleLesson) => {
     if (!locked) {
       router.push(`/testing/app/math/${roadmapId}/${sectionIndex}/${lessonIndex}/${xp}/${questionType}/${lessonContent ? lessonContent : ''}`);
+    } else if (finished){
+      toast.info('This lesson is already completed');
     } else {
       toast.info('Complete previous lessons to unlock this one');
     }
@@ -132,7 +136,7 @@ export default function MathDetailed({ }: Props) {
             key={lessonIndex}
             index={lessonIndex}
             totalCount={section.lessons.length}
-            onClick={() => handleLessonClick({ roadmapId: RoadMapMath?.mathRoadmap._id || '', sectionIndex: index, lessonIndex, xp: lesson.xp, questionType: section.questionType, locked: lesson.locked, lessonContent: lesson.lessonContent })}
+            onClick={() => handleLessonClick({ roadmapId: RoadMapMath?.mathRoadmap._id || '', sectionIndex: index, lessonIndex, xp: lesson.xp, questionType: section.questionType, locked: lesson.locked, lessonContent: lesson.lessonContent, finished: lesson.finished })}
           />
         ))}
       </div>
@@ -163,6 +167,10 @@ export default function MathDetailed({ }: Props) {
       <ToastContainer />
       <CongratulationsModal show={showModal} onClose={closeModal} xp={user?.todaysXp || 0} /> 
       <LessonCompleteModal isModalOpen={isLessonCompleted} closeModal={() =>  setLessonCompleted(false)} />
+
+      <div className="lg:hidden">
+        <MobileXPDisplay xp={user?.todaysXp || 0} dailyGoal={20} />
+      </div>
     </div>
   );
 }

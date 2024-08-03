@@ -218,13 +218,19 @@ export default class CourseService {
     try {
       const user = await User.findById(userId);
       if (!user) return null;
-  
-      const processedIncorrectThemes = incorrectThemes.map(theme => theme.replace(/%/g, ' '));
-  
+
+      const processedIncorrectThemes = incorrectThemes.map(theme => 
+        theme.replace(/%|\d/g, '')
+          .trim() 
+          .toLowerCase() 
+      );
+
       user.themesToImprove = [...new Set([...user.themesToImprove, ...processedIncorrectThemes])];
-  
-      user.bestThemes = user.bestThemes.filter(theme => !processedIncorrectThemes.includes(theme));
-  
+
+      user.bestThemes = user.bestThemes.filter(theme => 
+        !processedIncorrectThemes.includes(theme.replace(/%|\d/g, '').trim().toLowerCase())
+      );
+
       await user.save();
       return true;
     } catch (error) {
@@ -351,13 +357,19 @@ export default class CourseService {
     try {
       const user = await User.findById(userId);
       if (!user) return null;
-  
-      const processedBestThemes = bestThemes.map(theme => theme.replace(/%/g, ' '));
-  
+
+      const processedBestThemes = bestThemes.map(theme => 
+        theme.replace(/%|\d/g, '') 
+          .trim() 
+          .toLowerCase() 
+      );
+
       user.bestThemes = [...new Set([...user.bestThemes, ...processedBestThemes])];
-  
-      user.themesToImprove = user.themesToImprove.filter(theme => !processedBestThemes.includes(theme));
-  
+
+      user.themesToImprove = user.themesToImprove.filter(theme => 
+        !processedBestThemes.includes(theme.replace(/%|\d/g, '').trim().toLowerCase())
+      );
+
       await user.save();
       return true;
     } catch (error) {
@@ -365,7 +377,7 @@ export default class CourseService {
       return false;
     }
   }
-  
+
 
   async getAllUsers(){
     try {

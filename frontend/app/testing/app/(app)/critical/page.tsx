@@ -19,6 +19,7 @@ import AuthForm from "@/components/testing/AuthForm";
 import LessonCompleteModal from "@/components/testing/AuthFormaModal";
 import useStore from "@/hooks/useStore";
 import { AiOutlineConsoleSql } from "react-icons/ai";
+import MobileXPDisplay from "@/components/testing/MobileXP";
 
 const Loading = dynamic(() => import('@/components/Loading'), { ssr: false });
 
@@ -173,6 +174,10 @@ export default function CriticalDetailed({ }: Props) {
       <ToastContainer />
       <CongratulationsModal show={showCongratulationsModal} onClose={closeModal} xp={user?.todaysXp || 0} />
       <LessonCompleteModal isModalOpen={showLessonCompleteModal} closeModal={closeModal} />
+
+      <div className="lg:hidden">
+        <MobileXPDisplay xp={user?.todaysXp || 0} dailyGoal={20} />
+      </div>
     </div>
   );
 }

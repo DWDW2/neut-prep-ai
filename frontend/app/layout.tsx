@@ -11,6 +11,7 @@ const nunito = Nunito({
 });
 
 export const metadata:Metadata = {
+  title: 'Nuet Prep AI', 
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
   description: "Prepare for the NUET (Nazarbayev University Entrance Test) with AI-generated tasks and personalized roadmaps tailored to your needs.",
   keywords: "NUET, Nazarbayev University Entrance Test, AI-generated tasks, personalized roadmaps, exam preparation",
